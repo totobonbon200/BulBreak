@@ -18,8 +18,17 @@ class Maze:
             for col in random.sample(candidates, size // 2):
                 self.walls[row, col] = 2
         passages = [(r, c) for r in range(size) for c in range(size)
-                    if (r, c) not in self.walls and (r, c) != entrance]
+                    if (r, c) not in self.walls
+                    and not self.in_exit_exclusion((r, c))]
         self.exit = random.choice(passages)
+
+    def in_exit_exclusion(self, position):
+        """Exclude a start-centered square; even sides extend down/right."""
+        side = self.size // 2 + 1
+        before = (side - 1) // 2
+        after = side // 2
+        return all(-before <= value - origin <= after
+                   for value, origin in zip(position, self.entrance))
 
     def step(self, position, direction):
         target = tuple(a + b for a, b in zip(position, direction))
