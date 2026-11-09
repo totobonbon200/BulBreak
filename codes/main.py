@@ -3,6 +3,8 @@ from pathlib import Path
 from pico2d import *
 
 from codes.maze_gamemode import MazeMode
+from codes.game_framework import GameFramework
+from codes.menu_modes import create_menus
 
 
 class Assets:
@@ -14,17 +16,25 @@ class Assets:
 
 
 def main():
-    mode = MazeMode(Assets())
-    mode.enter(True)
-    running = True
-    while running:
-        mode.update(get_time())
+    assets = Assets()
+    modes = create_menus(assets.font)
+    modes['maze_mode'] = MazeMode(assets)
+    framework = GameFramework(modes)
+    for mode in modes.values():
+        mode.framework = framework
+    while framework.running:
+        framework.update(get_time())
         for event in get_events():
             if event.type == SDL_QUIT:
-                running = False
-            else:
-                mode.handle_event(event)
+                framework.change_mode('quit_mode')
+                break
+            previous = framework.current_mode
+            framework.handle_event(event)
+            if framework.current_mode != previous:
+                break
+        if not framework.running:
+            break
         clear_canvas()
-        mode.draw()
+        framework.draw()
         update_canvas()
         delay(0.01)
