@@ -11,7 +11,6 @@ class GameOverRules:
         self.last_update = now
         self.health = 3
         self.maze_elapsed = 0.0
-        self.maze_penalized = False
 
     @property
     def is_over(self):
@@ -22,9 +21,8 @@ class GameOverRules:
         self.last_update = now
         self.remaining = max(0.0, self.remaining - elapsed)
         self.maze_elapsed += elapsed
-        if self.maze_elapsed >= self.MAZE_LIMIT and not self.maze_penalized:
-            self.health = max(0, self.health - 1)
-            self.maze_penalized = True
+        periods, self.maze_elapsed = divmod(self.maze_elapsed, self.MAZE_LIMIT)
+        self.health = max(0, self.health - int(periods))
 
     def record_action(self, now):
         self.update(now)
@@ -35,7 +33,6 @@ class GameOverRules:
     def enter_maze(self, now):
         self.last_update = now
         self.maze_elapsed = 0.0
-        self.maze_penalized = False
 
     def record_wrong_defense(self):
         self.health = max(0, self.health - 1)

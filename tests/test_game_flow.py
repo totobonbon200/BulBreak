@@ -74,7 +74,7 @@ class GameFlowTests(unittest.TestCase):
         player.update(101.5)
         self.assertFalse(player.is_playing)
 
-    def test_health_penalty_occurs_once_per_maze(self):
+    def test_health_timer_resets_on_next_maze(self):
         rules = GameOverRules()
         for now in (1, 2, 3, 4, 5):
             rules.record_action(now)
@@ -85,6 +85,20 @@ class GameFlowTests(unittest.TestCase):
         self.assertEqual(rules.health, 1)
         rules.record_wrong_defense()
         self.assertTrue(rules.is_over)
+
+    def test_health_decreases_every_three_seconds_despite_input(self):
+        rules = GameOverRules()
+        for now in range(1, 10):
+            rules.record_action(now)
+            self.assertEqual(rules.health, 3 - now // 3)
+            self.assertEqual(rules.maze_elapsed, now % 3)
+        self.assertTrue(rules.is_over)
+
+    def test_health_timer_preserves_remainder_after_delayed_update(self):
+        rules = GameOverRules()
+        rules.update(6.5)
+        self.assertEqual(rules.health, 1)
+        self.assertEqual(rules.maze_elapsed, 0.5)
 
     def test_wall_hits_and_action_animation(self):
         maze = Maze(4)
