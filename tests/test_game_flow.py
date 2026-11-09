@@ -3,7 +3,7 @@ import unittest
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
 
-from pico2d import SDL_KEYDOWN, SDL_QUIT, SDLK_RIGHT, SDLK_UP, SDLK_LEFT
+from pico2d import SDL_KEYDOWN, SDL_QUIT, SDLK_RIGHT, SDLK_UP, SDLK_LEFT, SDLK_DOWN
 from codes.character import Character
 from codes.game_framework import GameFramework
 from codes.gameover import GameOverRules
@@ -66,7 +66,7 @@ class GameFlowTests(unittest.TestCase):
         assets = SimpleNamespace(font=Mock(), maze_sheet=Mock(w=400, h=200),
                                  character_sheet=Mock(w=400, h=400))
         key = lambda value: SimpleNamespace(type=SDL_KEYDOWN, key=value)
-        events = [[key(SDLK_UP)], [key(SDLK_LEFT)], [key(SDLK_RIGHT)],
+        events = [[key(SDLK_RIGHT)], [key(SDLK_LEFT)], [key(SDLK_DOWN)],
                   [], [SimpleNamespace(type=SDL_QUIT)]]
         with patch.object(game, 'Assets', return_value=assets), \
              patch.object(game, 'get_time', side_effect=[0, .1, .2, 4, 4.1]), \

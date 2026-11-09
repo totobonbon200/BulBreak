@@ -37,9 +37,9 @@ class MenuMode:
 def create_menus(font):
     return {
         'start_mode': MenuMode(font, 'BulBreak',
-                              ['RIGHT: start maze', 'UP: instructions', 'LEFT: quit'],
-                              {SDLK_RIGHT: 'maze_mode', SDLK_UP: 'instrument_mode',
-                               SDLK_LEFT: 'quit_mode'}),
+                              ['DOWN: start maze', 'UP: quit', 'RIGHT: instructions'],
+                              {SDLK_DOWN: 'maze_mode', SDLK_UP: 'quit_mode',
+                               SDLK_RIGHT: 'instrument_mode'}),
         'instrument_mode': MenuMode(font, 'Instructions',
                                    ['Arrow keys: move / hit wall',
                                     'Hit a wall twice, then move into it.',
