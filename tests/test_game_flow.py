@@ -9,9 +9,50 @@ from codes.game_framework import GameFramework
 from codes.gameover import GameOverRules
 from codes.maze import Maze
 from codes import main as game
+from codes.maze_gamemode import MazeMode
+from codes.menu_modes import create_menus
 
 
 class GameFlowTests(unittest.TestCase):
+    def test_start_screen_down_starts_and_up_quits(self):
+        for key, expected in ((SDLK_DOWN, 'maze_mode'), (SDLK_UP, 'quit_mode')):
+            menu = create_menus(Mock())['start_mode']
+            menu.framework = Mock()
+            menu.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=key))
+            menu.framework.change_mode.assert_called_once_with(expected)
+
+    def test_game_over_restart_resets_session_and_blocks_held_key(self):
+        with patch('codes.maze_gamemode.get_time', return_value=10):
+            mode = MazeMode(Mock())
+            old_maze = mode.maze
+            mode.completed = 8
+            mode.player.rules.health = 0
+            mode.player.update(10)
+            event = SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_DOWN)
+            mode.handle_event(event)
+            self.assertIsNot(mode.maze, old_maze)
+            self.assertEqual(mode.completed, 0)
+            self.assertTrue(mode.player.is_playing)
+            self.assertEqual(mode.player.rules.health, 3)
+            self.assertEqual(mode.player.idle_remaining(10), 3)
+            self.assertEqual(mode.player.position, mode.maze.entrance)
+            mode.update(10.1)
+            mode.handle_event(event)
+            self.assertEqual(mode.player.position, mode.maze.entrance)
+            self.assertEqual(mode.player.action_state, 'idle')
+
+    def test_game_over_up_returns_and_next_start_is_fresh(self):
+        with patch('codes.maze_gamemode.get_time', return_value=10):
+            mode = MazeMode(Mock())
+            mode.framework = Mock()
+            mode.player.rules.health = 0
+            mode.player.update(10)
+            mode.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_UP))
+            mode.framework.change_mode.assert_called_once_with('start_mode')
+            mode.enter(False)
+            self.assertTrue(mode.player.is_playing)
+            self.assertEqual(mode.player.rules.health, 3)
+
     def test_mode_history_and_reentry(self):
         modes = {name: Mock() for name in GameFramework.MODES if name != 'quit_mode'}
         framework = GameFramework(modes)

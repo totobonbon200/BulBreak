@@ -10,17 +10,20 @@ class MazeMode:
     def __init__(self, assets):
         self.assets = assets
         self.held = set()
+        self.reset(get_time())
+
+    def reset(self, now):
         self.size = random.choice((4, 6))
         self.completed = 0
         self.maze = Maze(self.size)
-        self.player = Character(self.maze.entrance, get_time())
-        self.now = get_time()
+        self.player = Character(self.maze.entrance, now)
+        self.now = now
         self.message = 'Arrow keys: move / hit wall twice'
         self.transitioned = False
 
     def enter(self, first_visit):
         self.held.clear()
-        self.player.enter_maze(self.player.position, get_time())
+        self.reset(get_time())
 
     def exit(self):
         self.held.clear()
@@ -34,7 +37,14 @@ class MazeMode:
             if event.key in self.held:
                 return
             self.held.add(event.key)
-            if not self.player.is_playing or self.transitioned:
+            if not self.player.is_playing:
+                if event.key == SDLK_DOWN:
+                    self.reset(get_time())
+                    self.transitioned = True
+                elif event.key == SDLK_UP:
+                    self.framework.change_mode('start_mode')
+                return
+            if self.transitioned:
                 return
             self.player.position, result = self.maze.step(
                 self.player.position, directions[event.key])
@@ -75,3 +85,4 @@ class MazeMode:
                                 400, 300, 800, 600)
             finally:
                 sheet.opacify(1.0)
+            font.draw(180, 320, 'DOWN: restart / UP: start screen', (220, 40, 40))
