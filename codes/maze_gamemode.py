@@ -62,8 +62,9 @@ class MazeMode:
         font.draw(100, 550, f'BulBreak | {self.size}x{self.size} | Maze {self.completed + 1} | {self.player.state.name}', (20, 20, 20))
         if self.player.is_playing:
             font.draw(100, 525, f'Idle time left: {self.player.idle_remaining(self.now):.1f}s', (180, 40, 40))
+            font.draw(550, 550, f'HP: {self.player.rules.health}', (180, 40, 40))
         else:
-            self.message = 'GAME OVER: no action for 3 seconds'
+            self.message = 'GAME OVER: time or health depleted'
         font.draw(100, 70, self.message, (20, 20, 20))
         font.draw(100, 45, 'IN: entrance / OUT: exit | Close window to quit', (20, 20, 20))
         if not self.player.is_playing:
