@@ -1,5 +1,7 @@
 """Player state and the top-row maze animation."""
+
 from enum import Enum, auto
+from codes.gameover import GameOverRules
 
 
 class PlayerState(Enum):
@@ -14,28 +16,29 @@ class Character:
         self.position = position
         self.animation_until = 0.0
         self.state = PlayerState.PLAYING
-        self.last_action_at = now
+        self.rules = GameOverRules(now)
 
     @property
     def is_playing(self):
         return self.state is PlayerState.PLAYING
 
     def idle_remaining(self, now):
-        return max(0.0, self.IDLE_TIMEOUT - (now - self.last_action_at))
+        return self.rules.idle_remaining(now)
 
     def update(self, now):
-        if self.is_playing and self.idle_remaining(now) <= 0:
+        self.rules.update(now)
+        if self.is_playing and self.rules.is_over:
             self.state = PlayerState.GAME_OVER
 
     def enter_maze(self, position, now):
-        # A scene transition never triggers game over; start a fresh idle period.
+        # Scene transitions do not consume idle time.
         self.position = position
-        self.last_action_at = now
+        self.rules.enter_maze(now)
 
     def react(self, now):
         if not self.is_playing:
             return
-        self.last_action_at = now
+        self.rules.record_action(now)
         self.animation_until = now + 0.15
 
     def draw(self, sheet, maze, now):
