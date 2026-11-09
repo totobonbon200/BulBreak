@@ -19,9 +19,10 @@ class Character:
         self.animation_until = 0.0
         self.animation_started = now
         self.action_machine = Machine(
-            model=self, states=['idle', 'moving'], initial='idle',
+            model=self, states=['idle', 'moving', 'wall_attack'], initial='idle',
             model_attribute='action_state', auto_transitions=False)
         self.action_machine.add_transition('start_move', '*', 'moving')
+        self.action_machine.add_transition('start_wall_attack', '*', 'wall_attack')
         self.action_machine.add_transition('finish_action', '*', 'idle')
         self.state = PlayerState.PLAYING
         self.rules = GameOverRules(now)
@@ -52,6 +53,11 @@ class Character:
         self.rules.record_action(now)
         if result in ('moved', 'exit'):
             self.start_move()
+        elif result in ('hit', 'broken'):
+            self.start_wall_attack()
+        else:
+            return
+        if self.action_state != 'idle':
             self.animation_started = now
             self.animation_until = now + 2 * self.FRAME_SECONDS
 
