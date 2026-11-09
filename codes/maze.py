@@ -4,6 +4,7 @@ import random
 
 class Maze:
     DISPLAY_SIZE = 400
+    WALL_FRAME_SECONDS = 0.15
 
     @property
     def cell_size(self):
@@ -48,7 +49,7 @@ class Maze:
         row, col = position
         return 100 + (col + 0.5) * cell, 500 - (row + 0.5) * cell
 
-    def draw(self, sheet, font):
+    def draw(self, sheet, font, now=0.0):
         from pico2d import draw_rectangle
         cell = self.cell_size
         width, height = sheet.w // 4, sheet.h // 2
@@ -57,14 +58,19 @@ class Maze:
                 position = row, col
                 x, y = self.center(position)
                 hp = self.walls.get(position, 0)
-                frame = 1 if hp == 2 else 2 if hp == 1 else 0
+                # Top columns 2/3: passage or intact wall / damaged wall.
+                # Column 1 is the exit, column 4 is the game-over overlay.
+                frame = 2 if hp == 1 else 1
                 sheet.clip_draw(frame * width, height, width, height,
                                 x, y, cell, cell)
                 if hp:
-                    # Temporary mapping: bottom columns 1/2 mean 1/2 hits left.
-                    sheet.clip_draw((hp - 1) * width, 0, width, height,
+                    frame = int(now / self.WALL_FRAME_SECONDS) % 4
+                    sheet.clip_draw(frame * width, 0, width, height,
                                     x, y, cell * .55, cell * .55)
                     font.draw(x - 4, y, str(hp), (220, 40, 40))
+                if position == self.exit:
+                    sheet.clip_draw(0, height, width, height,
+                                    x, y, cell, cell)
                 draw_rectangle(x - cell / 2, y - cell / 2,
                                x + cell / 2, y + cell / 2)
         for position, label, color in [(self.entrance, 'IN', (0, 150, 70)),
