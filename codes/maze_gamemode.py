@@ -26,6 +26,10 @@ class MazeMode:
             framework.restart_stage_timer()
 
     @property
+    def use_stage_deadline(self):
+        return self.player.rules.rule == 3
+
+    @property
     def is_game_over(self):
         return not self.player.is_playing
 
@@ -83,10 +87,14 @@ class MazeMode:
         sheet, font = self.assets.maze_sheet, self.assets.font
         self.maze.draw(sheet, font, self.now)
         self.player.draw(self.assets.character_sheet, self.maze, self.now)
-        font.draw(100, 550, f'BulBreak | {self.size}x{self.size} | Maze {self.completed + 1} | {self.player.state.name}', (20, 20, 20))
+        rule = self.player.rules.rule
+        label = {1: '무행동 3초 / 입력 시 1초 회복', 2: '체력 3개 / 3초마다 1 감소', 3: '15초 제한'}[rule]
+        font.draw(100, 575, f'게임오버 기준 {rule}번: {label}', (255, 255, 255))
+        font.draw(100, 550, f'BulBreak | {self.size}x{self.size} | Maze {self.completed + 1}', (255, 255, 255))
         if self.player.is_playing:
-            font.draw(100, 525, f'Idle time left: {self.player.idle_remaining(self.now):.1f}s', (180, 40, 40))
-            font.draw(550, 550, f'HP: {self.player.rules.health}', (180, 40, 40))
+            status = (f'남은 시간: {self.player.idle_remaining(self.now):.1f}초' if rule == 1
+                      else f'체력: {self.player.rules.health} / 3')
+            font.draw(100, 525, status, (255, 220, 100))
         elif not self.stage_timed_out:
             self.message = 'GAME OVER: time or health depleted'
         font.draw(100, 70, self.message, (20, 20, 20))
