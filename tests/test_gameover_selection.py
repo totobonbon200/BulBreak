@@ -1,0 +1,19 @@
+import unittest
+from unittest.mock import patch
+from codes.gameover import GameOverRules
+
+
+class SelectionTests(unittest.TestCase):
+    def test_new_play_draws_only_one_of_first_two_rules(self):
+        with patch('codes.gameover.random.choice', side_effect=[1, 2]) as choose:
+            self.assertEqual(GameOverRules().rule, 1)
+            self.assertEqual(GameOverRules().rule, 2)
+        self.assertEqual(choose.call_count, 2)
+        choose.assert_called_with((1, 2))
+
+    def test_rule_one_ignores_health_and_rule_two_ignores_idle_time(self):
+        first, second = GameOverRules(rule=1), GameOverRules(rule=2)
+        first.health = 0
+        second.remaining = 0
+        self.assertFalse(first.is_over)
+        self.assertFalse(second.is_over)
