@@ -14,6 +14,22 @@ from codes.menu_modes import create_menus
 
 
 class GameFlowTests(unittest.TestCase):
+    def test_guide_round_trip_and_white_start_text(self):
+        font = Mock()
+        modes = create_menus(font)
+        framework = GameFramework(modes)
+        for mode in modes.values():
+            mode.framework = framework
+        framework.draw()
+        self.assertTrue(all(call.args[-1] == (255, 255, 255)
+                            for call in font.draw.call_args_list))
+        framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_LEFT))
+        self.assertEqual(framework.current_mode, 'guide_mode')
+        framework.update(100)
+        framework.draw()
+        framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_RIGHT))
+        self.assertEqual(framework.current_mode, 'start_mode')
+
     def test_start_screen_down_starts_and_up_quits(self):
         for key, expected in ((SDLK_DOWN, 'maze_mode'), (SDLK_UP, 'quit_mode')):
             menu = create_menus(Mock())['start_mode']

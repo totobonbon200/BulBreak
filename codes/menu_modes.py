@@ -1,5 +1,6 @@
 """방향키로 이동하는 시작 및 안내 화면."""
 from pico2d import *
+from codes.guide_mode import GuideMode
 
 
 class MenuMode:
@@ -29,17 +30,19 @@ class MenuMode:
         pass
 
     def draw(self):
-        self.font.draw(100, 500, self.title, (20, 20, 20))
+        self.font.draw(100, 500, self.title, (255, 255, 255))
         for index, line in enumerate(self.lines):
-            self.font.draw(100, 450 - 30 * index, line, (20, 20, 20))
+            self.font.draw(100, 450 - 30 * index, line, (255, 255, 255))
 
 
 def create_menus(font):
     return {
         'start_mode': MenuMode(font, 'BulBreak',
-                              ['DOWN: start maze', 'UP: quit', 'RIGHT: instructions'],
+                              ['DOWN: start maze', 'UP: quit',
+                               'LEFT: guide', 'RIGHT: instructions'],
                               {SDLK_DOWN: 'maze_mode', SDLK_UP: 'quit_mode',
-                               SDLK_RIGHT: 'instrument_mode'}),
+                               SDLK_RIGHT: 'instrument_mode', SDLK_LEFT: 'guide_mode'}),
+        'guide_mode': GuideMode(font),
         'instrument_mode': MenuMode(font, 'Instructions',
                                    ['Arrow keys: move / hit wall',
                                     'Hit a wall twice, then move into it.',

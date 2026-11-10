@@ -3,7 +3,7 @@ from transitions import Machine
 
 
 class GameFramework:
-    MODES = ('start_mode', 'instrument_mode', 'maze_mode',
+    MODES = ('start_mode', 'instrument_mode', 'guide_mode', 'maze_mode',
              'battle_mode', 'result_mode', 'quit_mode')
 
     def __init__(self, modes):
