@@ -1,5 +1,10 @@
 """Maze rules; coordinates are (row, column), starting at the top left."""
+# 이곳은 maze_gamemode에서 작동되며 이곳에서 미로에서 판정해야될 코드를 구현할 것
 import random
+
+
+class maze:
+    DISPLAY_SIZE = 400
 
 
 class Maze:

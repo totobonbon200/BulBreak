@@ -1,6 +1,8 @@
+# 여기에다 게임 메인루프 만들고 BulBreak.py에는 canvas.open, close의 기능만을 사용하고 나머지는 클래스, 함수의 구성으로만 작성
 """게임 자원과 메인 루프."""
 from pathlib import Path
-from pico2d import *
+# 이걸로 상태머신 표현할 것: from transitions import *
+from pico2d import * # pico2d는 이걸로 불러올 것
 from sdl2 import SDL_SetHint, SDL_HINT_RENDER_SCALE_QUALITY
 
 from codes.maze_gamemode import MazeMode

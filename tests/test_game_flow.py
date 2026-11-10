@@ -14,6 +14,28 @@ from codes.menu_modes import create_menus
 
 
 class GameFlowTests(unittest.TestCase):
+    def test_stage_deadline_applies_to_every_rule(self):
+        for rule in (1, 2, 3):
+            with self.subTest(rule=rule), patch('codes.maze_gamemode.get_time', return_value=0):
+                mode = MazeMode(Mock())
+                modes = create_menus(Mock())
+                modes['maze_mode'] = mode
+                framework = GameFramework(modes, clock=lambda: 0)
+                mode.framework = framework
+                framework.change_mode('maze_mode')
+                mode.player.rules.rule = rule
+                # Keep the independent rules alive to isolate the common deadline.
+                mode.player.rules.remaining = 100
+                mode.player.rules.health = 100
+                framework.update(14.9)
+                self.assertTrue(mode.player.is_playing)
+                self.assertFalse(framework.stage_timed_out)
+                mode.player.react(14.9, 'blocked')
+                self.assertEqual(framework.stage_started, 0)
+                framework.update(15)
+                self.assertTrue(framework.stage_timed_out)
+                self.assertFalse(mode.player.is_playing)
+
     def setUp(self):
         chooser = patch('codes.gameover.random', SimpleNamespace(choice=lambda options: 1))
         chooser.start()
@@ -31,8 +53,6 @@ class GameFlowTests(unittest.TestCase):
             for item in modes.values():
                 item.framework = framework
             framework.change_mode('maze_mode')
-            mode.player.rules.rule = 3
-            framework.restart_stage_timer()
             mode.player.rules.health = 100
             mode.player.rules.remaining = 100
             framework.update(14.9)
@@ -60,7 +80,6 @@ class GameFlowTests(unittest.TestCase):
         framework.update(100)
         self.assertIsNone(framework.stage_started)
         for name in ('maze_mode', 'battle_mode'):
-            modes[name].use_stage_deadline = True
             framework.change_mode(name)
             framework.update(34.9)
             self.assertFalse(framework.stage_timed_out)
@@ -218,6 +237,40 @@ class GameFlowTests(unittest.TestCase):
         self.assertEqual(player.position, (0, 1))
         player.update(0.7)
         self.assertEqual(player.action_state, 'idle')
+
+    def test_wall_animation_reaches_in_input_direction_and_returns(self):
+        maze = Maze(4)
+        origin_x, origin_y = maze.center((0, 0))
+        for direction in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+            for result in ('hit', 'broken'):
+                with self.subTest(direction=direction, result=result):
+                    player = Character((0, 0))
+                    sheet = Mock(w=600, h=600)
+                    player.react(0, result, direction)
+                    for phase, frame, fraction in ((0.5, 1, 0.5),
+                                                   (1.5, 0, 0.5),
+                                                   (2, 0, 0)):
+                        now = phase * player.FRAME_SECONDS
+                        player.update(now)
+                        player.draw(sheet, maze, now)
+                        offset = maze.cell_size * player.WALL_NUDGE * fraction
+                        sheet.clip_draw.assert_called_with(
+                            frame * 150, 450, 150, 150,
+                            origin_x + direction[1] * offset,
+                            origin_y - direction[0] * offset, 80, 80)
+                    self.assertEqual(player.position, (0, 0))
+                    self.assertEqual(player.action_state, 'idle')
+
+    def test_passage_movement_keeps_first_frame_without_nudge(self):
+        player = Character((0, 1))
+        maze = Maze(4)
+        sheet = Mock(w=600, h=600)
+        player.react(0, 'moved', (0, 1))
+        for now in (0, 0.1, 0.2, 0.3):
+            player.update(now)
+            player.draw(sheet, maze, now)
+            sheet.clip_draw.assert_called_with(
+                0, 450, 150, 150, *maze.center((0, 1)), 80, 80)
 
     def test_main_menu_instructions_maze_and_overlay(self):
         assets = SimpleNamespace(font=Mock(), timeout_font=Mock(), maze_sheet=Mock(w=400, h=200),

@@ -26,10 +26,6 @@ class MazeMode:
             framework.restart_stage_timer()
 
     @property
-    def use_stage_deadline(self):
-        return self.player.rules.rule == 3
-
-    @property
     def is_game_over(self):
         return not self.player.is_playing
 
@@ -65,7 +61,7 @@ class MazeMode:
                 return
             self.player.position, result = self.maze.step(
                 self.player.position, directions[event.key])
-            self.player.react(self.now, result)
+            self.player.react(self.now, result, directions[event.key])
             self.message = {'hit': 'Wall: 1 hit left',
                             'broken': 'Wall broken! Press again to move.',
                             'blocked': 'Map boundary',

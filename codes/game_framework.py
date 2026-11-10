@@ -1,3 +1,7 @@
+    # 시작모드, 설명모드, 종료모드, 미로모드, 전투모드로 전환할 코드 만들어줘
+    # 이것으로 코드를 넘나들며 사용하는 형태를 만들 것
+    # 이전모드를 저장해 이것으로 처음으로 전환되는지, 전환되는지 확인
+    # 이곳에서는 초기화, 모드전환을 관리할 것
 """모드 초기화와 전환을 관리한다."""
 from transitions import Machine
 from pico2d import get_time, SDL_KEYDOWN, SDLK_DOWN, SDLK_UP
@@ -57,8 +61,7 @@ class GameFramework:
 
     def restart_stage_timer(self):
         """Start a fresh deadline on maze/battle entry, never on ordinary input."""
-        enabled = getattr(self.modes.get(self.state), 'use_stage_deadline', False) is True
-        self.stage_started = self.clock() if self.state in self.TIMED_MODES and enabled else None
+        self.stage_started = self.clock() if self.state in self.TIMED_MODES else None
         self.stage_elapsed = 0.0
         self.stage_timed_out = False
 

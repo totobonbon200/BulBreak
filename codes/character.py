@@ -1,4 +1,6 @@
 """Player state and the top-row maze animation."""
+# 이곳은 미로상태에서 이동, 벽공격상태를 만들어 그에맞춰 애니메이션을 사용하게 변경
+# 전투상태는 구현예정
 
 from enum import Enum, auto
 from transitions import Machine
@@ -13,11 +15,13 @@ class PlayerState(Enum):
 class Character:
     IDLE_TIMEOUT = 3.0
     FRAME_SECONDS = 0.15
+    WALL_NUDGE = 0.18
 
     def __init__(self, position, now=0.0):
         self.position = position
         self.animation_until = 0.0
         self.animation_started = now
+        self.action_direction = (0, 0)
         self.action_machine = Machine(
             model=self, states=['idle', 'moving', 'wall_attack'], initial='idle',
             model_attribute='action_state', auto_transitions=False)
@@ -47,7 +51,7 @@ class Character:
         self.rules.enter_maze(now)
         self.finish_action()
 
-    def react(self, now, result='moved'):
+    def react(self, now, result='moved', direction=(0, 0)):
         if not self.is_playing:
             return
         self.rules.record_action(now)
@@ -58,15 +62,23 @@ class Character:
         else:
             return
         if self.action_state != 'idle':
+            self.action_direction = direction
             self.animation_started = now
             self.animation_until = now + 2 * self.FRAME_SECONDS
 
     def draw(self, sheet, maze, now):
         width, height = sheet.w // 4, sheet.h // 4
         frame = 0
-        if self.action_state != 'idle':
-            frame = min(1, int(max(0, now - self.animation_started) / self.FRAME_SECONDS))
         x, y = maze.center(self.position)
+        if self.action_state == 'wall_attack':
+            elapsed = max(0, now - self.animation_started)
+            progress = min(2.0, elapsed / self.FRAME_SECONDS)
+            # Reach toward the wall, then return without changing the grid cell.
+            offset = (1 - abs(1 - progress)) * maze.cell_size * self.WALL_NUDGE
+            row, col = self.action_direction
+            x += col * offset
+            y -= row * offset
+            frame = 1 if progress < 1 else 0
         size = maze.cell_size * .8
         sheet.clip_draw(frame * width, 3 * height, width, height,
                         x, y, size, size)
