@@ -14,6 +14,11 @@ from codes.menu_modes import create_menus
 
 
 class GameFlowTests(unittest.TestCase):
+    def setUp(self):
+        chooser = patch('codes.gameover.random.choice', return_value=1)
+        chooser.start()
+        self.addCleanup(chooser.stop)
+
     def test_stage_deadline_ignores_input_and_shows_large_korean_message(self):
         assets = SimpleNamespace(font=Mock(), maze_sheet=Mock(w=800, h=400),
                                  character_sheet=Mock(w=600, h=600))
@@ -26,6 +31,8 @@ class GameFlowTests(unittest.TestCase):
             for item in modes.values():
                 item.framework = framework
             framework.change_mode('maze_mode')
+            mode.player.rules.rule = 3
+            framework.restart_stage_timer()
             mode.player.rules.health = 100
             mode.player.rules.remaining = 100
             framework.update(14.9)
@@ -53,6 +60,7 @@ class GameFlowTests(unittest.TestCase):
         framework.update(100)
         self.assertIsNone(framework.stage_started)
         for name in ('maze_mode', 'battle_mode'):
+            modes[name].use_stage_deadline = True
             framework.change_mode(name)
             framework.update(34.9)
             self.assertFalse(framework.stage_timed_out)
@@ -72,6 +80,7 @@ class GameFlowTests(unittest.TestCase):
                 item.framework = framework
             framework.change_mode('maze_mode')
             mode.maze.walls.pop((0, 1), None)
+            mode.player.rules.rule = 3
             mode.maze.exit = (0, 1)
             mode.now = 14
             mode.player.rules.remaining = 100
@@ -84,6 +93,7 @@ class GameFlowTests(unittest.TestCase):
             self.assertFalse(framework.stage_timed_out)
             self.assertEqual(framework.stage_elapsed, 1)
             mode.player.rules.health = 0
+            mode.player.rules.rule = 2
             mode.player.update(15)
             framework.update(100)
             self.assertFalse(framework.stage_timed_out)
