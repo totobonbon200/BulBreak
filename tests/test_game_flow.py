@@ -131,7 +131,7 @@ class GameFlowTests(unittest.TestCase):
              patch('codes.maze_gamemode.get_time', return_value=0):
             game.main()
         assets.maze_sheet.clip_draw.assert_any_call(300, 100, 100, 100,
-                                                   400, 300, 800, 600)
+                                                   400, 300, 600, 600)
         self.assertEqual(assets.maze_sheet.opacify.call_args_list[-1].args, (1.0,))
 
 

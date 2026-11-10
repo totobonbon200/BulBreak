@@ -6,6 +6,7 @@ from codes.main import main
 if __name__ == '__main__':
     open_canvas(800, 600)
     try:
+        hide_lattice()
         main()
     finally:
         close_canvas()

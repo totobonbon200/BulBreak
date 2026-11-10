@@ -67,6 +67,6 @@ class Character:
         if self.action_state != 'idle':
             frame = min(1, int(max(0, now - self.animation_started) / self.FRAME_SECONDS))
         x, y = maze.center(self.position)
-        size = maze.cell_size * .7
+        size = maze.cell_size * .8
         sheet.clip_draw(frame * width, 3 * height, width, height,
                         x, y, size, size)

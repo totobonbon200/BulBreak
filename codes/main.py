@@ -1,6 +1,7 @@
 """게임 자원과 메인 루프."""
 from pathlib import Path
 from pico2d import *
+from sdl2 import SDL_SetHint, SDL_HINT_RENDER_SCALE_QUALITY
 
 from codes.maze_gamemode import MazeMode
 from codes.game_framework import GameFramework
@@ -9,9 +10,13 @@ from codes.menu_modes import create_menus
 
 class Assets:
     def __init__(self):
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, b'linear')
         root = Path(__file__).resolve().parents[1]
-        self.maze_sheet = load_image(str(root / 'resources/maze_animation_sheet.png'))
-        self.character_sheet = load_image(str(root / 'resources/character_animation_sheet.png'))
+        self.maze_sheet = load_image(str(root / 'resources/maze_800x400.png'))
+        self.character_sheet = load_image(str(root / 'resources/character_600x600.png'))
+        self.character_attack_sheet = load_image(str(root / 'resources/character_attacks_800x400.png'))
+        self.effect_sheet = load_image(str(root / 'resources/effect_800x400.png'))
+        self.result_sheet = load_image(str(root / 'resources/result_800x400.png'))
         self.font = load_font('C:/Windows/Fonts/arial.ttf', 15)
 
 
@@ -37,7 +42,7 @@ def main():
         clear_canvas()
         width, height = assets.maze_sheet.w // 4, assets.maze_sheet.h // 2
         assets.maze_sheet.clip_draw(width, height, width, height,
-                                    400, 300, 800, 600)
+                                    400, 300, 600, 600)
         framework.draw()
         update_canvas()
         delay(0.01)
