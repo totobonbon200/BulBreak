@@ -1,4 +1,5 @@
 """게임오버 판정을 표시 및 입력 처리와 분리한다."""
+import random
 
 
 class GameOverRules:
@@ -6,7 +7,10 @@ class GameOverRules:
     ACTION_BONUS = 1.0
     MAZE_LIMIT = 3.0
 
-    def __init__(self, now=0.0):
+    def __init__(self, now=0.0, rule=None):
+        self.rule = random.choice((1, 2)) if rule is None else rule
+        if self.rule not in (1, 2, 3):
+            raise ValueError(self.rule)
         self.remaining = self.MAX_IDLE_TIME
         self.last_update = now
         self.health = 3
@@ -14,7 +18,8 @@ class GameOverRules:
 
     @property
     def is_over(self):
-        return self.remaining <= 0 or self.health <= 0
+        return ((self.rule == 1 and self.remaining <= 0)
+                or (self.rule == 2 and self.health <= 0))
 
     def update(self, now):
         elapsed = max(0.0, now - self.last_update)
