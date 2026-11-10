@@ -15,7 +15,7 @@ from codes.menu_modes import create_menus
 
 class GameFlowTests(unittest.TestCase):
     def setUp(self):
-        chooser = patch('codes.gameover.random.choice', return_value=1)
+        chooser = patch('codes.gameover.random', SimpleNamespace(choice=lambda options: 1))
         chooser.start()
         self.addCleanup(chooser.stop)
 
