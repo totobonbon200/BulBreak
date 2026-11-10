@@ -82,7 +82,7 @@ class MazeMode:
             sheet.opacify(0.5)
             try:
                 sheet.clip_draw(3 * width, height, width, height,
-                                400, 300, 600, 600)
+                                400, 300, 800, 600)
             finally:
                 sheet.opacify(1.0)
             font.draw(180, 320, 'DOWN: restart / UP: start screen', (220, 40, 40))
