@@ -126,6 +126,7 @@ class GameFlowTests(unittest.TestCase):
             mode = MazeMode(Mock())
             old_maze = mode.maze
             mode.completed = 8
+            mode.player.rules.rule = 2
             mode.player.rules.health = 0
             mode.player.update(10)
             event = SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_DOWN)
@@ -145,6 +146,7 @@ class GameFlowTests(unittest.TestCase):
         with patch('codes.maze_gamemode.get_time', return_value=10):
             mode = MazeMode(Mock())
             mode.framework = Mock()
+            mode.player.rules.rule = 2
             mode.player.rules.health = 0
             mode.player.update(10)
             mode.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_UP))
@@ -175,7 +177,7 @@ class GameFlowTests(unittest.TestCase):
         self.assertFalse(player.is_playing)
 
     def test_health_timer_resets_on_next_maze(self):
-        rules = GameOverRules()
+        rules = GameOverRules(rule=2)
         for now in (1, 2, 3, 4, 5):
             rules.record_action(now)
         self.assertEqual(rules.health, 2)
@@ -187,7 +189,7 @@ class GameFlowTests(unittest.TestCase):
         self.assertTrue(rules.is_over)
 
     def test_health_decreases_every_three_seconds_despite_input(self):
-        rules = GameOverRules()
+        rules = GameOverRules(rule=2)
         for now in range(1, 10):
             rules.record_action(now)
             self.assertEqual(rules.health, 3 - now // 3)
@@ -195,7 +197,7 @@ class GameFlowTests(unittest.TestCase):
         self.assertTrue(rules.is_over)
 
     def test_health_timer_preserves_remainder_after_delayed_update(self):
-        rules = GameOverRules()
+        rules = GameOverRules(rule=2)
         rules.update(6.5)
         self.assertEqual(rules.health, 1)
         self.assertEqual(rules.maze_elapsed, 0.5)
