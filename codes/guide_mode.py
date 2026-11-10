@@ -32,11 +32,11 @@ class GuideMode:
                 '2번: 체력 3개로 시작하며, 같은 미로에 머무르면 3초마다 체력이 1 줄어듭니다.',
                 '2번에서 출구에 도착하면 체력 감소 주기만 초기화됩니다. 체력은 회복되지 않습니다.',
                 '선택된 기준은 다음 미로에서도 유지됩니다. 재시작하면 다시 추첨합니다.')),
-            ('STAGE DEADLINE', (
-                'Each maze or battle has a separate 15-second limit.',
-                'Inputs cannot extend it. At 15 seconds, the run ends.',)),
-            ('CURRENT VERSION', (
-                'Mazes repeat. Combat and constraint gameplay are not available yet.',)),
+            ('3번 기준과 재시작', (
+                '3번은 15초 제한 규칙이며, 현재 무작위 추첨에는 포함되지 않습니다.',
+                '게임오버 후 아래는 재시작, 위는 시작 화면으로 돌아가기입니다.',)),
+            ('현재 구현 범위', (
+                '미로는 반복됩니다. 전투와 제약시스템 플레이는 아직 구현되지 않았습니다.',)),
         )
         y = 490
         for title, lines in sections:
