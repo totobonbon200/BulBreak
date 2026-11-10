@@ -27,11 +27,11 @@ class GuideMode:
                 '방향키로 이동합니다. 출구(OUT)에 도착하면 다음 미로로 넘어갑니다.',
                 '벽은 두 번 눌러 부순 뒤, 한 번 더 눌러 이동합니다.',
                 '키는 눌렀다 떼어야 합니다. 길게 누르는 것은 연속 입력이 아닙니다.')),
-            ('KEEP MOVING', (
-                'Idle time starts at 3 seconds. Each press restores 1 second (max 3).',
-                'You start with 3 HP. Every 3 seconds in a maze costs 1 HP.',
-                'Reaching OUT restarts the HP countdown, but does not refill HP.',
-                'Zero idle time or zero HP means GAME OVER.')),
+            ('게임오버 기준: 새 게임마다 1번 또는 2번 중 하나만 추첨', (
+                '1번: 무행동 시간이 0초면 종료됩니다. 입력마다 1초 회복하며 최대 3초입니다.',
+                '2번: 체력 3개로 시작하며, 같은 미로에 머무르면 3초마다 체력이 1 줄어듭니다.',
+                '2번에서 출구에 도착하면 체력 감소 주기만 초기화됩니다. 체력은 회복되지 않습니다.',
+                '선택된 기준은 다음 미로에서도 유지됩니다. 재시작하면 다시 추첨합니다.')),
             ('STAGE DEADLINE', (
                 'Each maze or battle has a separate 15-second limit.',
                 'Inputs cannot extend it. At 15 seconds, the run ends.',)),
