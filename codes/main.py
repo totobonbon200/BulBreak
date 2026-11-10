@@ -17,7 +17,7 @@ class Assets:
         self.character_attack_sheet = load_image(str(root / 'resources/character_attacks_800x400.png'))
         self.effect_sheet = load_image(str(root / 'resources/effect_800x400.png'))
         self.result_sheet = load_image(str(root / 'resources/result_800x400.png'))
-        self.font = load_font('C:/Windows/Fonts/arial.ttf', 15)
+        self.font = load_font('C:/Windows/Fonts/malgun.ttf', 15)
         self.timeout_font = load_font('C:/Windows/Fonts/malgun.ttf', 38)
 
 
