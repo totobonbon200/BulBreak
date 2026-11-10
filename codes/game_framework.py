@@ -57,7 +57,8 @@ class GameFramework:
 
     def restart_stage_timer(self):
         """Start a fresh deadline on maze/battle entry, never on ordinary input."""
-        self.stage_started = self.clock() if self.state in self.TIMED_MODES else None
+        enabled = getattr(self.modes.get(self.state), 'use_stage_deadline', False) is True
+        self.stage_started = self.clock() if self.state in self.TIMED_MODES and enabled else None
         self.stage_elapsed = 0.0
         self.stage_timed_out = False
 
