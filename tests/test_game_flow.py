@@ -14,6 +14,80 @@ from codes.menu_modes import create_menus
 
 
 class GameFlowTests(unittest.TestCase):
+    def test_stage_deadline_ignores_input_and_shows_large_korean_message(self):
+        assets = SimpleNamespace(font=Mock(), maze_sheet=Mock(w=800, h=400),
+                                 character_sheet=Mock(w=600, h=600))
+        with patch('codes.maze_gamemode.get_time', return_value=0):
+            mode = MazeMode(assets)
+            modes = create_menus(assets.font)
+            modes['maze_mode'] = mode
+            large_font = Mock()
+            framework = GameFramework(modes, timeout_font=large_font, clock=lambda: 0)
+            for item in modes.values():
+                item.framework = framework
+            framework.change_mode('maze_mode')
+            mode.player.rules.health = 100
+            mode.player.rules.remaining = 100
+            framework.update(14.9)
+            framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_UP))
+            self.assertFalse(framework.stage_timed_out)
+            framework.update(15)
+            self.assertTrue(framework.stage_timed_out)
+            self.assertFalse(mode.player.is_playing)
+            self.assertEqual(framework.stage_elapsed, 15)
+            with patch('pico2d.draw_rectangle'):
+                framework.draw()
+            large_font.draw.assert_called_once_with(
+                100, 380, '그냥 다른게임하러가세요', (255, 255, 255))
+            self.assertNotIn('GAME OVER', mode.message)
+            framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_RIGHT))
+            self.assertFalse(mode.player.is_playing)
+            framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_DOWN))
+            self.assertFalse(framework.stage_timed_out)
+            self.assertTrue(mode.player.is_playing)
+            self.assertEqual(framework.stage_elapsed, 0)
+
+    def test_stage_timer_only_runs_in_gameplay_and_resets_on_entry(self):
+        modes = {name: Mock() for name in GameFramework.MODES if name != 'quit_mode'}
+        framework = GameFramework(modes, clock=lambda: 20)
+        framework.update(100)
+        self.assertIsNone(framework.stage_started)
+        for name in ('maze_mode', 'battle_mode'):
+            framework.change_mode(name)
+            framework.update(34.9)
+            self.assertFalse(framework.stage_timed_out)
+            framework.update(35)
+            self.assertTrue(framework.stage_timed_out)
+            modes[name].on_stage_timeout.assert_called_once()
+            framework.change_mode('start_mode')
+            self.assertFalse(framework.stage_timed_out)
+
+    def test_new_maze_resets_deadline_and_existing_game_over_is_preserved(self):
+        with patch('codes.maze_gamemode.get_time', return_value=0):
+            mode = MazeMode(Mock())
+            modes = create_menus(Mock())
+            modes['maze_mode'] = mode
+            framework = GameFramework(modes, clock=lambda: 0)
+            for item in modes.values():
+                item.framework = framework
+            framework.change_mode('maze_mode')
+            mode.maze.walls.pop((0, 1), None)
+            mode.maze.exit = (0, 1)
+            mode.now = 14
+            mode.player.rules.remaining = 100
+            mode.player.rules.health = 100
+            framework.clock = lambda: 14
+            framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_RIGHT))
+            self.assertEqual(mode.completed, 1)
+            self.assertEqual(framework.stage_started, 14)
+            framework.update(15)
+            self.assertFalse(framework.stage_timed_out)
+            self.assertEqual(framework.stage_elapsed, 1)
+            mode.player.rules.health = 0
+            mode.player.update(15)
+            framework.update(100)
+            self.assertFalse(framework.stage_timed_out)
+
     def test_guide_round_trip_and_white_start_text(self):
         font = Mock()
         modes = create_menus(font)
@@ -134,7 +208,7 @@ class GameFlowTests(unittest.TestCase):
         self.assertEqual(player.action_state, 'idle')
 
     def test_main_menu_instructions_maze_and_overlay(self):
-        assets = SimpleNamespace(font=Mock(), maze_sheet=Mock(w=400, h=200),
+        assets = SimpleNamespace(font=Mock(), timeout_font=Mock(), maze_sheet=Mock(w=400, h=200),
                                  character_sheet=Mock(w=400, h=400))
         key = lambda value: SimpleNamespace(type=SDL_KEYDOWN, key=value)
         events = [[key(SDLK_RIGHT)], [key(SDLK_LEFT)], [key(SDLK_DOWN)],

@@ -1,13 +1,21 @@
 """모드 초기화와 전환을 관리한다."""
 from transitions import Machine
+from pico2d import get_time, SDL_KEYDOWN, SDLK_DOWN, SDLK_UP
 
 
 class GameFramework:
+    STAGE_LIMIT = 15.0
+    TIMED_MODES = ('maze_mode', 'battle_mode')
     MODES = ('start_mode', 'instrument_mode', 'guide_mode', 'maze_mode',
              'battle_mode', 'result_mode', 'quit_mode')
 
-    def __init__(self, modes):
+    def __init__(self, modes, timeout_font=None, clock=None):
         self.modes = modes
+        self.clock = clock or get_time
+        self.timeout_font = timeout_font
+        self.stage_started = None
+        self.stage_elapsed = 0.0
+        self.stage_timed_out = False
         self.previous_mode = None
         self.visited = set()
         self.running = True
@@ -35,19 +43,53 @@ class GameFramework:
         self.previous_mode = self.state
 
     def _enter(self):
+        self.stage_started = None
+        self.stage_elapsed = 0.0
+        self.stage_timed_out = False
         if self.state == 'quit_mode':
             self.running = False
             return
         mode = self.modes[self.state]
         first_visit = self.state not in self.visited
         mode.enter(first_visit)
+        self.restart_stage_timer()
         self.visited.add(self.state)
 
+    def restart_stage_timer(self):
+        """Start a fresh deadline on maze/battle entry, never on ordinary input."""
+        self.stage_started = self.clock() if self.state in self.TIMED_MODES else None
+        self.stage_elapsed = 0.0
+        self.stage_timed_out = False
+
     def handle_event(self, event):
+        if self.stage_timed_out:
+            if event.type == SDL_KEYDOWN:
+                if event.key == SDLK_DOWN:
+                    mode = self.modes[self.state]
+                    mode.enter(False)
+                    if isinstance(getattr(mode, 'held', None), set):
+                        mode.held.add(SDLK_DOWN)
+                    self.restart_stage_timer()
+                elif event.key == SDLK_UP:
+                    self.change_mode('start_mode')
+            return
         self.modes[self.state].handle_event(event)
 
     def update(self, now):
-        self.modes[self.state].update(now)
+        mode = self.modes[self.state]
+        if self.stage_timed_out:
+            return
+        if self.stage_started is not None and getattr(mode, 'is_game_over', False) is not True:
+            self.stage_elapsed = min(self.STAGE_LIMIT, max(0.0, now - self.stage_started))
+            if self.stage_elapsed >= self.STAGE_LIMIT:
+                self.stage_timed_out = True
+                callback = getattr(mode, 'on_stage_timeout', None)
+                if callback is not None:
+                    callback()
+                return
+        mode.update(now)
 
     def draw(self):
         self.modes[self.state].draw()
+        if self.stage_timed_out and self.timeout_font is not None:
+            self.timeout_font.draw(100, 380, '그냥 다른게임하러가세요', (255, 255, 255))

@@ -32,6 +32,9 @@ class GuideMode:
                 'You start with 3 HP. Every 3 seconds in a maze costs 1 HP.',
                 'Reaching OUT restarts the HP countdown, but does not refill HP.',
                 'Zero idle time or zero HP means GAME OVER.')),
+            ('STAGE DEADLINE', (
+                'Each maze or battle has a separate 15-second limit.',
+                'Inputs cannot extend it. At 15 seconds, the run ends.',)),
             ('CURRENT VERSION', (
                 'Mazes repeat. Combat and constraint gameplay are not available yet.',)),
         )
