@@ -203,7 +203,7 @@ class GameFlowTests(unittest.TestCase):
         self.assertEqual(rules.maze_elapsed, 0.5)
 
     def test_wall_hits_and_action_animation(self):
-        maze = Maze(4)
+        maze = Maze(6)
         maze.walls = {(0, 1): 2}
         player = Character((0, 0))
         for now, expected in ((0.1, 'hit'), (0.2, 'broken')):
