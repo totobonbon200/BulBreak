@@ -233,10 +233,11 @@ class GameFlowTests(unittest.TestCase):
                                                (.3, 0, 0)):
                         player.update(now)
                         player.draw(sheet, maze, now)
-                        args = sheet.clip_draw.call_args.args
+                        args = sheet.clip_composite_draw.call_args.args
                         self.assertEqual(args[:4], (frame * 100, 300, 100, 100))
-                        self.assertAlmostEqual(args[4], 400 + column * offset)
-                        self.assertAlmostEqual(args[5], 300 - row * offset)
+                        self.assertEqual(args[4:6], (0, 'h' if column == -1 else ''))
+                        self.assertAlmostEqual(args[6], 400 + column * offset)
+                        self.assertAlmostEqual(args[7], 300 - row * offset)
                         self.assertEqual(player.position, (1, 1))
                     self.assertEqual(player.action_state, 'idle')
 

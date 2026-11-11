@@ -20,6 +20,7 @@ class Character:
         self.animation_until = 0.0
         self.animation_started = now
         self.attack_direction = (0, 0)
+        self.flip_horizontal = False
         self.action_machine = Machine(
             model=self, states=['idle', 'moving', 'wall_attack'], initial='idle',
             model_attribute='action_state', auto_transitions=False)
@@ -52,6 +53,7 @@ class Character:
     def react(self, now, result='moved', direction=(0, 0)):
         if not self.is_playing:
             return
+        self.flip_horizontal = direction == (0, -1)
         self.rules.record_action(now)
         if result in ('moved', 'exit'):
             self.start_move()
@@ -79,5 +81,6 @@ class Character:
             x += column * offset
             y -= row * offset
         size = maze.cell_size * .8
-        sheet.clip_draw(frame * width, 3 * height, width, height,
-                        x, y, size, size)
+        flip = 'h' if self.flip_horizontal else ''
+        sheet.clip_composite_draw(frame * width, 3 * height, width, height,
+                                  0, flip, x, y, size, size)
