@@ -13,11 +13,13 @@ class PlayerState(Enum):
 class Character:
     IDLE_TIMEOUT = 3.0
     FRAME_SECONDS = 0.15
+    WALL_ATTACK_DISTANCE = 0.2
 
     def __init__(self, position, now=0.0):
         self.position = position
         self.animation_until = 0.0
         self.animation_started = now
+        self.attack_direction = (0, 0)
         self.action_machine = Machine(
             model=self, states=['idle', 'moving', 'wall_attack'], initial='idle',
             model_attribute='action_state', auto_transitions=False)
@@ -47,13 +49,14 @@ class Character:
         self.rules.enter_maze(now)
         self.finish_action()
 
-    def react(self, now, result='moved'):
+    def react(self, now, result='moved', direction=(0, 0)):
         if not self.is_playing:
             return
         self.rules.record_action(now)
         if result in ('moved', 'exit'):
             self.start_move()
         elif result in ('hit', 'broken'):
+            self.attack_direction = direction
             self.start_wall_attack()
         else:
             return
@@ -67,6 +70,14 @@ class Character:
         if self.action_state != 'idle':
             frame = min(1, int(max(0, now - self.animation_started) / self.FRAME_SECONDS))
         x, y = maze.center(self.position)
+        if self.action_state == 'wall_attack':
+            progress = min(1.0, max(0.0, now - self.animation_started)
+                           / (2 * self.FRAME_SECONDS))
+            frame = 1 if progress < 0.5 else 0
+            offset = (1 - abs(2 * progress - 1)) * maze.cell_size * self.WALL_ATTACK_DISTANCE
+            row, column = self.attack_direction
+            x += column * offset
+            y -= row * offset
         size = maze.cell_size * .8
         sheet.clip_draw(frame * width, 3 * height, width, height,
                         x, y, size, size)

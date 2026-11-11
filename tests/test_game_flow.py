@@ -219,6 +219,36 @@ class GameFlowTests(unittest.TestCase):
         player.update(0.7)
         self.assertEqual(player.action_state, 'idle')
 
+    def test_wall_attack_lunges_in_each_direction_and_returns(self):
+        maze = Mock(cell_size=100)
+        maze.center.return_value = (400, 300)
+        for result in ('hit', 'broken'):
+            for row, column in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+                with self.subTest(result=result, direction=(row, column)):
+                    player = Character((1, 1))
+                    sheet = Mock(w=400, h=400)
+                    player.react(0, result, (row, column))
+                    for now, frame, offset in ((0, 1, 0), (.075, 1, 10),
+                                               (.15, 0, 20), (.225, 0, 10),
+                                               (.3, 0, 0)):
+                        player.update(now)
+                        player.draw(sheet, maze, now)
+                        args = sheet.clip_draw.call_args.args
+                        self.assertEqual(args[:4], (frame * 100, 300, 100, 100))
+                        self.assertAlmostEqual(args[4], 400 + column * offset)
+                        self.assertAlmostEqual(args[5], 300 - row * offset)
+                        self.assertEqual(player.position, (1, 1))
+                    self.assertEqual(player.action_state, 'idle')
+
+    def test_maze_passes_wall_attack_direction(self):
+        with patch('codes.maze_gamemode.get_time', return_value=0):
+            mode = MazeMode(Mock())
+        mode.maze.walls = {(0, 1): 2}
+        mode.player.position = (0, 0)
+        mode.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_RIGHT))
+        self.assertEqual(mode.player.action_state, 'wall_attack')
+        self.assertEqual(mode.player.attack_direction, (0, 1))
+
     def test_main_menu_instructions_maze_and_overlay(self):
         assets = SimpleNamespace(font=Mock(), timeout_font=Mock(), maze_sheet=Mock(w=400, h=200),
                                  character_sheet=Mock(w=400, h=400))
