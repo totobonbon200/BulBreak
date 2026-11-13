@@ -20,12 +20,8 @@ def game_text(font, x, y, message, size=15):
 
 def draw_hud(assets, rules, now, completed, score=0):
     font = assets.font
-    panel(100, 510, 500, 590)
-    panel(520, 100, 780, 500)
-    text(font, 540, 475, '제약 시스템')
-    text(font, 540, 445, '현재 적용된 제약 없음')
-    text(font, 530, 565, '미로 → 미로 → 전투')
-    text(font, 530, 535, '진행 순서 안내 (전투 준비 중)')
+    game_text(font, 640, 575, f'점수: {score}')
+    game_text(font, 530, 535, '미로 → 미로 → 전투')
     sheet = assets.effect_sheet
     width, height = sheet.w // 4, sheet.h // 2
     for index in range(3):
