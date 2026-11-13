@@ -3,7 +3,8 @@
 from pathlib import Path
 # 이걸로 상태머신 표현할 것: from transitions import *
 from pico2d import * # pico2d는 이걸로 불러올 것
-from sdl2 import SDL_SetHint, SDL_HINT_RENDER_SCALE_QUALITY
+from sdl2 import (SDL_SetHint, SDL_HINT_RENDER_SCALE_QUALITY,
+                  SDL_SetRenderDrawBlendMode, SDL_BLENDMODE_BLEND)
 
 from codes.maze_gamemode import MazeMode
 from codes.game_framework import GameFramework
