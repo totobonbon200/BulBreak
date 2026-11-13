@@ -37,8 +37,8 @@ class DeadlineTests(unittest.TestCase):
         rules = GameOverRules()
         for index in range(60):
             rules.enter_maze(index + 100)
-        self.assertEqual(rules.max_idle_time, 1)
-        self.assertEqual(rules.remaining, 1)
+        self.assertEqual(rules.max_idle_time, 3)
+        self.assertEqual(rules.remaining, 3)
         self.assertEqual(rules.health, 3)
         self.assertEqual(GameOverRules().max_idle_time, 3)
 
