@@ -264,11 +264,11 @@ class GameFlowTests(unittest.TestCase):
              patch.object(game, 'get_time', side_effect=[0, .1, .2, 10, 10.1]), \
              patch.object(game, 'get_events', side_effect=events), \
              patch.object(game, 'clear_canvas'), patch.object(game, 'update_canvas'), \
+             patch.object(game, 'draw_rectangle') as background, \
              patch.object(game, 'delay'), patch('pico2d.draw_rectangle'), \
              patch('codes.maze_gamemode.get_time', return_value=0):
             game.main()
-        assets.maze_sheet.clip_draw.assert_any_call(300, 100, 100, 100,
-                                                   400, 300, 800, 600)
+        background.assert_called_with(0, 0, 799, 599, 0, 0, 0, 255, filled=True)
         self.assertEqual(assets.maze_sheet.opacify.call_args_list[-1].args, (1.0,))
 
 
