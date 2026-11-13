@@ -10,7 +10,7 @@ class GameOverRuleTests(unittest.TestCase):
             self.assertEqual(GameOverRules().rule, 1)
         choose.assert_not_called()
 
-    def test_rule_one_ignores_health_and_rule_two_ignores_idle_time(self):
+    def test_health_depletion_ends_play_but_timer_requires_update(self):
         first, second = GameOverRules(rule=1), GameOverRules(rule=2)
         first.health = 0
         second.remaining = 0
