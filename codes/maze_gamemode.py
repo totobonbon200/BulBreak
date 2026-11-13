@@ -64,7 +64,7 @@ class MazeMode:
             self.player.react(self.now, result, directions[event.key])
             self.message = {'hit': '벽: 한 번 더 공격',
                             'broken': '벽 파괴 완료! 다시 누르면 이동',
-                            'blocked': 'Map boundary',
+                            'blocked': '미로의 경계입니다',
                             'moved': '방향키: 이동 / 벽은 두 번 공격',
                             'exit': 'Next maze'}[result]
             if result == 'exit':
