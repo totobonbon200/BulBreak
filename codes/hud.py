@@ -19,6 +19,10 @@ def game_text(font, x, y, message, size=15):
     text(font, x, y, message, size=size, background=False)
 
 
+def info_text(font, x, y, message, size=15):
+    text(font, x, y, message, size=size, dark=True)
+
+
 def draw_hud(assets, rules, now, completed, score=0):
     font = assets.font
     panel(100, 510, 500, 590)
