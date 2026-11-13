@@ -166,7 +166,7 @@ class GameFlowTests(unittest.TestCase):
         framework.change_mode('quit_mode')
         self.assertFalse(framework.running)
 
-    def test_timer_recovers_one_second_and_pauses_on_transition(self):
+    def test_maze_timer_ignores_input_and_resets_on_transition(self):
         player = Character((0, 0))
         player.update(2.5)
         player.react(2.5, 'blocked')
