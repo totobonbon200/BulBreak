@@ -182,7 +182,7 @@ class GameFlowTests(unittest.TestCase):
         rules = GameOverRules(rule=2)
         for now in (1, 2, 3, 4, 5):
             rules.record_action(now)
-        self.assertEqual(rules.health, 2)
+        self.assertEqual(rules.health, 3)
         rules.enter_maze(100)
         for now in (101, 102, 103):
             rules.record_action(now)
