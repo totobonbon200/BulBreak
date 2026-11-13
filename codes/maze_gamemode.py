@@ -96,4 +96,4 @@ class MazeMode:
                                 400, 300, 800, 600)
             finally:
                 sheet.opacify(1.0)
-            font.draw(180, 320, 'DOWN: restart / UP: start screen', (220, 40, 40))
+            text(font, 180, 320, '아래: 재시작 / 위: 시작 화면')
