@@ -1,5 +1,4 @@
 """미로 모드의 입력, 진행, 표시를 연결한다."""
-import random
 from pico2d import *
 
 from codes.maze import Maze
@@ -14,7 +13,7 @@ class MazeMode:
 
     def reset(self, now):
         self.stage_timed_out = False
-        self.size = random.choice((4, 6))
+        self.size = 6
         self.completed = 0
         self.maze = Maze(self.size)
         self.player = Character(self.maze.entrance, now)
