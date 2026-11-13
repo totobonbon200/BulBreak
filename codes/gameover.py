@@ -8,7 +8,8 @@ class GameOverRules:
     ACTION_BONUS = 1.0
     MAZE_LIMIT = 3.0
 
-    def __init__(self, now=0.0, rule=None):
+    def __init__(self, now=0.0, rule=None, mode="battle"):
+        self.mode = mode
         self.rule = 1 if rule is None else rule
         self.max_idle_time = self.MAX_IDLE_TIME
         if self.rule not in (1, 2, 3):
