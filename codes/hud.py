@@ -8,7 +8,7 @@ def panel(left, bottom, right, top, dark=False):
     draw_rectangle(left, bottom, right, top, 0, 0, 0)
 
 
-def text(font, x, y, message, size=15, background=True):
+def text(font, x, y, message, size=15, background=True, dark=False):
     if background:
         width = sum(size if ord(char) > 127 else size * 0.6 for char in message)
         panel(x - 5, y - size * 0.6 - 3, min(795, x + width + 5), y + size * 0.6 + 3)
