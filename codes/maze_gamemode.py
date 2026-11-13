@@ -88,7 +88,7 @@ class MazeMode:
         if not self.player.is_playing and not self.stage_timed_out:
             self.message = '체력이 모두 소진되었습니다'
         text(font, 100, 70, self.message)
-        text(font, 100, 45, '방향키: 이동·벽 공격 / 입구 IN · 출구 OUT')
+        text(font, 100, 45, '방향키: 이동·벽 공격')
         if not self.player.is_playing:
             width, height = sheet.w // 4, sheet.h // 2
             sheet.opacify(0.5)
