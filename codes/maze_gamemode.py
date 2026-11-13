@@ -84,14 +84,10 @@ class MazeMode:
         self.maze.draw(sheet, font, self.now)
         self.player.draw(self.assets.character_sheet, self.maze, self.now)
         draw_hud(self.assets, self.player.rules, self.now, self.completed)
-        if self.player.is_playing:
-            status = (f'남은 시간: {self.player.idle_remaining(self.now):.1f}초' if rule == 1
-                      else f'체력: {self.player.rules.health} / 3')
-            font.draw(100, 525, status, (255, 220, 100))
-        elif not self.stage_timed_out:
-            self.message = 'GAME OVER: time or health depleted'
-        font.draw(100, 70, self.message, (20, 20, 20))
-        font.draw(100, 45, 'IN: entrance / OUT: exit | Close window to quit', (20, 20, 20))
+        if not self.player.is_playing and not self.stage_timed_out:
+            self.message = '체력이 모두 소진되었습니다'
+        text(font, 100, 70, self.message)
+        text(font, 100, 45, '방향키: 이동·벽 공격 / 입구 IN · 출구 OUT')
         if not self.player.is_playing:
             width, height = sheet.w // 4, sheet.h // 2
             sheet.opacify(0.5)
