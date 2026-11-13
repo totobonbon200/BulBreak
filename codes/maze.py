@@ -55,8 +55,7 @@ class Maze:
         return 100 + (col + 0.5) * cell, 500 - (row + 0.5) * cell
 
     def draw(self, sheet, font, now=0.0):
-        from pico2d import draw_rectangle
-        from codes.hud import text
+        from codes.hud import game_text as text
         cell = self.cell_size
         width, height = sheet.w // 4, sheet.h // 2
         for row in range(self.size):
