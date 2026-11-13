@@ -3,7 +3,7 @@ from unittest.mock import patch
 from codes.gameover import GameOverRules
 
 
-class SelectionTests(unittest.TestCase):
+class GameOverRuleTests(unittest.TestCase):
     def test_new_play_draws_only_one_of_first_two_rules(self):
         with patch('codes.gameover.random.choice', side_effect=AssertionError('무작위 추첨 금지')) as choose:
             self.assertEqual(GameOverRules().rule, 1)
