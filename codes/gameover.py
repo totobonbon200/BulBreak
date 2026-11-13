@@ -35,7 +35,7 @@ class GameOverRules:
 
     def record_action(self, now):
         self.update(now)
-        if not self.is_over:
+        if self.mode == "battle" and not self.is_over:
             self.remaining = min(self.max_idle_time,
                                  self.remaining + self.ACTION_BONUS)
 
