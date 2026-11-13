@@ -25,12 +25,12 @@ class GameOverRules:
     def update(self, now):
         elapsed = max(0.0, now - self.last_update)
         self.last_update = now
-        if self.rule == 1:
-            self.remaining = max(0.0, self.remaining - elapsed)
-        elif self.rule == 2:
-            self.maze_elapsed += elapsed
-            periods, self.maze_elapsed = divmod(self.maze_elapsed, self.MAZE_LIMIT)
-            self.health = max(0, self.health - int(periods))
+        self.remaining -= elapsed
+        while self.remaining <= 0 and self.health > 0:
+            self.health -= 1
+            self.remaining += self.max_idle_time
+        if self.is_over:
+            self.remaining = 0.0
 
     def record_action(self, now):
         self.update(now)
