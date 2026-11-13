@@ -31,7 +31,7 @@ class MenuMode:
         pass
 
     def draw(self):
-        self.font.draw(100, 500, self.title, (255, 255, 255))
+        text(self.font, 100, 500, self.title)
         for index, line in enumerate(self.lines):
             self.font.draw(100, 450 - 30 * index, line, (255, 255, 255))
 
