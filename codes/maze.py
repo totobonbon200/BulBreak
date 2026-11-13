@@ -16,6 +16,8 @@ class Maze:
         return self.DISPLAY_SIZE / self.size
 
     def __init__(self, size, entrance=(0, 0)):
+        if size != 6:
+            raise ValueError("미로 크기는 6×6만 사용할 수 있습니다")
         self.size = size
         self.entrance = entrance
         self.walls = {}
