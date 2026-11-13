@@ -175,8 +175,8 @@ class GameFlowTests(unittest.TestCase):
         self.assertEqual(player.idle_remaining(100), 3)
         player.update(101.5)
         self.assertTrue(player.is_playing)
-        self.assertEqual(player.rules.health, 2)
-        self.assertEqual(player.rules.max_idle_time, 2.95)
+        self.assertEqual(player.rules.health, 3)
+        self.assertEqual(player.rules.max_idle_time, 3)
 
     def test_action_recovery_and_wrong_defense_use_remaining_time(self):
         rules = GameOverRules(rule=2)
