@@ -15,9 +15,9 @@ from codes.menu_modes import create_menus
 
 class GameFlowTests(unittest.TestCase):
     def setUp(self):
-        chooser = patch('codes.gameover.random', SimpleNamespace(choice=lambda options: 1))
-        chooser.start()
-        self.addCleanup(chooser.stop)
+        drawing = patch('codes.hud.draw_rectangle')
+        drawing.start()
+        self.addCleanup(drawing.stop)
 
     def test_stage_deadline_ignores_input_and_shows_large_korean_message(self):
         assets = SimpleNamespace(font=Mock(), maze_sheet=Mock(w=800, h=400),
