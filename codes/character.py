@@ -28,7 +28,7 @@ class Character:
         self.action_machine.add_transition('start_wall_attack', '*', 'wall_attack')
         self.action_machine.add_transition('finish_action', '*', 'idle')
         self.state = PlayerState.PLAYING
-        self.rules = GameOverRules(now)
+        self.rules = GameOverRules(now, mode="maze")
 
     @property
     def is_playing(self):
