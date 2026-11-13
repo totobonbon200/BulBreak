@@ -84,7 +84,7 @@ class MazeMode:
         sheet, font = self.assets.maze_sheet, self.assets.font
         self.maze.draw(sheet, font, self.now)
         self.player.draw(self.assets.character_sheet, self.maze, self.now)
-        draw_hud(self.assets, self.player.rules, self.now, self.completed)
+        draw_hud(self.assets, self.player.rules, self.now, self.completed, self.score)
         if not self.player.is_playing and not self.stage_timed_out:
             self.message = '체력이 모두 소진되었습니다'
         text(font, 100, 70, self.message)
