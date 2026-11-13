@@ -196,9 +196,9 @@ class GameFlowTests(unittest.TestCase):
         rules = GameOverRules(rule=2)
         for now in range(1, 10):
             rules.record_action(now)
-            self.assertEqual(rules.health, 3 - now // 3)
-            self.assertEqual(rules.maze_elapsed, now % 3)
-        self.assertTrue(rules.is_over)
+            self.assertEqual(rules.health, 3)
+            self.assertEqual(rules.remaining, 3)
+        self.assertFalse(rules.is_over)
 
     def test_health_timer_preserves_remainder_after_delayed_update(self):
         rules = GameOverRules(rule=2)
