@@ -261,7 +261,7 @@ class GameFlowTests(unittest.TestCase):
         events = [[key(SDLK_RIGHT)], [key(SDLK_LEFT)], [key(SDLK_DOWN)],
                   [], [SimpleNamespace(type=SDL_QUIT)]]
         with patch.object(game, 'Assets', return_value=assets), \
-             patch.object(game, 'get_time', side_effect=[0, .1, .2, 4, 4.1]), \
+             patch.object(game, 'get_time', side_effect=[0, .1, .2, 10, 10.1]), \
              patch.object(game, 'get_events', side_effect=events), \
              patch.object(game, 'clear_canvas'), patch.object(game, 'update_canvas'), \
              patch.object(game, 'delay'), patch('pico2d.draw_rectangle'), \
