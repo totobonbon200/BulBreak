@@ -105,7 +105,7 @@ class GameFlowTests(unittest.TestCase):
         for mode in modes.values():
             mode.framework = framework
         framework.draw()
-        self.assertTrue(all(call.args[-1] == (255, 255, 255)
+        self.assertTrue(all(call.args[-1] == (0, 0, 0)
                             for call in font.draw.call_args_list))
         framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_LEFT))
         self.assertEqual(framework.current_mode, 'guide_mode')
