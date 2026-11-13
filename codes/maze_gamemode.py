@@ -81,6 +81,7 @@ class MazeMode:
 
     def draw(self):
         sheet, font = self.assets.maze_sheet, self.assets.font
+        panel(98, 98, 502, 502)
         self.maze.draw(sheet, font, self.now)
         self.player.draw(self.assets.character_sheet, self.maze, self.now)
         draw_hud(self.assets, self.player.rules, self.now, self.completed)
