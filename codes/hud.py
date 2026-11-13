@@ -5,7 +5,8 @@ from pico2d import draw_rectangle
 def panel(left, bottom, right, top, dark=False):
     color = (0, 0, 0, 255) if dark else (255, 255, 255, 128)
     draw_rectangle(left, bottom, right, top, *color, filled=True)
-    draw_rectangle(left, bottom, right, top, 0, 0, 0)
+    border = (255, 255, 255) if dark else (0, 0, 0)
+    draw_rectangle(left, bottom, right, top, *border)
 
 
 def text(font, x, y, message, size=15, background=True, dark=False):
