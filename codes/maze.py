@@ -56,6 +56,7 @@ class Maze:
 
     def draw(self, sheet, font, now=0.0):
         from pico2d import draw_rectangle
+        from codes.hud import text
         cell = self.cell_size
         width, height = sheet.w // 4, sheet.h // 2
         for row in range(self.size):
