@@ -76,8 +76,6 @@ class Maze:
                 if position == self.exit:
                     sheet.clip_draw(0, height, width, height,
                                     x, y, cell, cell)
-                draw_rectangle(x - cell / 2, y - cell / 2,
-                               x + cell / 2, y + cell / 2, 255, 255, 255)
         for position, label, color in [(self.entrance, 'IN', (0, 150, 70)),
                                         (self.exit, 'OUT', (30, 80, 240))]:
             x, y = self.center(position)
