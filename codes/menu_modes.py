@@ -1,6 +1,7 @@
 """방향키로 이동하는 시작 및 안내 화면."""
 from pico2d import *
 from codes.guide_mode import GuideMode
+from codes.hud import text
 
 
 class MenuMode:
