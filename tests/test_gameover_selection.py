@@ -30,3 +30,21 @@ class SelectionTests(unittest.TestCase):
         second.update(102)
         self.assertEqual(second.health, 2)
         self.assertEqual(second.max_idle_time, 2.95)
+
+
+class DeadlineTests(unittest.TestCase):
+    def test_maximum_stops_at_one_second_and_restart_restores_three(self):
+        rules = GameOverRules()
+        for index in range(60):
+            rules.enter_maze(index + 100)
+        self.assertEqual(rules.max_idle_time, 1)
+        self.assertEqual(rules.remaining, 1)
+        self.assertEqual(rules.health, 3)
+        self.assertEqual(GameOverRules().max_idle_time, 3)
+
+    def test_long_idle_consumes_all_health_and_cannot_be_revived_by_input(self):
+        rules = GameOverRules()
+        rules.update(9)
+        self.assertTrue(rules.is_over)
+        rules.record_action(10)
+        self.assertEqual((rules.health, rules.remaining), (0, 0))
