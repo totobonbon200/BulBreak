@@ -13,7 +13,7 @@ def panel(left, bottom, right, top, dark=False, outline=True):
 def text(font, x, y, message, size=15, background=True, dark=False):
     if background:
         width = sum(size if ord(char) > 127 else size * 0.6 for char in message)
-        panel(x - 5, y - size * 0.6 - 3, min(795, x + width + 5), y + size * 0.6 + 3, dark=dark)
+        panel(x - 5, y - size * 0.6 - 3, min(795, x + width + 5), y + size * 0.6 + 3, dark=dark, outline=False)
     font.draw(x, y, message, (255, 255, 255) if dark else (0, 0, 0))
 
 
