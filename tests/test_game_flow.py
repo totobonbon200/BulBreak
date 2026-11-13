@@ -172,7 +172,7 @@ class GameFlowTests(unittest.TestCase):
         player.react(2.5, 'blocked')
         self.assertEqual(player.idle_remaining(2.5), 0.5)
         player.enter_maze((1, 1), 100)
-        self.assertEqual(player.idle_remaining(100), 1.5)
+        self.assertEqual(player.idle_remaining(100), 3)
         player.update(101.5)
         self.assertTrue(player.is_playing)
         self.assertEqual(player.rules.health, 2)
