@@ -21,7 +21,7 @@ class GameFlowTests(unittest.TestCase):
 
     def test_stage_deadline_ignores_input_and_shows_large_korean_message(self):
         assets = SimpleNamespace(font=Mock(), maze_sheet=Mock(w=800, h=400),
-                                 character_sheet=Mock(w=600, h=600))
+                                 character_sheet=Mock(w=600, h=600), effect_sheet=Mock(w=800, h=400))
         with patch('codes.maze_gamemode.get_time', return_value=0):
             mode = MazeMode(assets)
             modes = create_menus(assets.font)
