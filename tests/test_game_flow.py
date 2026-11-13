@@ -192,7 +192,7 @@ class GameFlowTests(unittest.TestCase):
         rules.record_wrong_defense()
         self.assertTrue(rules.is_over)
 
-    def test_health_decreases_every_three_seconds_despite_input(self):
+    def test_regular_input_preserves_health_and_recovers_time(self):
         rules = GameOverRules(rule=2)
         for now in range(1, 10):
             rules.record_action(now)
