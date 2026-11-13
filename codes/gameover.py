@@ -45,6 +45,10 @@ class GameOverRules:
         self.max_idle_time = self.MAZE_LIMIT
         self.remaining = self.MAZE_LIMIT
 
+    def enter_battle(self, now):
+        self.mode = "battle"
+        self.last_update = now
+
     def record_wrong_defense(self):
         self.remaining = max(0.0, self.remaining - 0.5)
         if self.remaining <= 0:
