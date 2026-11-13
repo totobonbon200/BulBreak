@@ -4,7 +4,7 @@ from codes.gameover import GameOverRules
 
 
 class GameOverRuleTests(unittest.TestCase):
-    def test_new_play_draws_only_one_of_first_two_rules(self):
+    def test_new_play_uses_fixed_rule_without_random_selection(self):
         with patch('codes.gameover.random.choice', side_effect=AssertionError('무작위 추첨 금지')) as choose:
             self.assertEqual(GameOverRules().rule, 1)
             self.assertEqual(GameOverRules().rule, 1)
