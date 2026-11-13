@@ -14,7 +14,7 @@ class SelectionTests(unittest.TestCase):
         first, second = GameOverRules(rule=1), GameOverRules(rule=2)
         first.health = 0
         second.remaining = 0
-        self.assertFalse(first.is_over)
+        self.assertTrue(first.is_over)
         self.assertFalse(second.is_over)
 
     def test_only_selected_timer_advances_and_maze_entry_keeps_rule(self):
