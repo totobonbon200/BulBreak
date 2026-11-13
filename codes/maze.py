@@ -74,7 +74,7 @@ class Maze:
                     frame = int(now / self.WALL_FRAME_SECONDS) % 4
                     sheet.clip_draw(frame * width, 0, width, height,
                                     x, y, cell * .55, cell * .55)
-                    text(font, x - 4, y, str(hp))
+                    font.draw(x - 4, y, str(hp), (255, 255, 255))
                 if position == self.exit:
                     sheet.clip_draw(0, height, width, height,
                                     x, y, cell, cell)
