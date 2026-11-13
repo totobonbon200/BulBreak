@@ -82,4 +82,4 @@ class Maze:
         for position, label, color in [(self.entrance, 'IN', (0, 150, 70)),
                                         (self.exit, 'OUT', (30, 80, 240))]:
             x, y = self.center(position)
-            font.draw(x - cell * .45, y + cell * .3, label, color)
+            text(font, x - cell * .45, y + cell * .3, label)
