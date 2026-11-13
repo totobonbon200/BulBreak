@@ -66,7 +66,7 @@ class MazeMode:
                             'broken': '벽 파괴 완료! 다시 누르면 이동',
                             'blocked': '미로의 경계입니다',
                             'moved': '방향키: 이동 / 벽은 두 번 공격',
-                            'exit': 'Next maze'}[result]
+                            'exit': '다음 미로'}[result]
             if result == 'exit':
                 self.completed += 1
                 self.maze = Maze(self.size, self.maze.exit)
