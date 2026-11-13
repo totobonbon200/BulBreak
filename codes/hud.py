@@ -24,14 +24,14 @@ def draw_hud(assets, rules, now, completed, score=0):
     panel(520, 510, 780, 590)
     panel(520, 100, 780, 500)
     text(font, 540, 475, '제약 시스템')
-    game_text(font, 640, 575, f'점수: {score}')
-    game_text(font, 530, 535, '미로 → 미로 → 전투')
+    text(font, 640, 575, f'점수: {score}')
+    text(font, 530, 535, '미로 → 미로 → 전투')
     sheet = assets.effect_sheet
     width, height = sheet.w // 4, sheet.h // 2
     for index in range(3):
         column = 0 if index < rules.health else 1
         sheet.clip_draw(column * width, height, width, height,
                         145 + index * 85, 550, 64, 64)
-    game_text(font, 375, 575, '무행동')
-    game_text(font, 375, 550, f'{rules.idle_remaining(now):.1f}초')
-    game_text(font, 375, 525, f'최대 {rules.max_idle_time:.2f}')
+    text(font, 375, 575, '무행동')
+    text(font, 375, 550, f'{rules.idle_remaining(now):.1f}초')
+    text(font, 375, 525, f'최대 {rules.max_idle_time:.2f}')
