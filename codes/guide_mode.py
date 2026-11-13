@@ -42,7 +42,7 @@ class GuideMode:
         )
         y = 490
         for title, lines in sections:
-            self.font.draw(70, y, title, (255, 220, 100))
+            text(self.font, 70, y, title)
             y -= 28
             for line in lines:
                 self.font.draw(70, y, line, (255, 255, 255))
