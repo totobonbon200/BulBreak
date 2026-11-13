@@ -45,9 +45,7 @@ def main():
         if not framework.running:
             break
         clear_canvas()
-        width, height = assets.maze_sheet.w // 4, assets.maze_sheet.h // 2
-        assets.maze_sheet.clip_draw(width, height, width, height,
-                                    400, 300, 800, 600)
+        draw_rectangle(0, 0, 799, 599, 0, 0, 0, 255, filled=True)
         framework.draw()
         update_canvas()
         delay(0.01)
