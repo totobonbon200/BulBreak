@@ -256,7 +256,7 @@ class GameFlowTests(unittest.TestCase):
 
     def test_main_menu_instructions_maze_and_overlay(self):
         assets = SimpleNamespace(font=Mock(), timeout_font=Mock(), maze_sheet=Mock(w=400, h=200),
-                                 character_sheet=Mock(w=400, h=400))
+                                 character_sheet=Mock(w=400, h=400), effect_sheet=Mock(w=800, h=400))
         key = lambda value: SimpleNamespace(type=SDL_KEYDOWN, key=value)
         events = [[key(SDLK_RIGHT)], [key(SDLK_LEFT)], [key(SDLK_DOWN)],
                   [], [SimpleNamespace(type=SDL_QUIT)]]
