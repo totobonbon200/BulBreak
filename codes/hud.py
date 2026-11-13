@@ -2,8 +2,9 @@
 from pico2d import draw_rectangle
 
 
-def panel(left, bottom, right, top):
-    draw_rectangle(left, bottom, right, top, 255, 255, 255, 128, filled=True)
+def panel(left, bottom, right, top, dark=False):
+    color = (0, 0, 0, 255) if dark else (255, 255, 255, 128)
+    draw_rectangle(left, bottom, right, top, *color, filled=True)
     draw_rectangle(left, bottom, right, top, 0, 0, 0)
 
 
