@@ -16,6 +16,7 @@ class MazeMode:
         self.stage_timed_out = False
         self.size = 6
         self.completed = 0
+        self.score = 0
         self.maze = Maze(self.size)
         self.player = Character(self.maze.entrance, now)
         self.now = now
