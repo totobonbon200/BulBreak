@@ -30,4 +30,4 @@ def draw_hud(assets, rules, now, completed):
     text(font, 375, 575, '무행동')
     text(font, 375, 550, f'{rules.idle_remaining(now):.1f}초')
     text(font, 375, 525, f'최대 {rules.max_idle_time:.2f}')
-    text(font, 530, 505, f'현재 미로: {completed + 1}')
+    text(font, 540, 410, f'현재 미로: {completed + 1}')
