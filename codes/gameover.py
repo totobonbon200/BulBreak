@@ -20,8 +20,7 @@ class GameOverRules:
 
     @property
     def is_over(self):
-        return ((self.rule == 1 and self.remaining <= 0)
-                or (self.rule == 2 and self.health <= 0))
+        return self.health <= 0
 
     def update(self, now):
         elapsed = max(0.0, now - self.last_update)
