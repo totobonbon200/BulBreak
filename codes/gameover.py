@@ -40,7 +40,8 @@ class GameOverRules:
 
     def enter_maze(self, now):
         self.last_update = now
-        self.maze_elapsed = 0.0
+        self.max_idle_time = max(1.0, round(self.max_idle_time - 0.05, 2))
+        self.remaining = min(self.remaining, self.max_idle_time)
 
     def record_wrong_defense(self):
         if self.rule == 2:
