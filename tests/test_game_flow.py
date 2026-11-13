@@ -98,7 +98,7 @@ class GameFlowTests(unittest.TestCase):
             framework.update(100)
             self.assertFalse(framework.stage_timed_out)
 
-    def test_guide_round_trip_and_white_start_text(self):
+    def test_guide_round_trip_and_black_start_text(self):
         font = Mock()
         modes = create_menus(font)
         framework = GameFramework(modes)
