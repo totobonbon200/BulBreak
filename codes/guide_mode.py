@@ -1,5 +1,6 @@
 """A separate guide screen describing the playable maze prototype."""
 from pico2d import SDL_KEYDOWN, SDLK_RIGHT
+from codes.hud import text
 
 
 class GuideMode:
