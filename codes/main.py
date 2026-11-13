@@ -14,6 +14,7 @@ from codes.menu_modes import create_menus
 class Assets:
     def __init__(self):
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, b'linear')
+        SDL_SetRenderDrawBlendMode(draw_rectangle.__globals__['renderer'], SDL_BLENDMODE_BLEND)
         root = Path(__file__).resolve().parents[1]
         self.maze_sheet = load_image(str(root / 'resources/maze_800x400.png'))
         self.character_sheet = load_image(str(root / 'resources/character_600x600.png'))
