@@ -22,7 +22,7 @@ class GuideMode:
             self.framework.change_mode('start_mode')
 
     def draw(self):
-        self.font.draw(70, 540, 'BulBreak - 플레이 가이드', (255, 255, 255))
+        text(self.font, 70, 540, 'BulBreak - 플레이 가이드')
         sections = (
             ('이동과 탈출', (
                 '방향키로 이동합니다. 출구(OUT)에 도착하면 다음 미로로 넘어갑니다.',
