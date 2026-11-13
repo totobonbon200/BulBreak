@@ -44,8 +44,9 @@ class GameOverRules:
         self.remaining = min(self.remaining, self.max_idle_time)
 
     def record_wrong_defense(self):
-        if self.rule == 2:
-            self.health = max(0, self.health - 1)
+        self.remaining = max(0.0, self.remaining - 0.5)
+        if self.remaining <= 0:
+            self.health = 0
 
     def idle_remaining(self, now):
         return max(0.0, self.remaining - max(0.0, now - self.last_update))
