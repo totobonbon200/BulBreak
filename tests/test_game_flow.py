@@ -186,7 +186,9 @@ class GameFlowTests(unittest.TestCase):
         rules.enter_maze(100)
         for now in (101, 102, 103):
             rules.record_action(now)
-        self.assertEqual(rules.health, 1)
+        self.assertEqual(rules.health, 3)
+        self.assertEqual(rules.max_idle_time, 2.95)
+        rules.remaining = 0.5
         rules.record_wrong_defense()
         self.assertTrue(rules.is_over)
 
