@@ -34,8 +34,8 @@ class GameOverRules:
 
     def record_action(self, now):
         self.update(now)
-        if self.rule == 1 and not self.is_over:
-            self.remaining = min(self.MAX_IDLE_TIME,
+        if not self.is_over:
+            self.remaining = min(self.max_idle_time,
                                  self.remaining + self.ACTION_BONUS)
 
     def enter_maze(self, now):
