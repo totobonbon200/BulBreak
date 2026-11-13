@@ -45,7 +45,7 @@ class GameFlowTests(unittest.TestCase):
             with patch('pico2d.draw_rectangle'):
                 framework.draw()
             large_font.draw.assert_called_once_with(
-                100, 380, '그냥 다른게임하러가세요', (255, 255, 255))
+                100, 380, '관심받고싶음? 옛다 관심', (0, 0, 0))
             self.assertNotIn('GAME OVER', mode.message)
             framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_RIGHT))
             self.assertFalse(mode.player.is_playing)
