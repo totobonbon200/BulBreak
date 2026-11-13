@@ -29,3 +29,4 @@ class SelectionTests(unittest.TestCase):
         self.assertEqual(second.rule, 2)
         second.update(102)
         self.assertEqual(second.health, 2)
+        self.assertEqual(second.max_idle_time, 2.95)
