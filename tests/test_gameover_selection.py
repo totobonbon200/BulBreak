@@ -33,7 +33,7 @@ class GameOverRuleTests(unittest.TestCase):
 
 
 class DeadlineTests(unittest.TestCase):
-    def test_maximum_stops_at_one_second_and_restart_restores_three(self):
+    def test_repeated_maze_entries_keep_three_seconds(self):
         rules = GameOverRules()
         for index in range(60):
             rules.enter_maze(index + 100)
