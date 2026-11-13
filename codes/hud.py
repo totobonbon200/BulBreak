@@ -22,7 +22,7 @@ def game_text(font, x, y, message, size=15):
 
 
 def info_text(font, x, y, message, size=15):
-    text(font, x, y, message, size=size, dark=True)
+    text(font, x, y, message, size=size, background=False, dark=True)
 
 
 def draw_hud(assets, rules, now, completed, score=0):
