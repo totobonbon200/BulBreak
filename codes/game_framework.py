@@ -97,4 +97,4 @@ class GameFramework:
     def draw(self):
         self.modes[self.state].draw()
         if self.stage_timed_out and self.timeout_font is not None:
-            self.timeout_font.draw(100, 380, '그냥 다른게임하러가세요', (255, 255, 255))
+            text(self.timeout_font, 100, 380, '관심받고싶음? 옛다 관심')
