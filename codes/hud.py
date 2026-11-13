@@ -28,8 +28,8 @@ def info_text(font, x, y, message, size=15):
 def draw_hud(assets, rules, now, completed, score=0):
     font = assets.font
     text = info_text
-    panel(100, 510, 500, 590, dark=True, outline=False)
-    panel(520, 510, 780, 590, dark=True, outline=False)
+    panel(100, 510, 500, 590, dark=True)
+    panel(520, 510, 780, 590, dark=True)
     panel(520, 100, 780, 500, dark=True)
     text(font, 540, 475, '제약 시스템')
     text(font, 640, 575, f'점수: {score}')
