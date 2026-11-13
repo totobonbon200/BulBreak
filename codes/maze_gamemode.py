@@ -83,10 +83,7 @@ class MazeMode:
         sheet, font = self.assets.maze_sheet, self.assets.font
         self.maze.draw(sheet, font, self.now)
         self.player.draw(self.assets.character_sheet, self.maze, self.now)
-        rule = self.player.rules.rule
-        label = {1: '무행동 3초 / 입력 시 1초 회복', 2: '체력 3개 / 3초마다 1 감소', 3: '15초 제한'}[rule]
-        font.draw(100, 575, f'게임오버 기준 {rule}번: {label}', (255, 255, 255))
-        font.draw(100, 550, f'BulBreak | {self.size}x{self.size} | Maze {self.completed + 1}', (255, 255, 255))
+        draw_hud(self.assets, self.player.rules, self.now, self.completed)
         if self.player.is_playing:
             status = (f'남은 시간: {self.player.idle_remaining(self.now):.1f}초' if rule == 1
                       else f'체력: {self.player.rules.health} / 3')
