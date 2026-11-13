@@ -204,7 +204,7 @@ class GameFlowTests(unittest.TestCase):
         rules = GameOverRules(rule=2)
         rules.update(6.5)
         self.assertEqual(rules.health, 1)
-        self.assertEqual(rules.maze_elapsed, 0.5)
+        self.assertEqual(rules.remaining, 2.5)
 
     def test_wall_hits_and_action_animation(self):
         maze = Maze(6)
