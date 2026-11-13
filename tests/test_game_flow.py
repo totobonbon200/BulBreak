@@ -174,7 +174,9 @@ class GameFlowTests(unittest.TestCase):
         player.enter_maze((1, 1), 100)
         self.assertEqual(player.idle_remaining(100), 1.5)
         player.update(101.5)
-        self.assertFalse(player.is_playing)
+        self.assertTrue(player.is_playing)
+        self.assertEqual(player.rules.health, 2)
+        self.assertEqual(player.rules.max_idle_time, 2.95)
 
     def test_health_timer_resets_on_next_maze(self):
         rules = GameOverRules(rule=2)
