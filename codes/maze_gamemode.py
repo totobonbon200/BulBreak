@@ -62,7 +62,7 @@ class MazeMode:
             self.player.position, result = self.maze.step(
                 self.player.position, directions[event.key])
             self.player.react(self.now, result, directions[event.key])
-            self.message = {'hit': 'Wall: 1 hit left',
+            self.message = {'hit': '벽: 한 번 더 공격',
                             'broken': 'Wall broken! Press again to move.',
                             'blocked': 'Map boundary',
                             'moved': '방향키: 이동 / 벽은 두 번 공격',
