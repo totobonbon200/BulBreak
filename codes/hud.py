@@ -40,6 +40,6 @@ def draw_hud(assets, rules, now, completed, score=0):
         column = 0 if index < rules.health else 1
         sheet.clip_draw(column * width, height, width, height,
                         145 + index * 85, 550, 64, 64)
-    text(font, 375, 575, '무행동')
+    text(font, 375, 575, '미로 주파' if rules.mode == 'maze' else '무행동')
     text(font, 375, 550, f'{rules.idle_remaining(now):.1f}초')
     text(font, 375, 525, f'최대 {rules.max_idle_time:.2f}')
