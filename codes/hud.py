@@ -2,7 +2,7 @@
 from pico2d import draw_rectangle
 
 
-def panel(left, bottom, right, top, dark=False):
+def panel(left, bottom, right, top, dark=False, outline=True):
     color = (0, 0, 0, 255) if dark else (255, 255, 255, 128)
     draw_rectangle(left, bottom, right, top, *color, filled=True)
     border = (255, 255, 255) if dark else (0, 0, 0)
