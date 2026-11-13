@@ -17,7 +17,7 @@ class GameOverRuleTests(unittest.TestCase):
         self.assertTrue(first.is_over)
         self.assertFalse(second.is_over)
 
-    def test_only_selected_timer_advances_and_maze_entry_keeps_rule(self):
+    def test_idle_expiration_and_maze_transition_keep_health(self):
         first, second = GameOverRules(rule=1), GameOverRules(rule=2)
         first.update(2)
         second.update(3)
