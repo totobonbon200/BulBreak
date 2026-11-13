@@ -4,7 +4,7 @@
     # 이곳에서는 초기화, 모드전환을 관리할 것
 """모드 초기화와 전환을 관리한다."""
 from transitions import Machine
-from codes.hud import text
+from codes.hud import game_text as text
 from pico2d import get_time, SDL_KEYDOWN, SDLK_DOWN, SDLK_UP
 
 
