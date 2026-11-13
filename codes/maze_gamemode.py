@@ -19,7 +19,7 @@ class MazeMode:
         self.maze = Maze(self.size)
         self.player = Character(self.maze.entrance, now)
         self.now = now
-        self.message = 'Arrow keys: move / hit wall twice'
+        self.message = '방향키: 이동 / 벽은 두 번 공격'
         self.transitioned = False
         framework = getattr(self, 'framework', None)
         if framework is not None:
@@ -65,7 +65,7 @@ class MazeMode:
             self.message = {'hit': 'Wall: 1 hit left',
                             'broken': 'Wall broken! Press again to move.',
                             'blocked': 'Map boundary',
-                            'moved': 'Arrow keys: move / hit wall twice',
+                            'moved': '방향키: 이동 / 벽은 두 번 공격',
                             'exit': 'Next maze'}[result]
             if result == 'exit':
                 self.completed += 1
