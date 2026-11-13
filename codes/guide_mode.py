@@ -45,7 +45,7 @@ class GuideMode:
             text(self.font, 70, y, title)
             y -= 28
             for line in lines:
-                self.font.draw(70, y, line, (255, 255, 255))
+                text(self.font, 70, y, line)
                 y -= 26
             y -= 18
         self.font.draw(70, 45, '오른쪽 방향키: 시작 화면으로 돌아가기', (255, 220, 100))
