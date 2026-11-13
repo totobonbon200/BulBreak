@@ -2,7 +2,7 @@
 from pico2d import *
 
 from codes.maze import Maze
-from codes.hud import draw_hud, text
+from codes.hud import draw_hud, text, panel
 from codes.character import Character, PlayerState
 
 
