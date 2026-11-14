@@ -134,16 +134,16 @@ class BattleTests(unittest.TestCase):
         self.assertEqual(self.mode.enemy.state, 'attack')
         self.assertEqual(self.mode.successes, 2)
         self.assertEqual(self.mode.next_attack_direction, 'right')
-        self.assertEqual(self.mode.visual_state, 'idle')
-        self.assertEqual(self.mode.failure_started, .1)
-        self.assertAlmostEqual(self.mode.rules.remaining, 2.5)
+        self.assertEqual(self.mode.visual_state, 'parry')
+        self.assertIsNone(self.mode.failure_started)
+        self.assertAlmostEqual(self.mode.rules.remaining, 3)
 
-    def test_valid_order_with_wrong_horizontal_defense_still_shows_hit(self):
+    def test_opposite_horizontal_direction_also_succeeds(self):
         press(self.mode, SDLK_LEFT)
         self.mode.update(.1)
         press(self.mode, SDLK_RIGHT)
         self.assertEqual(self.mode.successes, 2)
-        self.assertEqual(self.mode.visual_state, 'hit')
+        self.assertEqual(self.mode.visual_state, 'parry')
         self.assertAlmostEqual(self.mode.rules.remaining, 2.5)
 
     def test_wrong_attack_order_with_correct_parry_uses_looping_idle_not_attack_or_hit(self):
