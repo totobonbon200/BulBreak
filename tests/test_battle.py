@@ -1,0 +1,194 @@
+"""임시 전투의 실제 입력, FIFO, 시간 기반 표시 및 순환 전환 검증."""
+import unittest
+from collections import deque
+from types import SimpleNamespace
+from unittest.mock import Mock, patch
+
+from pico2d import SDL_KEYDOWN, SDL_KEYUP, SDLK_LEFT, SDLK_RIGHT, SDLK_UP, SDLK_DOWN
+from codes.animation import Animation
+from codes.battle import BattleMode
+from codes.enemy import Enemy
+from codes.game_framework import GameFramework
+from codes.gameover import GameOverRules
+from codes.maze_gamemode import MazeMode
+from codes.menu_modes import create_menus
+
+
+def assets():
+    return SimpleNamespace(font=Mock(), timeout_font=Mock(),
+                           maze_sheet=Mock(w=800, h=400),
+                           character_sheet=Mock(w=600, h=600),
+                           character_attack_sheet=Mock(w=800, h=400),
+                           enemy_sheet=Mock(w=600, h=600),
+                           effect_sheet=Mock(w=800, h=400),
+                           effect_attack_sheet=Mock(w=800, h=200))
+
+
+def press(mode, key):
+    mode.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=key))
+    mode.handle_event(SimpleNamespace(type=SDL_KEYUP, key=key))
+
+
+class BattleTests(unittest.TestCase):
+    def setUp(self):
+        self.assets = assets()
+        self.mode = BattleMode(self.assets)
+        self.mode.framework = Mock(modes={'maze_mode': Mock()})
+        with patch('codes.battle.get_time', return_value=0):
+            self.mode.enter(True)
+        self.mode.enemy.directions = deque(['left', 'up', 'right', 'down', 'left'])
+
+    def test_frame_duration_tracks_maximum_not_remaining_timer(self):
+        rules = self.mode.rules
+        for maximum, expected in ((3, 1), (2, .75), (1, .5), (0, .5), (10, 1)):
+            rules.max_idle_time = maximum
+            rules.remaining = .01
+            self.assertEqual(rules.animation_frame_seconds, expected)
+        animation = Animation([(0, 0), (0, 1)], 5, .5)
+        self.assertEqual(animation.frame(5.499), (0, 0))
+        self.assertEqual(animation.frame(5.5), (0, 1))
+        self.assertTrue(animation.finished(100))
+        self.assertEqual(animation.frame(100), (0, 1))
+
+    def test_enemy_waits_for_two_frames_and_preserves_fifo(self):
+        enemy = self.mode.enemy
+        self.assertTrue(enemy.advance(0, .5))
+        self.assertEqual(enemy.state, 'prepare')
+        self.assertEqual(enemy.direction, 'left')
+        self.assertEqual(len(enemy.directions), 5)
+        self.assertFalse(enemy.advance(.499, 1))
+        self.assertEqual(enemy.animation.frame(.5), (0, 1))
+        self.assertTrue(enemy.advance(1, .5))
+        self.assertEqual(enemy.state, 'attack')
+        self.assertEqual(list(enemy.directions), ['up', 'right', 'down', 'left'])
+        self.assertTrue(enemy.advance(2, .5))
+        self.assertEqual(enemy.direction, 'up')
+        self.assertEqual(enemy.animation.frame(2), (1, 0))
+        self.assertEqual(enemy.animation.frame(2.5), (1, 1))
+
+    def test_refill_keeps_last_direction_and_never_exceeds_five(self):
+        enemy = Enemy(0, .5)
+        enemy.directions = deque(['left', 'up'])
+        enemy.advance(0, .5)
+        enemy.advance(1, .5)
+        self.assertEqual(len(enemy.directions), 5)
+        self.assertEqual(enemy.directions[0], 'up')
+        enemy.refill()
+        self.assertEqual(len(enemy.directions), 5)
+
+    def test_fast_correct_attacks_count_without_restarting_first_frame(self):
+        press(self.mode, SDLK_LEFT)
+        started = self.mode.player_animation.started
+        self.mode.update(.1)
+        press(self.mode, SDLK_LEFT)
+        self.assertEqual(self.mode.successes, 2)
+        self.assertEqual(self.mode.player_animation.started, started)
+        self.assertEqual(self.mode.enemy.state, 'prepare')
+        self.assertEqual(self.mode.player_effect.frame(.1), (0, 0))
+
+    def test_wrong_attack_cancels_increment_only_and_repeat_does_not_count(self):
+        press(self.mode, SDLK_LEFT)
+        press(self.mode, SDLK_RIGHT)
+        self.assertEqual(self.mode.successes, 1)
+        self.mode.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_LEFT, repeat=1))
+        self.assertEqual(self.mode.successes, 1)
+
+    def test_ten_successes_clear_back_to_maze_with_health_and_score(self):
+        self.mode.rules.health = 2
+        for _ in range(10):
+            press(self.mode, SDLK_LEFT)
+        self.assertEqual(self.mode.successes, 10)
+        self.assertTrue(self.mode.cleared)
+        self.mode.framework.change_mode.assert_called_once_with('maze_mode')
+        self.assertEqual(self.mode.framework.modes['maze_mode'].pending_session,
+                         (self.mode.rules, self.mode.score))
+
+    def test_wrong_defense_subtracts_time_and_displays_hit_frames(self):
+        press(self.mode, SDLK_LEFT)
+        self.mode.update(2)
+        press(self.mode, SDLK_UP)
+        self.assertEqual(self.mode.enemy.state, 'attack')
+        self.assertEqual(self.mode.player_state, 'hit')
+        self.assertEqual(self.mode.rules.remaining, 1.5)
+        self.mode.update(2.01)
+        self.assertEqual(self.mode.visual_state, 'hit')
+        self.assertEqual(self.mode.player_animation.frame(2.01), (0, 2))
+        self.assertEqual(self.mode.player_animation.frame(3.01), (0, 3))
+
+    def test_correct_horizontal_parries_and_vertical_dodges(self):
+        for direction, key in (('left', SDLK_LEFT), ('up', SDLK_UP), ('down', SDLK_DOWN)):
+            with self.subTest(direction=direction):
+                self.setUp()
+                self.mode.enemy.directions[0] = direction
+                press(self.mode, key)
+                self.mode.update(2)
+                press(self.mode, key)
+                self.assertEqual(self.mode.player_state,
+                                 'parry' if direction == 'left' else 'dodge_' + direction)
+                self.assertEqual(self.mode.rules.remaining, 2)
+
+    def test_lethal_hit_still_selects_hit_image_and_stops_clear(self):
+        press(self.mode, SDLK_LEFT)
+        self.mode.update(2)
+        self.mode.rules.remaining = .1
+        self.mode.rules.ACTION_BONUS = 0
+        press(self.mode, SDLK_UP)
+        self.assertTrue(self.mode.is_game_over)
+        self.assertEqual(self.mode.visual_state, 'hit')
+        self.assertEqual(self.mode.player_animation.frame(2), (0, 2))
+        self.mode.framework.change_mode.assert_not_called()
+
+    def test_time_alone_never_advances_enemy_or_consumes_queue(self):
+        press(self.mode, SDLK_LEFT)
+        before = tuple(self.mode.enemy.directions)
+        self.mode.update(2)
+        self.assertEqual(self.mode.enemy.state, 'prepare')
+        self.assertEqual(tuple(self.mode.enemy.directions), before)
+
+    def test_prepare_draws_direction_above_enemy_only(self):
+        press(self.mode, SDLK_LEFT)
+        with patch('codes.hud.draw_rectangle'):
+            self.mode.draw()
+        self.assets.effect_sheet.clip_draw.assert_any_call(0, 0, 200, 200, 350, 465, 65, 65)
+        self.assets.effect_sheet.reset_mock()
+        self.mode.update(2)
+        press(self.mode, SDLK_LEFT)
+        with patch('codes.hud.draw_rectangle'):
+            self.mode.draw()
+        self.assertFalse(any(call.args[4:6] == (350, 465)
+                             for call in self.assets.effect_sheet.clip_draw.call_args_list))
+
+    def test_two_mazes_battle_maze_cycle_and_fifteen_second_deadline(self):
+        with patch('codes.maze_gamemode.get_time', return_value=0), \
+             patch('codes.battle.get_time', return_value=0):
+            maze = MazeMode(self.assets)
+            modes = create_menus(self.assets.font)
+            modes.update(maze_mode=maze, battle_mode=self.mode)
+            framework = GameFramework(modes, clock=lambda: 0)
+            for mode in modes.values():
+                mode.framework = framework
+            framework.change_mode('maze_mode')
+            maze.player.rules.health = 2
+            for _ in range(2):
+                maze.update(0)
+                maze.player.position = (0, 0)
+                maze.maze.walls.pop((0, 1), None)
+                maze.maze.exit = (0, 1)
+                press(maze, SDLK_RIGHT)
+            self.assertEqual(framework.current_mode, 'battle_mode')
+            self.assertEqual(self.mode.rules.health, 2)
+            self.mode.enemy.directions[0] = 'left'
+            for _ in range(10):
+                press(self.mode, SDLK_LEFT)
+            self.assertEqual(framework.current_mode, 'maze_mode')
+            self.assertEqual(maze.completed, 0)
+            self.assertEqual(maze.player.rules.health, 2)
+            framework.change_mode('battle_mode')
+            self.mode.rules.remaining = 100
+            framework.update(15)
+            self.assertTrue(framework.stage_timed_out)
+            self.assertTrue(self.mode.is_game_over)
+
+
+if __name__ == '__main__':
+    unittest.main()

@@ -7,6 +7,7 @@ from sdl2 import (SDL_SetHint, SDL_HINT_RENDER_SCALE_QUALITY,
                   SDL_SetRenderDrawBlendMode, SDL_BLENDMODE_BLEND)
 
 from codes.maze_gamemode import MazeMode
+from codes.battle import BattleMode
 from codes.game_framework import GameFramework
 from codes.menu_modes import create_menus
 
@@ -31,6 +32,7 @@ def main():
     assets = Assets()
     modes = create_menus(assets.font)
     modes['maze_mode'] = MazeMode(assets)
+    modes['battle_mode'] = BattleMode(assets)
     framework = GameFramework(modes, timeout_font=assets.timeout_font)
     for mode in modes.values():
         mode.framework = framework

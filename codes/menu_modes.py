@@ -47,7 +47,7 @@ def create_menus(font):
         'instrument_mode': MenuMode(font, 'Instructions',
                                    ['Arrow keys: move / hit wall',
                                     'Hit a wall twice, then move into it.',
-                                    '출구에 도착하면 다음 미로로 이동합니다.',
+                                    '첫 출구는 다음 미로, 두 번째 출구는 전투입니다.',
                                     'LEFT: back'], {SDLK_LEFT: 'start_mode'}),
         'battle_mode': MenuMode(font, 'Battle: planned',
                                ['Combat is not implemented yet.', 'LEFT: back'],

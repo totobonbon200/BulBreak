@@ -9,6 +9,7 @@ from codes.character import Character, PlayerState
 class MazeMode:
     def __init__(self, assets):
         self.assets = assets
+        self.pending_session = None
         self.held = set()
         self.reset(get_time())
 
@@ -38,6 +39,10 @@ class MazeMode:
     def enter(self, first_visit):
         self.held.clear()
         self.reset(get_time())
+        if self.pending_session is not None:
+            self.player.rules, self.score = self.pending_session
+            self.pending_session = None
+            self.player.rules.enter_maze(self.now)
 
     def exit(self):
         self.held.clear()
@@ -48,6 +53,8 @@ class MazeMode:
         if event.type == SDL_KEYUP:
             self.held.discard(event.key)
         elif event.type == SDL_KEYDOWN and event.key in directions:
+            if getattr(event, 'repeat', False):
+                return
             if event.key in self.held:
                 return
             self.held.add(event.key)
@@ -70,6 +77,11 @@ class MazeMode:
                             'exit': '다음 미로'}[result]
             if result == 'exit':
                 self.completed += 1
+                if self.completed == 2:
+                    battle = self.framework.modes['battle_mode']
+                    battle.pending_session = (self.player.rules, self.score)
+                    self.framework.change_mode('battle_mode')
+                    return
                 self.maze = Maze(self.size, self.maze.exit)
                 self.player.enter_maze(self.maze.entrance, self.now)
                 self.framework.restart_stage_timer()
