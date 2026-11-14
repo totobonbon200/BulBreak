@@ -163,6 +163,33 @@ class BattleTests(unittest.TestCase):
         self.assets.character_sheet.clip_draw.assert_called_once_with(
             0, 0, 150, 150, 240, 200, 130, 130)
 
+    def test_horizontal_attack_and_parry_always_draws_character_row_four(self):
+        for incoming, key, required in (('left', SDLK_LEFT, 'left'),
+                                        ('right', SDLK_RIGHT, 'right'),
+                                        ('left', SDLK_LEFT, 'right'),
+                                        ('right', SDLK_RIGHT, 'left')):
+            with self.subTest(incoming=incoming, required=required):
+                self.setUp()
+                self.mode.enemy.directions[0] = incoming
+                press(self.mode, SDLK_UP)
+                self.mode.next_attack_direction = required
+                press(self.mode, key)
+                self.assertTrue(self.mode.horizontal_attack_parry)
+                for column in range(4):
+                    self.mode.update(column * .15 + .001)
+                    self.assets.character_sheet.reset_mock()
+                    with patch('codes.hud.draw_rectangle'):
+                        self.mode.draw()
+                    sheet = self.assets.character_sheet
+                    call = (sheet.clip_composite_draw.call_args if sheet.clip_composite_draw.called
+                            else sheet.clip_draw.call_args)
+                    self.assertEqual(call.args[:4], (column * 150, 0, 150, 150))
+                self.assets.character_attack_sheet.clip_draw.assert_not_called()
+                self.assets.character_attack_sheet.clip_composite_draw.assert_not_called()
+                self.mode.update(.61)
+                press(self.mode, SDLK_UP)
+                self.assertFalse(self.mode.horizontal_attack_parry)
+
     def test_vertical_failed_defense_removes_one_health_and_half_second(self):
         for incoming, wrong_key in (('up', SDLK_DOWN), ('up', SDLK_LEFT),
                                     ('up', SDLK_RIGHT), ('down', SDLK_UP),

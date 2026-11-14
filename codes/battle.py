@@ -41,6 +41,7 @@ class BattleMode:
         self.successes = 0
         self.next_attack_direction = 'left'
         self.failure_started = None
+        self.horizontal_attack_parry = False
         self.stage_timed_out = False
         self.cleared = False
         self.enemy = Enemy(self.now, self.rules.animation_frame_seconds)
@@ -64,7 +65,9 @@ class BattleMode:
         self.rules.health = 0
 
     def make_player_animation(self, state, direction):
-        if state in ('attack', 'parry'):
+        if self.horizontal_attack_parry:
+            frames = [(3, column) for column in range(4)]
+        elif state in ('attack', 'parry'):
             row = 0 if direction == 'left' else 1
             frames = [(row, column) for column in range(4)]
         elif state == 'hit':
@@ -76,7 +79,7 @@ class BattleMode:
             row = 2 if direction == 'left' else 3
             frames = [(row, column) for column in range(4)]
         return Animation(frames, self.now, self.rules.animation_frame_seconds,
-                         loop=state == 'idle')
+                         loop=state == 'idle' or self.horizontal_attack_parry)
 
     def display_action(self, state, direction):
         getattr(self, 'show_' + state)()
@@ -132,6 +135,8 @@ class BattleMode:
         correct = direction == expected
         enemy_attacking = advanced and self.enemy.state == 'attack'
         attack_order_correct = direction == self.next_attack_direction
+        self.horizontal_attack_parry = (enemy_attacking
+                                        and expected in ('left', 'right') and correct)
 
         if direction in ('left', 'right'):
             if attack_order_correct:
@@ -188,7 +193,8 @@ class BattleMode:
             column = ('left', 'right', 'up', 'down').index(self.enemy.direction)
             draw_frame(self.assets.effect_sheet, 2, 4, (1, column),
                        350, 465, 65, 65)
-        attack_sheet = self.visual_state in ('attack', 'parry')
+        attack_sheet = (self.visual_state in ('attack', 'parry')
+                        and not self.horizontal_attack_parry)
         sheet = self.assets.character_attack_sheet if attack_sheet else self.assets.character_sheet
         draw_frame(sheet, 2 if attack_sheet else 4, 4,
                    self.player_animation.frame(self.now), 240, 200, 130, 130,
