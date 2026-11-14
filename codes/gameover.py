@@ -23,6 +23,11 @@ class GameOverRules:
     def is_over(self):
         return self.health <= 0
 
+    @property
+    def animation_frame_seconds(self):
+        """최대 타이머 3초에서 1초, 1초에서 0.5초로 비례 조정한다."""
+        return min(1.0, max(0.5, 0.5 + (self.max_idle_time - 1.0) * 0.25))
+
     def update(self, now):
         elapsed = max(0.0, now - self.last_update)
         self.last_update = now
