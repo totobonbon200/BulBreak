@@ -164,7 +164,7 @@ class BattleTests(unittest.TestCase):
         self.assets.character_sheet.clip_draw.assert_not_called()
         self.assets.character_attack_sheet.clip_composite_draw.assert_not_called()
         self.assets.character_attack_sheet.clip_draw.assert_called_once_with(
-            0, 0, 200, 100, 240, 200, 130, 130)
+            0, 0, 200, 200, 240, 200, 130, 130)
 
     def test_horizontal_attack_and_parry_draws_pressed_direction_attack(self):
         for incoming, key, required in (('left', SDLK_LEFT, 'left'),
@@ -189,7 +189,7 @@ class BattleTests(unittest.TestCase):
                     sheet.clip_composite_draw.assert_not_called()
                     call = (sheet.clip_composite_draw.call_args if sheet.clip_composite_draw.called
                             else sheet.clip_draw.call_args)
-                    self.assertEqual(call.args[:4], (column * 200, 100 if incoming == 'left' else 0, 200, 100))
+                    self.assertEqual(call.args[:4], (column * 200, 200 if incoming == 'left' else 0, 200, 200))
                 self.assets.character_sheet.clip_draw.assert_not_called()
                 self.assets.character_attack_sheet.clip_composite_draw.assert_not_called()
                 self.mode.update(.61)
