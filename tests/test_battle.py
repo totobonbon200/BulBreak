@@ -1,5 +1,6 @@
 """임시 전투의 실제 입력, FIFO, 시간 기반 표시 및 순환 전환 검증."""
 import unittest
+import math
 from collections import deque
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
@@ -21,6 +22,7 @@ def assets():
                            character_attack_sheet=Mock(w=800, h=400),
                            enemy_sheet=Mock(w=600, h=600),
                            effect_sheet=Mock(w=800, h=400),
+                           yellow_arrow_sheet=Mock(w=2172, h=724),
                            effect_attack_sheet=Mock(w=800, h=200))
 
 
@@ -79,7 +81,7 @@ class BattleTests(unittest.TestCase):
         started = self.mode.player_animation.started
         self.mode.update(.1)
         press(self.mode, SDLK_LEFT)
-        self.assertEqual(self.mode.successes, 2)
+        self.assertEqual(self.mode.successes, 1)
         self.assertGreater(self.mode.player_animation.started, started)
         self.assertEqual(self.mode.enemy.state, 'attack')
         self.assertEqual(self.mode.visual_state, 'parry')
@@ -91,7 +93,7 @@ class BattleTests(unittest.TestCase):
 
     def test_wrong_attack_cancels_increment_only_and_repeat_does_not_count(self):
         press(self.mode, SDLK_LEFT)
-        press(self.mode, SDLK_RIGHT)
+        press(self.mode, SDLK_LEFT)
         self.assertEqual(self.mode.successes, 1)
         self.mode.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_LEFT, repeat=1))
         self.assertEqual(self.mode.successes, 1)
@@ -100,8 +102,8 @@ class BattleTests(unittest.TestCase):
         self.mode.rules.health = 2
         self.mode.enemy.directions = deque(['left'] * 5)
         with patch('codes.enemy.random.choice', return_value='left'):
-            for _ in range(10):
-                press(self.mode, SDLK_LEFT)
+            for index in range(10):
+                press(self.mode, SDLK_LEFT if index % 2 == 0 else SDLK_RIGHT)
         self.assertEqual(self.mode.successes, 10)
         self.assertTrue(self.mode.cleared)
         self.mode.framework.change_mode.assert_called_once_with('maze_mode')
@@ -184,8 +186,8 @@ class BattleTests(unittest.TestCase):
             self.assertEqual(self.mode.rules.health, 2)
             self.mode.enemy.directions = deque(['left'] * 5)
             with patch('codes.enemy.random.choice', return_value='left'):
-                for _ in range(10):
-                    press(self.mode, SDLK_LEFT)
+                for index in range(10):
+                    press(self.mode, SDLK_LEFT if index % 2 == 0 else SDLK_RIGHT)
             self.assertEqual(framework.current_mode, 'maze_mode')
             self.assertEqual(maze.completed, 0)
             self.assertEqual(maze.player.rules.health, 2)
@@ -194,6 +196,58 @@ class BattleTests(unittest.TestCase):
             framework.update(15)
             self.assertTrue(framework.stage_timed_out)
             self.assertTrue(self.mode.is_game_over)
+
+    def test_attacks_must_alternate_and_dodge_does_not_change_order(self):
+        self.assertEqual(self.mode.next_attack_direction, 'left')
+        for key, count, expected in ((SDLK_RIGHT, 0, 'left'),
+                                     (SDLK_LEFT, 1, 'right'),
+                                     (SDLK_LEFT, 1, 'right'),
+                                     (SDLK_UP, 1, 'right'),
+                                     (SDLK_RIGHT, 2, 'left'),
+                                     (SDLK_LEFT, 3, 'right')):
+            press(self.mode, key)
+            self.assertEqual(self.mode.successes, count)
+            self.assertEqual(self.mode.next_attack_direction, expected)
+
+    def test_yellow_arrow_points_opposite_last_successful_attack(self):
+        for key, column in ((SDLK_LEFT, 1), (SDLK_RIGHT, 0)):
+            press(self.mode, key)
+            self.assets.yellow_arrow_sheet.reset_mock()
+            with patch('codes.hud.draw_rectangle'):
+                self.mode.draw()
+            call = self.assets.yellow_arrow_sheet.clip_draw.call_args.args
+            self.assertEqual(call[:4], (column * 543, 0, 543, 724))
+            self.assertEqual(call[4:6], (240, 295))
+
+    def test_wrong_order_shows_cross_and_smooth_right_rotation_without_blocking(self):
+        press(self.mode, SDLK_RIGHT)
+        self.assertEqual(self.mode.successes, 0)
+        for now, angle in ((0, 0), (.15, -math.radians(7.5)),
+                           (.3, -math.radians(15)), (.45, -math.radians(7.5)), (.6, 0)):
+            self.mode.update(now)
+            self.assertAlmostEqual(self.mode.failure_rotation(), angle)
+            self.assets.effect_sheet.reset_mock()
+            with patch('codes.hud.draw_rectangle'):
+                self.mode.draw()
+            if angle:
+                rendered = self.assets.character_attack_sheet.clip_composite_draw.call_args.args
+                self.assertAlmostEqual(rendered[4], angle)
+                self.assertEqual(rendered[6:8], (240, 200))
+            cross = (200, 200, 200, 200, 240, 230, 65, 65)
+            calls = [call.args for call in self.assets.effect_sheet.clip_draw.call_args_list]
+            self.assertEqual(cross in calls, now < .4)
+        self.mode.update(.7)
+        press(self.mode, SDLK_LEFT)
+        self.assertEqual(self.mode.successes, 1)
+
+    def test_reentry_resets_attack_order_and_failure_feedback(self):
+        press(self.mode, SDLK_RIGHT)
+        press(self.mode, SDLK_LEFT)
+        with patch('codes.battle.get_time', return_value=1):
+            self.mode.enter(False)
+        self.assertEqual(self.mode.next_attack_direction, 'left')
+        self.assertEqual(self.mode.successes, 0)
+        self.assertIsNone(self.mode.failure_started)
 
 
 if __name__ == '__main__':

@@ -1,5 +1,6 @@
 """15초 제한의 임시 전투: 실시간 입력과 적의 방향 FIFO를 연결한다."""
 from pico2d import *
+import math
 from transitions import Machine
 
 from codes.animation import Animation, draw_frame
@@ -12,6 +13,8 @@ class BattleMode:
     DIRECTIONS = {SDLK_LEFT: 'left', SDLK_RIGHT: 'right',
                   SDLK_UP: 'up', SDLK_DOWN: 'down'}
     CLEAR_ATTACKS = 10
+    FAILURE_SECONDS = 0.6
+    FAILURE_EFFECT_SECONDS = 0.4
 
     def __init__(self, assets):
         self.assets = assets
@@ -36,6 +39,8 @@ class BattleMode:
         self.rules.enter_battle(self.now)
         self.rules.remaining = self.rules.max_idle_time
         self.successes = 0
+        self.next_attack_direction = 'left'
+        self.failure_started = None
         self.stage_timed_out = False
         self.cleared = False
         self.enemy = Enemy(self.now, self.rules.animation_frame_seconds)
@@ -85,6 +90,17 @@ class BattleMode:
             [(0, column) for column in columns], self.now,
             self.rules.animation_frame_seconds))
 
+    def show_failure(self):
+        self.failure_started = self.now
+
+    def failure_rotation(self):
+        if self.failure_started is None:
+            return 0.0
+        progress = (self.now - self.failure_started) / self.FAILURE_SECONDS
+        if not 0.0 < progress < 1.0:
+            return 0.0
+        return -math.radians(15) * math.sin(math.pi * progress) ** 2
+
     def handle_event(self, event):
         if event.type == SDL_KEYUP:
             self.held.discard(event.key)
@@ -118,11 +134,13 @@ class BattleMode:
 
         if direction in ('left', 'right'):
             self.start_effect('player')
-            if correct:
+            if direction == self.next_attack_direction:
                 self.successes += 1
+                self.next_attack_direction = 'right' if direction == 'left' else 'left'
                 self.message = f'공격 성공: {self.successes}/{self.CLEAR_ATTACKS}'
             else:
-                self.message = '공격 실패: 성공 횟수 유지'
+                self.show_failure()
+                self.message = '공격 순서 실패: 노란 화살표 방향으로 공격'
             self.display_action('parry' if correct and enemy_attacking else 'attack', direction)
         else:
             self.display_action('dodge_' + direction, direction)
@@ -132,6 +150,7 @@ class BattleMode:
             self.start_effect('enemy')
             if not correct:
                 self.rules.record_wrong_defense()
+                self.show_failure()
                 self.display_action('hit', direction)
                 self.message = '피격! 타이머 0.5초 감소'
 
@@ -161,7 +180,16 @@ class BattleMode:
         attack_sheet = self.visual_state in ('attack', 'parry')
         sheet = self.assets.character_attack_sheet if attack_sheet else self.assets.character_sheet
         draw_frame(sheet, 2 if attack_sheet else 4, 4,
-                   self.player_animation.frame(self.now), 240, 200, 130, 130)
+                   self.player_animation.frame(self.now), 240, 200, 130, 130,
+                   rotation=self.failure_rotation())
+        arrow_sheet = self.assets.yellow_arrow_sheet
+        # 원본 생성 시트의 셀 종횡비를 보존해 화살표가 찌그러지지 않게 한다.
+        arrow_height = 65 * arrow_sheet.h / (arrow_sheet.w / 4)
+        column = 0 if self.next_attack_direction == 'left' else 1
+        draw_frame(arrow_sheet, 1, 4, (0, column), 240, 295, 65, arrow_height)
+        if (self.failure_started is not None
+                and 0 <= self.now - self.failure_started < self.FAILURE_EFFECT_SECONDS):
+            draw_frame(self.assets.effect_sheet, 2, 4, (0, 1), 240, 230, 65, 65)
         for owner, position in (('player', (310, 260)), ('enemy', (310, 300))):
             effect = getattr(self, owner + '_effect')
             if effect is not None and not effect.finished(self.now):
@@ -170,7 +198,7 @@ class BattleMode:
         draw_hud(self.assets, self.rules, self.now, 2, self.score)
         text(self.assets.font, 100, 85, f'공격 성공: {self.successes}/{self.CLEAR_ATTACKS}')
         text(self.assets.font, 100, 60, self.message)
-        text(self.assets.font, 100, 35, '좌우: 공격·패링 / 상하: 같은 방향 회피')
+        text(self.assets.font, 100, 35, '좌→우 교대 공격 / 상하: 회피 / 노란 화살표: 다음 공격')
         if self.is_game_over:
             sheet = self.assets.maze_sheet
             sheet.opacify(0.5)
