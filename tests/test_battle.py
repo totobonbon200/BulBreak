@@ -40,31 +40,29 @@ class BattleTests(unittest.TestCase):
 
     def test_frame_duration_tracks_maximum_not_remaining_timer(self):
         rules = self.mode.rules
-        for maximum, expected in ((3, 1), (2, .75), (1, .5), (0, .5), (10, 1)):
+        for maximum, expected in ((3, .15), (2, .1125), (1, .075), (0, .075), (10, .15)):
             rules.max_idle_time = maximum
             rules.remaining = .01
-            self.assertEqual(rules.animation_frame_seconds, expected)
+            self.assertAlmostEqual(rules.animation_frame_seconds, expected)
         animation = Animation([(0, 0), (0, 1)], 5, .5)
         self.assertEqual(animation.frame(5.499), (0, 0))
         self.assertEqual(animation.frame(5.5), (0, 1))
         self.assertTrue(animation.finished(100))
         self.assertEqual(animation.frame(100), (0, 1))
 
-    def test_enemy_waits_for_two_frames_and_preserves_fifo(self):
+    def test_enemy_advances_on_fast_input_and_preserves_fifo(self):
         enemy = self.mode.enemy
         self.assertTrue(enemy.advance(0, .5))
         self.assertEqual(enemy.state, 'prepare')
         self.assertEqual(enemy.direction, 'left')
         self.assertEqual(len(enemy.directions), 5)
-        self.assertFalse(enemy.advance(.499, 1))
-        self.assertEqual(enemy.animation.frame(.5), (0, 1))
-        self.assertTrue(enemy.advance(1, .5))
+        self.assertTrue(enemy.advance(.01, .15))
         self.assertEqual(enemy.state, 'attack')
         self.assertEqual(list(enemy.directions), ['up', 'right', 'down', 'left'])
-        self.assertTrue(enemy.advance(2, .5))
+        self.assertTrue(enemy.advance(.02, .15))
         self.assertEqual(enemy.direction, 'up')
-        self.assertEqual(enemy.animation.frame(2), (1, 0))
-        self.assertEqual(enemy.animation.frame(2.5), (1, 1))
+        self.assertEqual(enemy.animation.frame(.02), (1, 0))
+        self.assertEqual(enemy.animation.frame(.18), (1, 1))
 
     def test_refill_keeps_last_direction_and_never_exceeds_five(self):
         enemy = Enemy(0, .5)
@@ -76,15 +74,20 @@ class BattleTests(unittest.TestCase):
         enemy.refill()
         self.assertEqual(len(enemy.directions), 5)
 
-    def test_fast_correct_attacks_count_without_restarting_first_frame(self):
+    def test_fast_input_immediately_replaces_action_and_advances_enemy(self):
         press(self.mode, SDLK_LEFT)
         started = self.mode.player_animation.started
         self.mode.update(.1)
         press(self.mode, SDLK_LEFT)
         self.assertEqual(self.mode.successes, 2)
-        self.assertEqual(self.mode.player_animation.started, started)
-        self.assertEqual(self.mode.enemy.state, 'prepare')
+        self.assertGreater(self.mode.player_animation.started, started)
+        self.assertEqual(self.mode.enemy.state, 'attack')
+        self.assertEqual(self.mode.visual_state, 'parry')
         self.assertEqual(self.mode.player_effect.frame(.1), (0, 0))
+        self.mode.update(.11)
+        press(self.mode, SDLK_UP)
+        self.assertEqual(self.mode.visual_state, 'dodge_up')
+        self.assertEqual(self.mode.player_animation.started, .11)
 
     def test_wrong_attack_cancels_increment_only_and_repeat_does_not_count(self):
         press(self.mode, SDLK_LEFT)
@@ -95,8 +98,10 @@ class BattleTests(unittest.TestCase):
 
     def test_ten_successes_clear_back_to_maze_with_health_and_score(self):
         self.mode.rules.health = 2
-        for _ in range(10):
-            press(self.mode, SDLK_LEFT)
+        self.mode.enemy.directions = deque(['left'] * 5)
+        with patch('codes.enemy.random.choice', return_value='left'):
+            for _ in range(10):
+                press(self.mode, SDLK_LEFT)
         self.assertEqual(self.mode.successes, 10)
         self.assertTrue(self.mode.cleared)
         self.mode.framework.change_mode.assert_called_once_with('maze_mode')
@@ -113,7 +118,7 @@ class BattleTests(unittest.TestCase):
         self.mode.update(2.01)
         self.assertEqual(self.mode.visual_state, 'hit')
         self.assertEqual(self.mode.player_animation.frame(2.01), (0, 2))
-        self.assertEqual(self.mode.player_animation.frame(3.01), (0, 3))
+        self.assertEqual(self.mode.player_animation.frame(2.16), (0, 3))
 
     def test_correct_horizontal_parries_and_vertical_dodges(self):
         for direction, key in (('left', SDLK_LEFT), ('up', SDLK_UP), ('down', SDLK_DOWN)):
@@ -177,9 +182,10 @@ class BattleTests(unittest.TestCase):
                 press(maze, SDLK_RIGHT)
             self.assertEqual(framework.current_mode, 'battle_mode')
             self.assertEqual(self.mode.rules.health, 2)
-            self.mode.enemy.directions[0] = 'left'
-            for _ in range(10):
-                press(self.mode, SDLK_LEFT)
+            self.mode.enemy.directions = deque(['left'] * 5)
+            with patch('codes.enemy.random.choice', return_value='left'):
+                for _ in range(10):
+                    press(self.mode, SDLK_LEFT)
             self.assertEqual(framework.current_mode, 'maze_mode')
             self.assertEqual(maze.completed, 0)
             self.assertEqual(maze.player.rules.health, 2)

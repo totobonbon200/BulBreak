@@ -25,8 +25,8 @@ class GameOverRules:
 
     @property
     def animation_frame_seconds(self):
-        """최대 타이머 3초에서 1초, 1초에서 0.5초로 비례 조정한다."""
-        return min(1.0, max(0.5, 0.5 + (self.max_idle_time - 1.0) * 0.25))
+        """미로와 같은 기본 0.15초 간격을 최대 타이머에 비례 조정한다."""
+        return min(0.15, max(0.075, 0.075 + (self.max_idle_time - 1.0) * 0.0375))
 
     def update(self, now):
         elapsed = max(0.0, now - self.last_update)

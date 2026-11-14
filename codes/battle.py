@@ -42,7 +42,6 @@ class BattleMode:
         self.show_idle()
         self.visual_state = 'idle'
         self.player_direction = 'right'
-        self.pending_visual = None
         self.player_animation = self.make_player_animation('idle', 'right')
         self.player_effect = None
         self.enemy_effect = None
@@ -76,21 +75,15 @@ class BattleMode:
 
     def display_action(self, state, direction):
         getattr(self, 'show_' + state)()
-        # 입력 판정은 즉시 처리하되 연타로 첫 프레임을 다시 시작하지 않는다.
-        if self.visual_state == 'idle' or self.player_animation.finished(self.now):
-            self.visual_state = state
-            self.player_direction = direction
-            self.player_animation = self.make_player_animation(state, direction)
-        elif self.pending_visual is None or state == 'hit' or self.pending_visual[0] != 'hit':
-            self.pending_visual = (state, direction)
+        self.visual_state = state
+        self.player_direction = direction
+        self.player_animation = self.make_player_animation(state, direction)
 
     def start_effect(self, owner):
-        current = getattr(self, owner + '_effect')
-        if current is None or current.finished(self.now):
-            columns = (0, 1) if owner == 'player' else (2, 3)
-            setattr(self, owner + '_effect', Animation(
-                [(0, column) for column in columns], self.now,
-                self.rules.animation_frame_seconds))
+        columns = (0, 1) if owner == 'player' else (2, 3)
+        setattr(self, owner + '_effect', Animation(
+            [(0, column) for column in columns], self.now,
+            self.rules.animation_frame_seconds))
 
     def handle_event(self, event):
         if event.type == SDL_KEYUP:
@@ -140,10 +133,6 @@ class BattleMode:
             if not correct:
                 self.rules.record_wrong_defense()
                 self.display_action('hit', direction)
-                if self.is_game_over:
-                    self.visual_state = 'hit'
-                    self.pending_visual = None
-                    self.player_animation = self.make_player_animation('hit', direction)
                 self.message = '피격! 타이머 0.5초 감소'
 
         if self.successes >= self.CLEAR_ATTACKS and not self.is_game_over:
@@ -157,22 +146,10 @@ class BattleMode:
         if self.is_game_over or self.cleared:
             return
         self.rules.update(now)
-        # 피격은 기존 첫 프레임의 최소 표시 시간을 지킨 직후 우선 표시한다.
-        pending_hit = (self.pending_visual is not None
-                       and self.pending_visual[0] == 'hit'
-                       and self.visual_state != 'hit'
-                       and now - self.player_animation.started >= self.player_animation.frame_seconds)
-        if self.player_animation.finished(now) or pending_hit:
-            if self.pending_visual is not None:
-                state, direction = self.pending_visual
-                self.pending_visual = None
-                self.visual_state = state
-                self.player_direction = direction
-                self.player_animation = self.make_player_animation(state, direction)
-            else:
-                self.show_idle()
-                self.visual_state = 'idle'
-                self.player_animation = self.make_player_animation('idle', self.player_direction)
+        if self.player_animation.finished(now):
+            self.show_idle()
+            self.visual_state = 'idle'
+            self.player_animation = self.make_player_animation('idle', self.player_direction)
 
     def draw(self):
         draw_frame(self.assets.enemy_sheet, 4, 4, self.enemy.animation.frame(self.now),

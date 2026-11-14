@@ -26,9 +26,7 @@ class Enemy:
             self.directions.append(random.choice(self.DIRECTIONS))
 
     def advance(self, now, frame_seconds):
-        """두 프레임을 보여준 뒤의 새 입력만 다음 단계로 진행한다."""
-        if self.state != 'idle' and not self.animation.finished(now):
-            return False
+        """새 입력마다 즉시 한 단계 진행하며 애니메이션 종료를 기다리지 않는다."""
         if self.state in ('idle', 'attack'):
             if not self.directions:
                 self.refill()
