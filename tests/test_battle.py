@@ -154,17 +154,17 @@ class BattleTests(unittest.TestCase):
         self.assertEqual(self.mode.player_state, 'parry')
         self.assertEqual(self.mode.visual_state, 'parry')
         self.assertFalse(self.mode.player_animation.loop)
-        self.assertEqual(self.mode.successes, 0)
+        self.assertEqual(self.mode.successes, 1)
         self.assertEqual(self.mode.next_attack_direction, 'left')
-        self.assertIsNone(self.mode.player_effect)
+        self.assertIsNotNone(self.mode.player_effect)
         self.assertEqual(self.mode.rules.health, 3)
         self.assertEqual(self.mode.rules.remaining, 3)
         with patch('codes.hud.draw_rectangle'):
             self.mode.draw()
-        self.assets.character_attack_sheet.clip_draw.assert_not_called()
+        self.assets.character_sheet.clip_draw.assert_not_called()
         self.assets.character_attack_sheet.clip_composite_draw.assert_not_called()
-        self.assets.character_sheet.clip_draw.assert_called_once_with(
-            0, 0, 150, 150, 240, 200, 130, 130)
+        self.assets.character_attack_sheet.clip_draw.assert_called_once_with(
+            0, 0, 200, 100, 240, 200, 130, 130)
 
     def test_horizontal_attack_and_parry_always_draws_character_row_four(self):
         for incoming, key, required in (('left', SDLK_LEFT, 'left'),
