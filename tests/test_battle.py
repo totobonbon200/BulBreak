@@ -122,6 +122,26 @@ class BattleTests(unittest.TestCase):
         self.assertEqual(self.mode.player_animation.frame(2.01), (0, 2))
         self.assertEqual(self.mode.player_animation.frame(2.16), (0, 3))
 
+    def test_horizontal_repeated_input_suppresses_only_hit_animation(self):
+        self.mode.enemy.directions[0] = 'right'
+        press(self.mode, SDLK_LEFT)
+        self.mode.update(.1)
+        press(self.mode, SDLK_LEFT)
+        self.assertEqual(self.mode.enemy.state, 'attack')
+        self.assertEqual(self.mode.successes, 1)
+        self.assertEqual(self.mode.next_attack_direction, 'right')
+        self.assertEqual(self.mode.visual_state, 'attack')
+        self.assertEqual(self.mode.failure_started, .1)
+        self.assertAlmostEqual(self.mode.rules.remaining, 2.5)
+
+    def test_valid_order_with_wrong_horizontal_defense_still_shows_hit(self):
+        press(self.mode, SDLK_LEFT)
+        self.mode.update(.1)
+        press(self.mode, SDLK_RIGHT)
+        self.assertEqual(self.mode.successes, 2)
+        self.assertEqual(self.mode.visual_state, 'hit')
+        self.assertAlmostEqual(self.mode.rules.remaining, 2.5)
+
     def test_correct_horizontal_parries_and_vertical_dodges(self):
         for direction, key in (('left', SDLK_LEFT), ('up', SDLK_UP), ('down', SDLK_DOWN)):
             with self.subTest(direction=direction):
