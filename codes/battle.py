@@ -138,7 +138,12 @@ class BattleMode:
         enemy_attacking = advanced and self.enemy.state == 'attack'
         attack_order_correct = direction == self.next_attack_direction
         self.horizontal_attack_parry = (enemy_attacking
-                                        and expected in ('left', 'right') and correct)
+                                        and expected in ('left', 'right')
+                                        and direction in ('left', 'right'))
+        # 적 가로공격에는 좌우 입력 모두 성공하며 이전 실패 표시도 해제한다.
+        if self.horizontal_attack_parry:
+            correct = attack_order_correct = True
+            self.failure_started = None
 
         if direction in ('left', 'right'):
             if attack_order_correct:
