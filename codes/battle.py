@@ -78,9 +78,9 @@ class BattleMode:
         return Animation(frames, self.now, self.rules.animation_frame_seconds,
                          loop=state == 'idle')
 
-    def display_action(self, state, direction, visual_state=None):
+    def display_action(self, state, direction):
         getattr(self, 'show_' + state)()
-        self.visual_state = visual_state or state
+        self.visual_state = state
         self.player_direction = direction
         self.player_animation = self.make_player_animation(self.visual_state, direction)
 
@@ -143,8 +143,10 @@ class BattleMode:
                 self.player_effect = None
                 self.show_failure()
                 self.message = '공격 순서 실패: 노란 화살표 방향으로 공격'
-            self.display_action('parry' if correct and enemy_attacking else 'attack', direction,
-                                visual_state=None if attack_order_correct else 'guard')
+            state = 'idle'
+            if attack_order_correct:
+                state = 'parry' if correct and enemy_attacking else 'attack'
+            self.display_action(state, direction)
         else:
             self.display_action('dodge_' + direction, direction)
             self.message = '회피 성공' if correct else '회피 방향 불일치'
