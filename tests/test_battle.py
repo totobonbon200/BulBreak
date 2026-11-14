@@ -64,7 +64,8 @@ class BattleTests(unittest.TestCase):
         self.assertTrue(enemy.advance(.02, .15))
         self.assertEqual(enemy.direction, 'up')
         self.assertEqual(enemy.animation.frame(.02), (1, 0))
-        self.assertEqual(enemy.animation.frame(.18), (1, 1))
+        self.assertEqual(enemy.animation.frame(.379), (1, 0))
+        self.assertEqual(enemy.animation.frame(.381), (1, 1))
 
     def test_refill_keeps_last_direction_and_never_exceeds_five(self):
         enemy = Enemy(0, .5)
@@ -121,7 +122,8 @@ class BattleTests(unittest.TestCase):
         self.mode.update(2.01)
         self.assertEqual(self.mode.visual_state, 'hit')
         self.assertEqual(self.mode.player_animation.frame(2.01), (0, 2))
-        self.assertEqual(self.mode.player_animation.frame(2.16), (0, 3))
+        self.assertEqual(self.mode.player_animation.frame(2.149), (0, 2))
+        self.assertEqual(self.mode.player_animation.frame(2.151), (0, 3))
 
     def test_horizontal_repeated_input_suppresses_only_hit_animation(self):
         self.mode.enemy.directions[0] = 'right'
@@ -177,14 +179,14 @@ class BattleTests(unittest.TestCase):
                 self.assertTrue(self.mode.horizontal_attack_parry)
                 for column in range(4):
                     self.mode.update(column * .15 + .001)
+                    self.assertEqual(self.mode.failure_rotation(), 0.0)
                     self.assets.character_sheet.reset_mock()
                     with patch('codes.hud.draw_rectangle'):
-                    self.assertEqual(self.mode.failure_rotation(), 0.0)
                         self.mode.draw()
                     sheet = self.assets.character_sheet
+                    sheet.clip_composite_draw.assert_not_called()
                     call = (sheet.clip_composite_draw.call_args if sheet.clip_composite_draw.called
                             else sheet.clip_draw.call_args)
-                    sheet.clip_composite_draw.assert_not_called()
                     self.assertEqual(call.args[:4], (column * 150, 0, 150, 150))
                 self.assets.character_attack_sheet.clip_draw.assert_not_called()
                 self.assets.character_attack_sheet.clip_composite_draw.assert_not_called()

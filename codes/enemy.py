@@ -9,6 +9,7 @@ from codes.animation import Animation
 class Enemy:
     DIRECTIONS = ('left', 'right', 'up', 'down')
     CAPACITY = 5
+    FIRST_FRAME_SECONDS = 0.36
 
     def __init__(self, now, frame_seconds):
         self.directions = deque()
@@ -41,5 +42,6 @@ class Enemy:
             columns = (2, 3)
         row = {'left': 0, 'right': 0, 'up': 1, 'down': 2}[self.direction]
         self.animation = Animation([(row, column) for column in columns],
-                                   now, frame_seconds)
+                                   now, frame_seconds,
+                                   first_frame_seconds=self.FIRST_FRAME_SECONDS)
         return True
