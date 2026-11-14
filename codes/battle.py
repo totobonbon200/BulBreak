@@ -78,11 +78,11 @@ class BattleMode:
         return Animation(frames, self.now, self.rules.animation_frame_seconds,
                          loop=state == 'idle')
 
-    def display_action(self, state, direction):
+    def display_action(self, state, direction, visual_state=None):
         getattr(self, 'show_' + state)()
-        self.visual_state = state
+        self.visual_state = visual_state or state
         self.player_direction = direction
-        self.player_animation = self.make_player_animation(state, direction)
+        self.player_animation = self.make_player_animation(self.visual_state, direction)
 
     def start_effect(self, owner):
         columns = (0, 1) if owner == 'player' else (2, 3)
@@ -134,15 +134,17 @@ class BattleMode:
         attack_order_correct = direction == self.next_attack_direction
 
         if direction in ('left', 'right'):
-            self.start_effect('player')
             if attack_order_correct:
+                self.start_effect('player')
                 self.successes += 1
                 self.next_attack_direction = 'right' if direction == 'left' else 'left'
                 self.message = f'공격 성공: {self.successes}/{self.CLEAR_ATTACKS}'
             else:
+                self.player_effect = None
                 self.show_failure()
                 self.message = '공격 순서 실패: 노란 화살표 방향으로 공격'
-            self.display_action('parry' if correct and enemy_attacking else 'attack', direction)
+            self.display_action('parry' if correct and enemy_attacking else 'attack', direction,
+                                visual_state=None if attack_order_correct else 'guard')
         else:
             self.display_action('dodge_' + direction, direction)
             self.message = '회피 성공' if correct else '회피 방향 불일치'
@@ -150,14 +152,16 @@ class BattleMode:
         if enemy_attacking:
             self.start_effect('enemy')
             if not correct:
-                self.rules.record_wrong_defense()
+                vertical_hit = expected in ('up', 'down')
+                self.rules.record_wrong_defense(health_damage=1 if vertical_hit else 0)
                 self.show_failure()
                 horizontal_order_failure = (expected in ('left', 'right')
                                             and direction in ('left', 'right')
                                             and not attack_order_correct)
                 if not horizontal_order_failure:
                     self.display_action('hit', direction)
-                self.message = '피격! 타이머 0.5초 감소'
+                self.message = ('피격! 체력 1 감소·타이머 0.5초 차감' if vertical_hit
+                                else '피격! 타이머 0.5초 감소')
 
         if self.successes >= self.CLEAR_ATTACKS and not self.is_game_over:
             self.cleared = True

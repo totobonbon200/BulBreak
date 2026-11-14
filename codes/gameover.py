@@ -54,10 +54,13 @@ class GameOverRules:
         self.mode = "battle"
         self.last_update = now
 
-    def record_wrong_defense(self):
+    def record_wrong_defense(self, health_damage=0):
         self.remaining = max(0.0, self.remaining - 0.5)
+        self.health = max(0, self.health - health_damage)
         if self.remaining <= 0:
             self.health = 0
+        if self.is_over:
+            self.remaining = 0.0
 
     def idle_remaining(self, now):
         return max(0.0, self.remaining - max(0.0, now - self.last_update))

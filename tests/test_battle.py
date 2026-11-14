@@ -84,8 +84,9 @@ class BattleTests(unittest.TestCase):
         self.assertEqual(self.mode.successes, 1)
         self.assertGreater(self.mode.player_animation.started, started)
         self.assertEqual(self.mode.enemy.state, 'attack')
-        self.assertEqual(self.mode.visual_state, 'parry')
-        self.assertEqual(self.mode.player_effect.frame(.1), (0, 0))
+        self.assertEqual(self.mode.player_state, 'parry')
+        self.assertEqual(self.mode.visual_state, 'guard')
+        self.assertIsNone(self.mode.player_effect)
         self.mode.update(.11)
         press(self.mode, SDLK_UP)
         self.assertEqual(self.mode.visual_state, 'dodge_up')
@@ -130,7 +131,7 @@ class BattleTests(unittest.TestCase):
         self.assertEqual(self.mode.enemy.state, 'attack')
         self.assertEqual(self.mode.successes, 1)
         self.assertEqual(self.mode.next_attack_direction, 'right')
-        self.assertEqual(self.mode.visual_state, 'attack')
+        self.assertEqual(self.mode.visual_state, 'guard')
         self.assertEqual(self.mode.failure_started, .1)
         self.assertAlmostEqual(self.mode.rules.remaining, 2.5)
 
@@ -141,6 +142,55 @@ class BattleTests(unittest.TestCase):
         self.assertEqual(self.mode.successes, 2)
         self.assertEqual(self.mode.visual_state, 'hit')
         self.assertAlmostEqual(self.mode.rules.remaining, 2.5)
+
+    def test_wrong_attack_order_with_correct_parry_uses_basic_pose_not_attack_or_hit(self):
+        self.mode.enemy.directions[0] = 'right'
+        press(self.mode, SDLK_UP)
+        self.mode.update(.1)
+        press(self.mode, SDLK_RIGHT)
+        self.assertEqual(self.mode.player_state, 'parry')
+        self.assertEqual(self.mode.visual_state, 'guard')
+        self.assertEqual(self.mode.successes, 0)
+        self.assertEqual(self.mode.next_attack_direction, 'left')
+        self.assertIsNone(self.mode.player_effect)
+        self.assertEqual(self.mode.rules.health, 3)
+        self.assertEqual(self.mode.rules.remaining, 3)
+        with patch('codes.hud.draw_rectangle'):
+            self.mode.draw()
+        self.assets.character_attack_sheet.clip_draw.assert_not_called()
+        self.assets.character_attack_sheet.clip_composite_draw.assert_not_called()
+        self.assets.character_sheet.clip_draw.assert_called_once_with(
+            0, 0, 150, 150, 240, 200, 130, 130)
+
+    def test_vertical_failed_defense_removes_one_health_and_half_second(self):
+        for incoming, wrong_key in (('up', SDLK_DOWN), ('up', SDLK_LEFT),
+                                    ('up', SDLK_RIGHT), ('down', SDLK_UP),
+                                    ('down', SDLK_LEFT), ('down', SDLK_RIGHT)):
+            with self.subTest(incoming=incoming, wrong_key=wrong_key):
+                self.setUp()
+                self.mode.enemy.directions[0] = incoming
+                press(self.mode, SDLK_UP if incoming == 'up' else SDLK_DOWN)
+                self.assertEqual(self.mode.rules.health, 3)
+                self.mode.update(.1)
+                press(self.mode, wrong_key)
+                self.assertEqual(self.mode.rules.health, 2)
+                self.assertEqual(self.mode.rules.remaining, 2.5)
+                self.assertEqual(self.mode.visual_state, 'hit')
+                self.assertEqual(self.mode.failure_started, .1)
+
+    def test_last_health_vertical_hit_ends_battle_even_on_tenth_attack(self):
+        self.mode.enemy.directions[0] = 'up'
+        press(self.mode, SDLK_UP)
+        self.mode.rules.health = 1
+        self.mode.successes = 9
+        press(self.mode, SDLK_LEFT)
+        self.assertEqual(self.mode.successes, 10)
+        self.assertTrue(self.mode.is_game_over)
+        self.assertEqual(self.mode.rules.health, 0)
+        self.assertEqual(self.mode.rules.remaining, 0)
+        self.assertEqual(self.mode.visual_state, 'hit')
+        self.assertFalse(self.mode.cleared)
+        self.mode.framework.change_mode.assert_not_called()
 
     def test_correct_horizontal_parries_and_vertical_dodges(self):
         for direction, key in (('left', SDLK_LEFT), ('up', SDLK_UP), ('down', SDLK_DOWN)):
@@ -153,6 +203,7 @@ class BattleTests(unittest.TestCase):
                 self.assertEqual(self.mode.player_state,
                                  'parry' if direction == 'left' else 'dodge_' + direction)
                 self.assertEqual(self.mode.rules.remaining, 2)
+                self.assertEqual(self.mode.rules.health, 3)
 
     def test_lethal_hit_still_selects_hit_image_and_stops_clear(self):
         press(self.mode, SDLK_LEFT)
@@ -250,7 +301,7 @@ class BattleTests(unittest.TestCase):
             with patch('codes.hud.draw_rectangle'):
                 self.mode.draw()
             if angle:
-                rendered = self.assets.character_attack_sheet.clip_composite_draw.call_args.args
+                rendered = self.assets.character_sheet.clip_composite_draw.call_args.args
                 self.assertAlmostEqual(rendered[4], angle)
                 self.assertEqual(rendered[6:8], (240, 200))
             cross = (200, 200, 200, 200, 240, 230, 65, 65)
