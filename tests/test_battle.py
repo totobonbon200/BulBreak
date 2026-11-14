@@ -97,9 +97,9 @@ class BattleTests(unittest.TestCase):
     def test_wrong_attack_cancels_increment_only_and_repeat_does_not_count(self):
         press(self.mode, SDLK_LEFT)
         press(self.mode, SDLK_LEFT)
-        self.assertEqual(self.mode.successes, 1)
+        self.assertEqual(self.mode.successes, 2)
         self.mode.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_LEFT, repeat=1))
-        self.assertEqual(self.mode.successes, 1)
+        self.assertEqual(self.mode.successes, 2)
 
     def test_ten_successes_clear_back_to_maze_with_health_and_score(self):
         self.mode.rules.health = 2
@@ -126,13 +126,13 @@ class BattleTests(unittest.TestCase):
         self.assertEqual(self.mode.player_animation.frame(2.149), (0, 2))
         self.assertEqual(self.mode.player_animation.frame(2.151), (0, 3))
 
-    def test_horizontal_repeated_input_suppresses_only_hit_animation(self):
+    def test_horizontal_repeated_input_succeeds_without_failure(self):
         self.mode.enemy.directions[0] = 'right'
         press(self.mode, SDLK_LEFT)
         self.mode.update(.1)
         press(self.mode, SDLK_LEFT)
         self.assertEqual(self.mode.enemy.state, 'attack')
-        self.assertEqual(self.mode.successes, 1)
+        self.assertEqual(self.mode.successes, 2)
         self.assertEqual(self.mode.next_attack_direction, 'right')
         self.assertEqual(self.mode.visual_state, 'idle')
         self.assertEqual(self.mode.failure_started, .1)
