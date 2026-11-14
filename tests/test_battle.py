@@ -179,10 +179,12 @@ class BattleTests(unittest.TestCase):
                     self.mode.update(column * .15 + .001)
                     self.assets.character_sheet.reset_mock()
                     with patch('codes.hud.draw_rectangle'):
+                    self.assertEqual(self.mode.failure_rotation(), 0.0)
                         self.mode.draw()
                     sheet = self.assets.character_sheet
                     call = (sheet.clip_composite_draw.call_args if sheet.clip_composite_draw.called
                             else sheet.clip_draw.call_args)
+                    sheet.clip_composite_draw.assert_not_called()
                     self.assertEqual(call.args[:4], (column * 150, 0, 150, 150))
                 self.assets.character_attack_sheet.clip_draw.assert_not_called()
                 self.assets.character_attack_sheet.clip_composite_draw.assert_not_called()

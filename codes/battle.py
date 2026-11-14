@@ -97,7 +97,7 @@ class BattleMode:
         self.failure_started = self.now
 
     def failure_rotation(self):
-        if self.failure_started is None:
+        if self.failure_started is None or self.horizontal_attack_parry:
             return 0.0
         progress = (self.now - self.failure_started) / self.FAILURE_SECONDS
         if not 0.0 < progress < 1.0:
