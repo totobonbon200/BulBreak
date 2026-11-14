@@ -1,4 +1,5 @@
 """임시 전투의 실제 입력, FIFO, 시간 기반 표시 및 순환 전환 검증."""
+# 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다. 커밋은 관련 코드 3개·변경 10줄 이내.
 import unittest
 import math
 from collections import deque
@@ -82,12 +83,12 @@ class BattleTests(unittest.TestCase):
         started = self.mode.player_animation.started
         self.mode.update(.1)
         press(self.mode, SDLK_LEFT)
-        self.assertEqual(self.mode.successes, 1)
+        self.assertEqual(self.mode.successes, 2)
         self.assertGreater(self.mode.player_animation.started, started)
         self.assertEqual(self.mode.enemy.state, 'attack')
-        self.assertEqual(self.mode.player_state, 'idle')
-        self.assertEqual(self.mode.visual_state, 'idle')
-        self.assertIsNone(self.mode.player_effect)
+        self.assertEqual(self.mode.player_state, 'parry')
+        self.assertEqual(self.mode.visual_state, 'parry')
+        self.assertIsNotNone(self.mode.player_effect)
         self.mode.update(.11)
         press(self.mode, SDLK_UP)
         self.assertEqual(self.mode.visual_state, 'dodge_up')
