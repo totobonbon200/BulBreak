@@ -1,4 +1,6 @@
 """15초 제한의 임시 전투: 실시간 입력과 적의 방향 FIFO를 연결한다."""
+# 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md의 최신 작성·커밋 기준을 확인한다.
+# 입력 판정과 표시를 연결한다. 코드 커밋은 관련 파일 3개·변경 10줄 이내로 나눈다.
 from pico2d import *
 import math
 from transitions import Machine
