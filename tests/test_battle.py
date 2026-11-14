@@ -176,6 +176,7 @@ class BattleTests(unittest.TestCase):
                 self.mode.enemy.directions[0] = incoming
                 press(self.mode, SDLK_UP)
                 self.mode.next_attack_direction = required
+                self.mode.failure_started = self.mode.now - .1  # 성공 시 이전 실패 회전도 취소한다.
                 press(self.mode, key)
                 self.assertTrue(self.mode.horizontal_attack_parry)
                 for column in range(4):
@@ -234,7 +235,7 @@ class BattleTests(unittest.TestCase):
                 self.mode.update(2)
                 press(self.mode, key)
                 self.assertEqual(self.mode.player_state,
-                                 'idle' if direction == 'left' else 'dodge_' + direction)
+                                 'parry' if direction == 'left' else 'dodge_' + direction)
                 self.assertEqual(self.mode.rules.remaining, 2)
                 self.assertEqual(self.mode.rules.health, 3)
 
