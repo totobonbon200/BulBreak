@@ -287,8 +287,7 @@ class BattleTests(unittest.TestCase):
                 maze.maze.walls.pop((0, 1), None)
                 maze.maze.exit = (0, 1)
                 press(maze, SDLK_RIGHT)
-                if maze.awaiting_next_maze:
-                    press(maze, SDLK_UP)  # 미로 사이에서만 도착 화면을 확인한다.
+                self.assertFalse(maze.awaiting_next_maze)  # 첫 전투 전에는 제약 없이 자동 전환한다.
             self.assertFalse(maze.awaiting_next_maze)
             self.assertEqual(framework.current_mode, 'battle_mode')
             self.assertEqual(self.mode.rules.health, 2)
@@ -299,6 +298,7 @@ class BattleTests(unittest.TestCase):
             framework.update(framework.notice.DURATION)
             self.assertEqual(framework.current_mode, 'maze_mode')
             self.assertEqual(maze.completed, 0)
+            self.assertIn('maze_arrival', framework.notice.active)
             self.assertEqual(maze.player.rules.health, 2)
             framework.change_mode('battle_mode')
             framework.update(framework.notice.DURATION)
