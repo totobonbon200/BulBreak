@@ -14,3 +14,11 @@ class ConstraintNotice:
 
     def reset(self):
         self.__init__()
+    def begin(self, source, target, now):
+        # 최초 미로에서 전투로 갈 때는 제약을 발동하지 않는다.
+        if source == "battle_mode" and target == "maze_mode":
+            self.enabled = True
+        if self.enabled and source != target and {source, target} == set(self.TITLES):
+            self.pending = (target, now)
+            return True
+        return False
