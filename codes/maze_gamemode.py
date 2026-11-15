@@ -89,7 +89,6 @@ class MazeMode:
                     return
                 self.awaiting_next_maze = True
                 self.message = '아무 방향키: 다음 미로'
-                self.transitioned = True
 
     def advance_maze(self):
         # 확인 입력은 이동에 쓰지 않고 직전 출구에서 다음 미로를 시작한다.
@@ -98,6 +97,7 @@ class MazeMode:
         self.player.enter_maze(self.maze.entrance, self.now)
         self.framework.restart_stage_timer()
         self.awaiting_next_maze = False
+        self.message = '방향키: 이동 / 벽은 두 번 공격'
         self.transitioned = True
 
     def update(self, now):
