@@ -30,3 +30,9 @@ class ConstraintNotice:
         self.active[target] = self.TITLES[target]
         self.pending = None
         return target
+    def draw(self, font):
+        # 6×6 미로 기준 그림 자리는 비우고 오른쪽 두 줄만 표시한다.
+        if self.pending is not None:
+            panel(100, 100, 500, 500, dark=True, outline=False)
+            info_text(font, 300, 400, self.TITLES[self.pending[0]])
+            info_text(font, 300, 333, "효과 없음. 전환 시험용.")
