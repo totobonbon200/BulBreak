@@ -12,7 +12,7 @@ class ConstraintNotice:
         # 첫 전투를 마친 뒤부터 안내하며 새 게임에서는 초기화한다.
         self.enabled = False
         self.pending = None
-        self.active = {}
+        self.active = set()  # 기존 제약을 유지하며 같은 제약의 중복을 막는다.
 
     def reset(self):
         self.__init__()
@@ -31,7 +31,7 @@ class ConstraintNotice:
         if self.pending is None or now - self.pending[1] < self.DURATION:
             return None
         target = self.pending[0]
-        self.active[target] = self.TITLES[target]
+        self.active.add(self.KEYS[target])
         self.pending = None
         return target
 
@@ -41,6 +41,6 @@ class ConstraintNotice:
             panel(100, 100, 500, 500, dark=True, outline=False)
             info_text(font, 300, 400, self.TITLES[self.pending[0]])
             info_text(font, 300, 333, "효과 없음. 전환 시험용.")
-        elif mode in self.active:
-            info_text(font, 535, 440, self.active[mode])
+        elif self.KEYS.get(mode) in self.active:
+            info_text(font, 535, 440, self.TITLES[mode])
             info_text(font, 535, 410, '효과 없음. 전환 시험용.')
