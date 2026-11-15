@@ -103,7 +103,8 @@ class MazeMode:
     def update(self, now):
         self.now = now
         self.transitioned = False
-        self.player.update(now)
+        if not self.awaiting_next_maze:
+            self.player.update(now)
 
     def draw(self):
         sheet, font = self.assets.maze_sheet, self.assets.font
