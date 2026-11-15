@@ -22,3 +22,11 @@ class ConstraintNotice:
             self.pending = (target, now)
             return True
         return False
+    def finish(self, now):
+        # 일반 게임오버와 분리하며 현재 임시 제약에는 실패 조건이 없다.
+        if self.pending is None or now - self.pending[1] < self.DURATION:
+            return None
+        target = self.pending[0]
+        self.active[target] = self.TITLES[target]
+        self.pending = None
+        return target
