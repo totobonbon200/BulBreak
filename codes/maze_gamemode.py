@@ -84,9 +84,8 @@ class MazeMode:
                     battle.pending_session = (self.player.rules, self.score)
                     self.framework.change_mode('battle_mode')
                     return
-                self.maze = Maze(self.size, self.maze.exit)
-                self.player.enter_maze(self.maze.entrance, self.now)
-                self.framework.restart_stage_timer()
+                self.awaiting_next_maze = True
+                self.message = '아무 방향키: 다음 미로'
                 self.transitioned = True
 
     def advance_maze(self):
