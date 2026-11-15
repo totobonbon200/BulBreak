@@ -77,6 +77,8 @@ class GameFramework:
         self.stage_timed_out = False
 
     def handle_event(self, event):
+        if self.notice.pending is not None:
+            return  # 안내 중 방향키는 다음 플레이에 전달하지 않는다.
         if self.stage_timed_out:
             if event.type == SDL_KEYDOWN:
                 if event.key == SDLK_DOWN:
