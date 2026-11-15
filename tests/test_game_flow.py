@@ -6,6 +6,7 @@ from unittest.mock import Mock, patch
 
 from pico2d import SDL_KEYDOWN, SDL_QUIT, SDLK_RIGHT, SDLK_UP, SDLK_LEFT, SDLK_DOWN
 from codes.character import Character
+from codes.constraints import ConstraintNotice
 from codes.game_framework import GameFramework
 from codes.gameover import GameOverRules
 from codes.maze import Maze
@@ -87,6 +88,7 @@ class GameFlowTests(unittest.TestCase):
             mode.player.rules.remaining = 100
             mode.player.rules.health = 100
             framework.clock = lambda: 14
+            framework.notice.active.add('maze_arrival')  # 제약이 있을 때만 도착 확인을 요구한다.
             framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_RIGHT))
             self.assertEqual(mode.completed, 1)
             # 도착 후에는 오래 기다려도 타임아웃 없이 새 입력을 기다린다.
