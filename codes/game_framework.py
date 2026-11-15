@@ -113,5 +113,7 @@ class GameFramework:
 
     def draw(self):
         self.modes[self.state].draw()
+        if self.notice.pending is not None:
+            self.notice.draw(self.modes[self.state].assets.font)
         if self.stage_timed_out and self.timeout_font is not None:
             text(self.timeout_font, 100, 380, '관심받고싶음? 옛다 관심', size=38)
