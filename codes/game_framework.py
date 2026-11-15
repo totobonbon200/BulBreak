@@ -93,6 +93,11 @@ class GameFramework:
         self.modes[self.state].handle_event(event)
 
     def update(self, now):
+        if self.notice.pending is not None:
+            target = self.notice.finish(now)
+            if target is not None:
+                self._change_mode(target)
+            return  # 안내 중에는 일반 타이머와 적 큐를 진행하지 않는다.
         mode = self.modes[self.state]
         if self.stage_timed_out:
             return
