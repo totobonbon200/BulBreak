@@ -1,9 +1,11 @@
+# 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md의 최신 기준을 확인한다.
     # 시작모드, 설명모드, 종료모드, 미로모드, 전투모드로 전환할 코드 만들어줘
     # 이것으로 코드를 넘나들며 사용하는 형태를 만들 것
     # 이전모드를 저장해 이것으로 처음으로 전환되는지, 전환되는지 확인
     # 이곳에서는 초기화, 모드전환을 관리할 것
 """모드 초기화와 전환을 관리한다."""
 from transitions import Machine
+from codes.constraints import ConstraintNotice
 from codes.hud import info_text as text
 from pico2d import get_time, SDL_KEYDOWN, SDLK_DOWN, SDLK_UP
 
@@ -15,6 +17,7 @@ class GameFramework:
              'battle_mode', 'result_mode', 'quit_mode')
 
     def __init__(self, modes, timeout_font=None, clock=None):
+        self.notice = ConstraintNotice()  # 전환 안내와 일반 진행을 분리한다.
         self.modes = modes
         self.clock = clock or get_time
         self.timeout_font = timeout_font
