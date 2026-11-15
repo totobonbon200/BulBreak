@@ -91,6 +91,9 @@ class GameFlowTests(unittest.TestCase):
             self.assertEqual(mode.completed, 1)
             # 도착 후에는 오래 기다려도 타임아웃 없이 새 입력을 기다린다.
             self.assertTrue(mode.awaiting_next_maze)
+            framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_RIGHT))
+            framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_UP, repeat=True))
+            self.assertTrue(mode.awaiting_next_maze)  # 누름 유지와 자동 반복은 확인이 아니다.
             framework.update(100)
             self.assertFalse(framework.stage_timed_out)
             framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_UP))
