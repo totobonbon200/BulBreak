@@ -1,3 +1,4 @@
+# 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md의 최신 기준을 확인한다.
 """미로 모드의 입력, 진행, 표시를 연결한다."""
 from pico2d import *
 
@@ -14,6 +15,7 @@ class MazeMode:
         self.reset(get_time())
 
     def reset(self, now):
+        self.awaiting_next_maze = False  # 도착 화면에서 새 방향키 입력을 기다린다.
         self.stage_timed_out = False
         self.size = 6
         self.completed = 0
