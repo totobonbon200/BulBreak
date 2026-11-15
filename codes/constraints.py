@@ -4,7 +4,7 @@ from codes.hud import panel, info_text
 
 
 class ConstraintNotice:
-    DURATION = 1.5
+    DURATION = 1.0
     TITLES = {"maze_mode": "[미로] 임시 제약", "battle_mode": "[전투] 임시 제약"}
 
     def __init__(self):
