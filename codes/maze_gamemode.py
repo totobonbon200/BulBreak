@@ -69,6 +69,9 @@ class MazeMode:
                 return
             if self.transitioned:
                 return
+            if self.awaiting_next_maze:
+                self.advance_maze()
+                return  # 확인에 쓴 방향으로 캐릭터를 이동시키지 않는다.
             self.player.position, result = self.maze.step(
                 self.player.position, directions[event.key])
             self.player.react(self.now, result, directions[event.key])
