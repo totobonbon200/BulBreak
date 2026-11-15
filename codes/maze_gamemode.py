@@ -108,8 +108,13 @@ class MazeMode:
 
     def draw(self):
         sheet, font = self.assets.maze_sheet, self.assets.font
-        self.maze.draw(sheet, font, self.now)
-        self.player.draw(self.assets.character_sheet, self.maze, self.now)
+        if self.awaiting_next_maze:
+            # 미로 시트 1행 4열을 플레이 영역(100, 100)~(500, 500)에 표시한다.
+            width, height = sheet.w // 4, sheet.h // 2
+            sheet.clip_draw(3 * width, height, width, height, 300, 300, 400, 400)
+        else:
+            self.maze.draw(sheet, font, self.now)
+            self.player.draw(self.assets.character_sheet, self.maze, self.now)
         draw_hud(self.assets, self.player.rules, self.now, self.completed, self.score)
         if not self.player.is_playing and not self.stage_timed_out:
             self.message = '체력이 모두 소진되었습니다'
