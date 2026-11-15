@@ -287,6 +287,9 @@ class BattleTests(unittest.TestCase):
                 maze.maze.walls.pop((0, 1), None)
                 maze.maze.exit = (0, 1)
                 press(maze, SDLK_RIGHT)
+                if maze.awaiting_next_maze:
+                    press(maze, SDLK_UP)  # 미로 사이에서만 도착 화면을 확인한다.
+            self.assertFalse(maze.awaiting_next_maze)
             self.assertEqual(framework.current_mode, 'battle_mode')
             self.assertEqual(self.mode.rules.health, 2)
             self.mode.enemy.directions = deque(['left'] * 5)
