@@ -132,6 +132,16 @@ class GameFlowTests(unittest.TestCase):
         self.assertEqual(notice.finish(1), 'maze_mode')
         self.assertEqual(notice.active, {'maze_arrival'})
 
+    def test_constraints_accumulate_without_duplicates(self):
+        notice = ConstraintNotice()
+        for source, target in [('battle_mode', 'maze_mode'),
+                               ('maze_mode', 'battle_mode'), ('battle_mode', 'maze_mode')]:
+            notice.begin(source, target, 0)
+            notice.finish(1)
+        self.assertEqual(notice.active, {'maze_arrival', 'battle_placeholder'})
+        notice.reset()
+        self.assertEqual(notice.active, set())
+
     def test_guide_round_trip_and_black_start_text(self):
         font = Mock()
         modes = create_menus(font)
