@@ -103,6 +103,8 @@ class GameFramework:
                 self._change_mode(target)
             return  # 안내 중에는 일반 타이머와 적 큐를 진행하지 않는다.
         mode = self.modes[self.state]
+        if getattr(mode, 'awaiting_next_maze', False) is True:
+            return  # 도착 확인 대기에는 일반 게임오버 타이머를 진행하지 않는다.
         if self.stage_timed_out:
             return
         if self.stage_started is not None and getattr(mode, 'is_game_over', False) is not True:
