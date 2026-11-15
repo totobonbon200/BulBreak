@@ -6,3 +6,11 @@ from codes.hud import panel, info_text
 class ConstraintNotice:
     DURATION = 1.5
     TITLES = {"maze_mode": "[미로] 임시 제약", "battle_mode": "[전투] 임시 제약"}
+    def __init__(self):
+        # 첫 전투를 마친 뒤부터 안내하며 새 게임에서는 초기화한다.
+        self.enabled = False
+        self.pending = None
+        self.active = {}
+
+    def reset(self):
+        self.__init__()
