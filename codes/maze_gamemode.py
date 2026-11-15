@@ -87,6 +87,10 @@ class MazeMode:
                     battle.pending_session = (self.player.rules, self.score)
                     self.framework.change_mode('battle_mode')
                     return
+                # 도착 확인 제약을 얻기 전에는 기존처럼 자동 전환한다.
+                if 'maze_arrival' not in self.framework.notice.active:
+                    self.advance_maze()
+                    return
                 self.awaiting_next_maze = True
                 self.message = '아무 방향키: 다음 미로'
 
