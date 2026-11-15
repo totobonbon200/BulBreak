@@ -122,6 +122,16 @@ class GameFlowTests(unittest.TestCase):
             mode.draw()
         assets.maze_sheet.clip_draw.assert_called_once_with(600, 200, 200, 200, 300, 300, 400, 400)
 
+    def test_arrival_constraint_starts_after_first_battle(self):
+        # 최초 전투 진입은 생략하고 복귀 안내가 끝날 때 획득한다.
+        notice = ConstraintNotice()
+        self.assertFalse(notice.begin('maze_mode', 'battle_mode', 0))
+        self.assertTrue(notice.begin('battle_mode', 'maze_mode', 0))
+        self.assertIsNone(notice.finish(0.9))
+        self.assertEqual(notice.active, set())
+        self.assertEqual(notice.finish(1), 'maze_mode')
+        self.assertEqual(notice.active, {'maze_arrival'})
+
     def test_guide_round_trip_and_black_start_text(self):
         font = Mock()
         modes = create_menus(font)
