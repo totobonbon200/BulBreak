@@ -1,3 +1,4 @@
+# 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md의 최신 기준을 확인한다.
 """모드 전환과 미로 진행의 회귀 검증."""
 import unittest
 from types import SimpleNamespace
@@ -88,6 +89,14 @@ class GameFlowTests(unittest.TestCase):
             framework.clock = lambda: 14
             framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_RIGHT))
             self.assertEqual(mode.completed, 1)
+            # 도착 후에는 오래 기다려도 타임아웃 없이 새 입력을 기다린다.
+            self.assertTrue(mode.awaiting_next_maze)
+            framework.update(100)
+            self.assertFalse(framework.stage_timed_out)
+            framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_UP))
+            self.assertFalse(mode.awaiting_next_maze)
+            self.assertEqual(mode.player.position, (0, 1))
+            self.assertEqual(mode.player.action_state, 'idle')
             self.assertEqual(framework.stage_started, 14)
             framework.update(15)
             self.assertFalse(framework.stage_timed_out)
