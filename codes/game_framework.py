@@ -41,6 +41,13 @@ class GameFramework:
     def change_mode(self, name):
         if name not in self.MODES:
             raise ValueError(name)
+        if name == 'maze_mode' and self.state not in self.TIMED_MODES:
+            self.notice.reset()
+        if self.notice.begin(self.state, name, self.clock()):
+            return
+        self._change_mode(name)
+
+    def _change_mode(self, name):
         if name != self.state:
             getattr(self, 'switch_to_' + name)()
 
