@@ -35,12 +35,16 @@ class ConstraintNotice:
         self.pending = None
         return target
 
+    def description(self, mode):
+        # 미로 제약은 도착 확인을 요구하며 전투 제약은 임시 무효과 상태다.
+        return '방향키로 다음 미로 진행.' if mode == 'maze_mode' else '효과 없음. 전환 시험용.'
+
     def draw(self, font, mode):
         # 6×6 미로 기준 그림 자리는 비우고 오른쪽 두 줄만 표시한다.
         if self.pending is not None:
             panel(100, 100, 500, 500, dark=True, outline=False)
             info_text(font, 300, 400, self.TITLES[self.pending[0]])
-            info_text(font, 300, 333, "효과 없음. 전환 시험용.")
+            info_text(font, 300, 333, self.description(self.pending[0]))
         elif self.KEYS.get(mode) in self.active:
             info_text(font, 535, 440, self.TITLES[mode])
-            info_text(font, 535, 410, '효과 없음. 전환 시험용.')
+            info_text(font, 535, 410, self.description(mode))
