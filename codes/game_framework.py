@@ -108,7 +108,7 @@ class GameFramework:
         if self.stage_timed_out:
             return
         # 리듬 제약은 체력 판정만 진행하며 독립 제한 시계도 멈춘다.
-        if getattr(mode, 'rhythm', None) is not None:
+        if 'battle_rhythm' in self.notice.active and self.state == 'battle_mode':
             mode.update(now)
             return
         if self.stage_started is not None and getattr(mode, 'is_game_over', False) is not True:
