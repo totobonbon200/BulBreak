@@ -92,3 +92,11 @@ class ConstraintTests(unittest.TestCase):
                 self.assertTrue(rhythm.press(beat))
                 rhythm.play_claps(beat, sound)
                 self.assertEqual(sound.play.call_count, len(rhythm.hits) + index + 1)
+
+    def test_claps_do_not_burst_after_a_delayed_frame(self):
+        rhythm, sound = Rhythm(0), Mock()
+        rhythm.advance(4.4)
+        rhythm.play_claps(4.4, sound)
+        sound.play.assert_not_called()
+        rhythm.play_claps(4.5, sound)
+        sound.play.assert_called_once_with()
