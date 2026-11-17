@@ -107,6 +107,10 @@ class GameFramework:
             return  # 도착 확인 대기에는 일반 게임오버 타이머를 진행하지 않는다.
         if self.stage_timed_out:
             return
+        # 리듬 제약은 체력 판정만 진행하며 독립 제한 시계도 멈춘다.
+        if getattr(mode, 'rhythm', None) is not None:
+            mode.update(now)
+            return
         if self.stage_started is not None and getattr(mode, 'is_game_over', False) is not True:
             self.stage_elapsed = min(self.STAGE_LIMIT, max(0.0, now - self.stage_started))
             if self.stage_elapsed >= self.STAGE_LIMIT:
