@@ -39,7 +39,7 @@ class ConstraintNotice:
 
     def description(self, mode):
         # 미로 제약은 도착 확인을 요구하며 전투 제약은 임시 무효과 상태다.
-        return '중앙에서 출구로 6회. 도착 확인.' if mode == 'maze_mode' else '시범 후 박자 입력. 무효과 제약 유지.'
+        return '중앙 출구 6회·도착 확인' if mode == 'maze_mode' else '시범 따라 입력·±25ms'
 
     def draw(self, font, mode):
         # 6×6 미로 기준 그림 자리는 비우고 오른쪽 두 줄만 표시한다.
