@@ -31,7 +31,7 @@ class Rhythm:
             self.started += 4
             self.index = 0
         while (self.index < len(self.hits)
-               and now > self.started + 2 + self.hits[self.index] / 1000 + self.WINDOW):
+               and now > self.beat_times()[self.index] + self.WINDOW):
             misses += 1
             self.index += 1
         return misses
