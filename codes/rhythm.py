@@ -54,3 +54,12 @@ class Rhythm:
 
     def description(self, now):
         return '시범 박자 확인' if now < self.started + 2 else '같은 박자 입력 (±25ms)'
+
+    def play_claps(self, now, sound):
+        # 현재 시범 박자만 재생하며 프레임 지연으로 지난 소리는 버린다.
+        for hit in self.hits:
+            onset = self.started + hit / 1000
+            if self.last_clap < onset <= now and now - onset < .05:
+                if sound is not None:
+                    sound.play()
+        self.last_clap = now
