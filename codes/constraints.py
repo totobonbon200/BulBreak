@@ -1,5 +1,5 @@
 # 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md의 최신 기준을 확인한다.
-"""누적 제약과 전환 안내를 관리한다."""
+"""무작위 단일 제약과 전환 안내를 관리한다."""
 from codes.hud import panel, info_text
 import random
 
@@ -32,7 +32,7 @@ class ConstraintNotice:
         return False
 
     def finish(self, now):
-        # 안내 완료 시 기존 제약과 신규 동작 제약을 함께 획득한다.
+        # 안내 완료 시 미리 선택한 단일 제약으로 교체한다.
         if self.pending is None or now - self.pending[1] < self.DURATION:
             return None
         target = self.pending[0]
