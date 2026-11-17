@@ -13,7 +13,8 @@ class ConstraintNotice:
         # 첫 전투를 마친 뒤부터 안내하며 새 게임에서는 초기화한다.
         self.enabled = False
         self.pending = None
-        self.active = set()  # 기존 제약을 유지하며 같은 제약의 중복을 막는다.
+        self.active = set()  # 현재 선택한 제약 하나만 보관한다.
+        self.selected = None
 
     def reset(self):
         self.__init__()
@@ -40,8 +41,10 @@ class ConstraintNotice:
         return target
 
     def description(self, mode):
-        # 도착 확인·무효과 제약에 추가된 중앙 이동·리듬 입력을 안내한다.
-        return '중앙 출구 6회·도착 확인' if mode == 'maze_mode' else '시범 따라 입력·±100ms'
+        # 안내 시작 때 선택한 제약과 실제 적용 설명을 일치시킨다.
+        return {'maze_arrival': '도착 후 방향키로 다음 미로', 'maze_cross': '중앙 출구 6회',
+                'battle_placeholder': '추가 효과 없음',
+                'battle_rhythm': '두 패턴 따라 입력·±100ms'}.get(self.selected, '')
 
     def draw(self, font, mode):
         # 6×6 미로 기준 그림 자리는 비우고 오른쪽 두 줄만 표시한다.
