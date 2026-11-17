@@ -9,6 +9,7 @@ from sdl2 import (SDL_SetHint, SDL_HINT_RENDER_SCALE_QUALITY,
 
 from codes.maze_gamemode import MazeMode
 from codes.battle import BattleMode
+from codes.clap_sound import load_clap
 from codes.game_framework import GameFramework
 from codes.menu_modes import create_menus
 
