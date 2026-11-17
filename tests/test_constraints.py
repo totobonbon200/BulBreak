@@ -56,3 +56,12 @@ class ConstraintTests(unittest.TestCase):
             press(mode, keys[delta])
             self.assertEqual(mode.completed, int(index == 5))
         self.assertTrue(mode.awaiting_next_maze)
+        mode.awaiting_next_maze = False
+        mode.update(9)
+        self.assertTrue(mode.is_game_over)
+
+    def test_rhythm_freezes_timer_and_wrong_input_damages_health(self):
+        mode = BattleMode(assets())
+        notice = ConstraintNotice()
+        notice.active.add('battle_rhythm')
+        mode.framework = SimpleNamespace(notice=notice)
