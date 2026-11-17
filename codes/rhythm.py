@@ -43,3 +43,12 @@ class Rhythm:
             return False
         self.index += 1
         return True
+
+    def frame(self, now):
+        # 시범의 각 박자에서 1행 2열을 짧게 보여 준비 동작을 만든다.
+        elapsed = now - self.started
+        pulse = elapsed < 2 and any(0 <= elapsed - hit / 1000 < .04 for hit in self.hits)
+        return 0, int(pulse)
+
+    def description(self, now):
+        return '시범 박자 확인' if now < self.started + 2 else '같은 박자 입력 (±25ms)'
