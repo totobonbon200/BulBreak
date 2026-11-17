@@ -44,6 +44,9 @@ class BattleMode:
         # 무효과 제약은 유지하고 새 리듬 제약이 있을 때만 판정한다.
         active = getattr(getattr(self.framework, 'notice', None), 'active', set())
         self.rhythm = Rhythm(self.now) if isinstance(active, set) and 'battle_rhythm' in active else None
+        # 리듬은 원본 전체 박자 수를 목표로 삼고 일반 전투 진입 시 10회로 복구한다.
+        self.CLEAR_ATTACKS = (sum(map(len, self.rhythm.patterns)) if self.rhythm
+                              else type(self).CLEAR_ATTACKS)
         self.successes = 0
         self.next_attack_direction = 'left'
         self.failure_started = None
@@ -57,7 +60,7 @@ class BattleMode:
         self.player_animation = self.make_player_animation('idle', 'right')
         self.player_effect = None
         self.enemy_effect = None
-        self.message = '임시 전투: 올바른 좌우 공격 10회 성공'
+        self.message = f'전투 목표: {self.CLEAR_ATTACKS}회 성공'
 
     def exit(self):
         self.held.clear()
