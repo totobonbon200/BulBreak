@@ -39,7 +39,7 @@ class ConstraintNotice:
 
     def description(self, mode):
         # 도착 확인·무효과 제약에 추가된 중앙 이동·리듬 입력을 안내한다.
-        return '중앙 출구 6회·도착 확인' if mode == 'maze_mode' else '시범 따라 입력·±25ms'
+        return '중앙 출구 6회·도착 확인' if mode == 'maze_mode' else '시범 따라 입력·±75ms'
 
     def draw(self, font, mode):
         # 6×6 미로 기준 그림 자리는 비우고 오른쪽 두 줄만 표시한다.
