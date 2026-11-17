@@ -48,8 +48,8 @@ class Rhythm:
 
     def frame(self, now):
         # 시범의 각 박자에서 1행 2열을 짧게 보여 준비 동작을 만든다.
-        elapsed = now - self.started
-        pulse = elapsed < 2 and any(0 <= elapsed - hit / 1000 < .04 for hit in self.hits)
+        beats = self.beat_times(False) + self.beat_times()
+        pulse = any(0 <= now - onset < .04 for onset in beats)
         return 0, int(pulse)
 
     def description(self, now):
