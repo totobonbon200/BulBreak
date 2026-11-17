@@ -25,7 +25,7 @@ class ConstraintTests(unittest.TestCase):
         rhythm = Rhythm(0)
         self.assertEqual(len(rhythm.patterns), 10)
         for segment in range(10):
-            for hit in rhythm.hits:
+            for index, hit in enumerate(rhythm.hits):
                 self.assertGreaterEqual(hit, 0)
                 now = segment * 4 + 2 + hit / 1000
                 self.assertEqual(rhythm.advance(now), 0)
