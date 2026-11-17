@@ -116,3 +116,13 @@ class ConstraintTests(unittest.TestCase):
         self.assertEqual(mode.successes, 1)
         self.assertEqual(mode.rules.health, 3)
         mode.assets.clap_sound.play.assert_called_once_with()
+
+    def test_last_beat_accepts_late_input_across_segment_boundary(self):
+        rhythm = Rhythm(0)
+        rhythm.segment = 8
+        rhythm.index = len(rhythm.hits) - 1
+        now = rhythm.beat_times()[-1] + .074
+        self.assertEqual(rhythm.advance(now), 0)
+        self.assertTrue(rhythm.press(now))
+        rhythm.advance(now)
+        self.assertEqual(rhythm.segment, 9)
