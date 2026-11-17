@@ -138,7 +138,7 @@ class GameFlowTests(unittest.TestCase):
                                ('maze_mode', 'battle_mode'), ('battle_mode', 'maze_mode')]:
             notice.begin(source, target, 0)
             notice.finish(1)
-        self.assertEqual(notice.active, {'maze_arrival', 'battle_placeholder'})
+        self.assertEqual(notice.active, {'maze_arrival', 'maze_cross', 'battle_placeholder', 'battle_rhythm'})
         notice.reset()
         self.assertEqual(notice.active, set())
 
