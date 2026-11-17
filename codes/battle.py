@@ -243,3 +243,10 @@ class BattleMode:
             finally:
                 sheet.opacify(1.0)
             text(self.assets.font, 180, 320, '아래: 재시작 / 위: 시작 화면')
+
+    def update_rhythm(self, now):
+        # 누락 피해는 한 번만 반영하고 일반 게임오버 시계를 고정한다.
+        self.rules.health = max(0, self.rules.health - self.rhythm.advance(now))
+        self.rules.last_update = now
+        self.enemy.animation = Animation([self.rhythm.frame(now)], now, .15)
+        self.message = self.rhythm.description(now)
