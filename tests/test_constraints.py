@@ -17,3 +17,13 @@ class ConstraintTests(unittest.TestCase):
         maze = CrossMaze()
         self.assertEqual(len(maze.walls), 3)
         self.assertEqual(maze.entrance, (1, 1))
+        for delta in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            position, result = maze.step(maze.entrance, delta)
+            self.assertEqual(result == 'exit', position == maze.exit)
+
+    def test_all_patterns_exact_hits_and_no_duplicate(self):
+        rhythm = Rhythm(0)
+        self.assertEqual(len(rhythm.patterns), 10)
+        for segment in range(10):
+            for hit in rhythm.hits:
+                self.assertGreaterEqual(hit, 0)
