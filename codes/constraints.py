@@ -50,8 +50,13 @@ class ConstraintNotice:
         # 6×6 미로 기준 그림 자리는 비우고 오른쪽 두 줄만 표시한다.
         if self.pending is not None:
             panel(100, 100, 500, 500, dark=True, outline=False)
-            info_text(font, 300, 400, self.TITLES[self.pending[0]])
+            info_text(font, 300, 400, self.title())
             info_text(font, 300, 333, self.description(self.pending[0]))
-        elif self.KEYS.get(mode) in self.active:
-            info_text(font, 535, 440, self.TITLES[mode])
+        elif self.active:
+            info_text(font, 535, 440, self.title())
             info_text(font, 535, 410, self.description(mode))
+
+    def title(self):
+        # 선택한 제약 이름을 안내와 플레이 패널에 동일하게 표시한다.
+        return {'maze_arrival': '[미로] 도착 화면 확인', 'maze_cross': '[미로] 중앙 출구',
+                'battle_placeholder': '[전투] 임시 제약', 'battle_rhythm': '[전투] 리듬'}.get(self.selected, '')
