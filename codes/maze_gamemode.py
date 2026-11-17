@@ -85,6 +85,13 @@ class MazeMode:
                             'moved': '방향키: 이동 / 벽은 두 번 공격',
                             'exit': '다음 미로'}[result]
             if result == 'exit':
+                if self.cross_enabled:
+                    self.cross_count += 1
+                    if self.cross_count < 6:
+                        self.maze.choose_exit()
+                        self.player.position = self.maze.entrance
+                        self.message = f'출구 방향 선택: {self.cross_count}/6'
+                        return
                 self.completed += 1
                 if self.completed == 2:
                     battle = self.framework.modes['battle_mode']
