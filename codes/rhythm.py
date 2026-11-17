@@ -7,3 +7,12 @@ from pathlib import Path
 
 class Rhythm:
     WINDOW = .025  # 최소 박자 간격보다 좁은 ±25ms 판정이다.
+
+    def __init__(self, now):
+        # 사용자 원본을 수정하지 않고 시범 페이지의 박자 목록을 읽는다.
+        source = Path(__file__).resolve().parents[1] / 'resources/rhythm_hell'
+        data = re.search(r'const segments = (\[.*?\]);', source.read_text(encoding='utf-8'))
+        self.patterns = [part['hits'] for part in json.loads(data.group(1))]
+        self.started = now
+        self.segment = 0
+        self.index = 0
