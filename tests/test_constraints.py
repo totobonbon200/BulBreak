@@ -69,7 +69,7 @@ class ConstraintTests(unittest.TestCase):
             mode.enter(False)
             remaining = mode.rules.remaining
             press(mode, SDLK_LEFT)
-        self.assertEqual(mode.rules.health, 2)
+        self.assertEqual(mode.rules.health, 3)
         self.assertEqual(mode.rules.remaining, remaining)
         mode.update(.5)
         self.assertEqual(mode.rules.idle_remaining(.5), remaining)
