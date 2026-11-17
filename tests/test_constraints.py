@@ -15,7 +15,9 @@ from pico2d import SDLK_LEFT, SDLK_RIGHT, SDLK_UP, SDLK_DOWN
 class ConstraintTests(unittest.TestCase):
     def setUp(self):
         # 시간 경계 검증은 원본 전체 패턴으로 고정하고 무작위 선택은 별도 검증한다.
-        sampling = patch('codes.rhythm.random.sample', side_effect=lambda patterns, count: patterns)
+        original_sample = __import__('random').sample
+        sampling = patch('codes.rhythm.random.sample', side_effect=lambda patterns, count:
+                         patterns if patterns and isinstance(patterns[0], list) else original_sample(patterns, count))
         sampling.start()
         self.addCleanup(sampling.stop)
 
