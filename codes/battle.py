@@ -148,9 +148,14 @@ class BattleMode:
             return
 
         direction = self.DIRECTIONS[event.key]
+        # 리듬 성공은 누른 방향과 관계없이 다음 교대 공격으로 연결한다.
+        if self.rhythm is not None:
+            direction = self.next_attack_direction
         advanced = self.enemy.advance(self.now, self.rules.animation_frame_seconds)
         expected = self.enemy.direction
         correct = direction == expected
+        if self.rhythm is not None:
+            correct = True  # 리듬 제약의 피해는 박자 실패·누락으로만 판정한다.
         enemy_attacking = advanced and self.enemy.state == 'attack'
         attack_order_correct = direction == self.next_attack_direction
         self.horizontal_attack_parry = (enemy_attacking
