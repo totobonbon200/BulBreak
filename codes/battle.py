@@ -130,6 +130,13 @@ class BattleMode:
             return
         if self.cleared:
             return
+        if self.rhythm is not None:
+            self.now = get_time()  # 프레임 시각 대신 실제 입력 시각을 사용한다.
+            self.update_rhythm(self.now)
+            if not self.rhythm.press(self.now):
+                self.rules.health = max(0, self.rules.health - 1)
+                self.message = '박자 실패! 체력 1 감소'
+                return
         self.rules.record_action(self.now)
         if self.is_game_over:
             return
