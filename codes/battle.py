@@ -41,6 +41,9 @@ class BattleMode:
             self.pending_session = None
         self.rules.enter_battle(self.now)
         self.rules.remaining = self.rules.max_idle_time
+        # 무효과 제약은 유지하고 새 리듬 제약이 있을 때만 판정한다.
+        active = getattr(getattr(self.framework, 'notice', None), 'active', set())
+        self.rhythm = Rhythm(self.now) if 'battle_rhythm' in active else None
         self.successes = 0
         self.next_attack_direction = 'left'
         self.failure_started = None
