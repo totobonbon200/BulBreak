@@ -47,3 +47,12 @@ class ConstraintTests(unittest.TestCase):
         mode = MazeMode(assets())
         notice = ConstraintNotice()
         notice.active.update(('maze_cross', 'maze_arrival'))
+        mode.framework = SimpleNamespace(notice=notice, restart_stage_timer=lambda: None)
+        with patch('codes.maze_gamemode.get_time', return_value=0):
+            mode.enter(False)
+        keys = {(-1, 0): SDLK_UP, (1, 0): SDLK_DOWN, (0, -1): SDLK_LEFT, (0, 1): SDLK_RIGHT}
+        for index in range(6):
+            delta = tuple(a - b for a, b in zip(mode.maze.exit, mode.maze.entrance))
+            press(mode, keys[delta])
+            self.assertEqual(mode.completed, int(index == 5))
+        self.assertTrue(mode.awaiting_next_maze)
