@@ -3,6 +3,7 @@
 from pico2d import *
 
 from codes.maze import Maze
+from codes.cross_maze import CrossMaze
 from codes.hud import draw_hud, info_text as text
 from codes.character import Character, PlayerState
 
