@@ -25,3 +25,13 @@ def load_clap():
         value = (white - previous * .7) * envelope * .65
         samples.append(round(max(-1, min(1, value)) * 32767))
         previous = white
+    # 로드 후 PCM은 믹서가 보관하므로 임시 파일은 바로 정리한다.
+    with TemporaryDirectory(prefix='bulbreak-clap-') as directory:
+        path = Path(directory) / 'clap.wav'
+        with wave.open(str(path), 'wb') as output:
+            output.setparams((1, 2, rate, 0, 'NONE', 'not compressed'))
+            output.writeframes(samples.tobytes())
+        try:
+            return load_wav(str(path))
+        except IOError:
+            return None
