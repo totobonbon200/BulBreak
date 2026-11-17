@@ -13,6 +13,12 @@ from pico2d import SDLK_LEFT, SDLK_RIGHT, SDLK_UP, SDLK_DOWN
 
 
 class ConstraintTests(unittest.TestCase):
+    def setUp(self):
+        # 시간 경계 검증은 원본 전체 패턴으로 고정하고 무작위 선택은 별도 검증한다.
+        sampling = patch('codes.rhythm.random.sample', side_effect=lambda patterns, count: patterns)
+        sampling.start()
+        self.addCleanup(sampling.stop)
+
     def test_cross_has_five_cells_and_only_exit_moves(self):
         maze = CrossMaze()
         self.assertEqual(len(maze.walls), 3)
