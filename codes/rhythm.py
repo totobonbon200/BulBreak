@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 class Rhythm:
-    WINDOW = .075  # 사용자 요청으로 기존 판정 범위를 3배 확대한다.
+    WINDOW = .100  # 사용자 요청에 따라 앞뒤 100ms까지 허용한다.
 
     def __init__(self, now):
         # 사용자 원본을 수정하지 않고 시범 페이지의 박자 목록을 읽는다.
