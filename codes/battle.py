@@ -178,7 +178,10 @@ class BattleMode:
             self.start_effect('enemy')
             if not correct:
                 vertical_hit = expected in ('up', 'down')
-                self.rules.record_wrong_defense(health_damage=1 if vertical_hit else 0)
+                if self.rhythm is None:
+                    self.rules.record_wrong_defense(health_damage=1 if vertical_hit else 0)
+                elif vertical_hit:
+                    self.rules.health = max(0, self.rules.health - 1)
                 self.show_failure()
                 horizontal_order_failure = (expected in ('left', 'right')
                                             and direction in ('left', 'right')
