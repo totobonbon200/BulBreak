@@ -7,3 +7,13 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 import wave
 from pico2d import load_wav
+
+
+def load_clap():
+    # rhythm_hell의 세 번 겹친 잡음과 짧은 감쇠를 PCM으로 만든다.
+    rate = 44100
+    samples = array('h')
+    noise = random.Random(0)
+    previous = 0.0
+    for index in range(round(rate * .115)):
+        elapsed = index / rate
