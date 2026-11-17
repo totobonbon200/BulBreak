@@ -83,3 +83,12 @@ class ConstraintTests(unittest.TestCase):
             for beat in rhythm.beat_times(False):
                 rhythm.play_claps(beat, sound)
                 rhythm.play_claps(beat, sound)
+            self.assertEqual(sound.play.call_count, len(rhythm.hits))
+            for index, beat in enumerate(rhythm.beat_times()):
+                self.assertEqual(rhythm.advance(beat), 0)
+                rhythm.play_claps(beat, sound)
+                self.assertEqual(sound.play.call_count, len(rhythm.hits) + index + 1)
+                self.assertEqual(rhythm.frame(beat), (0, 1))
+                self.assertTrue(rhythm.press(beat))
+                rhythm.play_claps(beat, sound)
+                self.assertEqual(sound.play.call_count, len(rhythm.hits) + index + 1)
