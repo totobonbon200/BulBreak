@@ -109,3 +109,10 @@ class ConstraintTests(unittest.TestCase):
         mode.framework = SimpleNamespace(notice=notice)
         with patch('codes.battle.get_time', return_value=0):
             mode.enter(False)
+        with patch('codes.battle.get_time', return_value=2):
+            mode.update(2)
+            mode.assets.clap_sound.play.assert_called_once_with()
+            press(mode, SDLK_LEFT)
+        self.assertEqual(mode.successes, 1)
+        self.assertEqual(mode.rules.health, 3)
+        mode.assets.clap_sound.play.assert_called_once_with()
