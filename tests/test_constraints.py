@@ -73,3 +73,13 @@ class ConstraintTests(unittest.TestCase):
         self.assertEqual(mode.rules.remaining, remaining)
         mode.update(.5)
         self.assertEqual(mode.rules.idle_remaining(.5), remaining)
+
+    def test_claps_match_demo_and_input_for_every_pattern(self):
+        rhythm = Rhythm(0)
+        for segment in range(10):
+            rhythm.segment, rhythm.started, rhythm.index = segment, segment * 4, 0
+            rhythm.last_clap = rhythm.started - .001
+            sound = Mock()
+            for beat in rhythm.beat_times(False):
+                rhythm.play_claps(beat, sound)
+                rhythm.play_claps(beat, sound)
