@@ -60,7 +60,7 @@ class ConstraintTests(unittest.TestCase):
         mode.update(9)
         self.assertTrue(mode.is_game_over)
 
-    def test_rhythm_freezes_timer_and_wrong_input_damages_health(self):
+    def test_demo_input_preserves_health_and_freezes_timer(self):
         mode = BattleMode(assets())
         notice = ConstraintNotice()
         notice.active.add('battle_rhythm')
