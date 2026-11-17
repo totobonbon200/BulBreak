@@ -63,3 +63,8 @@ class Rhythm:
                 if sound is not None:
                     sound.play()
         self.last_clap = now
+
+    def beat_times(self, response=True):
+        # 시범·입력의 소리와 판정이 공유하는 절대 박자 시각이다.
+        phase = 2 if response else 0
+        return [self.started + phase + hit / 1000 for hit in self.hits]
