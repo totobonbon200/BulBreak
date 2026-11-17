@@ -135,8 +135,9 @@ class BattleMode:
             self.update_rhythm(self.now)
             if self.is_game_over:
                 return
-            if self.now < self.rhythm.started + 2:
-                return  # 시범 박수에 누른 키로 체력을 차감하지 않는다.
+            if (self.now < self.rhythm.started + 2
+                    and self.now < self.rhythm.beat_times()[0] - self.rhythm.WINDOW):
+                return  # 첫 입력 박자의 이른 허용 범위를 보존한다.
             if not self.rhythm.press(self.now):
                 self.rules.health = max(0, self.rules.health - 1)
                 self.message = '박자 실패! 체력 1 감소'
