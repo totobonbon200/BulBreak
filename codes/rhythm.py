@@ -57,8 +57,7 @@ class Rhythm:
 
     def play_claps(self, now, sound):
         # 현재 시범 박자만 재생하며 프레임 지연으로 지난 소리는 버린다.
-        for hit in self.hits:
-            onset = self.started + hit / 1000
+        for onset in self.beat_times(False) + self.beat_times():
             if self.last_clap < onset <= now and now - onset < .05:
                 if sound is not None:
                     sound.play()
