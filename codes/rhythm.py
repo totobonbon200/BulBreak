@@ -40,7 +40,7 @@ class Rhythm:
         # 박자 하나를 한 번만 소비하며 구간 밖 입력도 실패로 판정한다.
         if self.index >= len(self.hits):
             return False
-        expected = self.started + 2 + self.hits[self.index] / 1000
+        expected = self.beat_times()[self.index]
         if abs(now - expected) > self.WINDOW + 1e-9:
             return False
         self.index += 1
