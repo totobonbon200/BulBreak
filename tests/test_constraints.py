@@ -121,7 +121,7 @@ class ConstraintTests(unittest.TestCase):
         rhythm = Rhythm(0)
         rhythm.segment = 8
         rhythm.index = len(rhythm.hits) - 1
-        now = rhythm.beat_times()[-1] + .074
+        now = rhythm.beat_times()[-1] + .099
         self.assertEqual(rhythm.advance(now), 0)
         self.assertTrue(rhythm.press(now))
         rhythm.advance(now)
