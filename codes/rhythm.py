@@ -2,6 +2,7 @@
 """시범 박자 재생과 입력·누락 판정을 관리한다."""
 import json
 import re
+import random
 from pathlib import Path
 
 
@@ -13,6 +14,8 @@ class Rhythm:
         source = Path(__file__).resolve().parents[1] / 'resources/rhythm_hell'
         data = re.search(r'const segments = (\[.*?\]);', source.read_text(encoding='utf-8'))
         self.patterns = [part['hits'] for part in json.loads(data.group(1))]
+        # 매 전투에서 서로 다른 두 패턴만 뽑아 성공 목표와 재생에 함께 쓴다.
+        self.patterns = random.sample(self.patterns, 2)
         self.started = now
         self.segment = 0
         self.index = 0
