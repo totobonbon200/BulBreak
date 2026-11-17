@@ -16,3 +16,13 @@ class Rhythm:
         self.started = now
         self.segment = 0
         self.index = 0
+
+    @property
+    def hits(self):
+        return self.patterns[self.segment % len(self.patterns)]
+
+    def advance(self, now):
+        # 시범 2초 뒤 같은 박자를 입력하고 다음 시범으로 진행한다.
+        misses = 0
+        while now > self.started + 4:
+            misses += len(self.hits) - self.index
