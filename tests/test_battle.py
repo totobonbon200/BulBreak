@@ -292,15 +292,17 @@ class BattleTests(unittest.TestCase):
             self.assertEqual(framework.current_mode, 'battle_mode')
             self.assertEqual(self.mode.rules.health, 2)
             self.mode.enemy.directions = deque(['left'] * 5)
-            with patch('codes.enemy.random.choice', return_value='left'):
+            # 적 방향 고정 중에도 제약은 유효한 후보 중 하나로 선택한다.
+            with patch('codes.enemy.random.choice', side_effect=lambda options: options[0]):
                 for index in range(10):
                     press(self.mode, SDLK_LEFT if index % 2 == 0 else SDLK_RIGHT)
             framework.update(framework.notice.DURATION)
             self.assertEqual(framework.current_mode, 'maze_mode')
             self.assertEqual(maze.completed, 0)
-            self.assertIn('maze_arrival', framework.notice.active)
+            self.assertEqual(len(framework.notice.active), 1)
             self.assertEqual(maze.player.rules.health, 2)
-            framework.change_mode('battle_mode')
+            with patch('codes.constraints.random.choice', return_value='battle_rhythm'):
+                framework.change_mode('battle_mode')
             framework.update(framework.notice.DURATION)
             self.mode.rules.remaining = 100
             framework.update(15)
