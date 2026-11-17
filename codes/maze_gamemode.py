@@ -23,7 +23,7 @@ class MazeMode:
         self.score = 0
         self.cross_count = 0  # 한 미로에서 출구 방향 선택 여섯 번을 센다.
         notice = getattr(getattr(self, 'framework', None), 'notice', None)
-        self.cross_enabled = notice is not None and 'maze_cross' in notice.active
+        self.cross_enabled = notice is not None and isinstance(notice.active, set) and 'maze_cross' in notice.active
         self.maze = CrossMaze() if self.cross_enabled else Maze(self.size)
         self.player = Character(self.maze.entrance, now)
         self.now = now
