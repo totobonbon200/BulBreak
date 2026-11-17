@@ -1,6 +1,7 @@
 # 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md의 최신 기준을 확인한다.
 """누적 제약과 전환 안내를 관리한다."""
 from codes.hud import panel, info_text
+import random
 
 
 class ConstraintNotice:
@@ -22,6 +23,9 @@ class ConstraintNotice:
         if source == "battle_mode" and target == "maze_mode":
             self.enabled = True
         if self.enabled and source != target and {source, target} == set(self.TITLES):
+            # 안내를 시작할 때 진입 모드의 제약 하나만 미리 선택한다.
+            self.selected = random.choice((self.KEYS[target],
+                                           'maze_cross' if target == 'maze_mode' else 'battle_rhythm'))
             self.pending = (target, now)
             return True
         return False
@@ -31,9 +35,7 @@ class ConstraintNotice:
         if self.pending is None or now - self.pending[1] < self.DURATION:
             return None
         target = self.pending[0]
-        self.active.add(self.KEYS[target])
-        # 기존 제약과 새 동작 제약을 함께 누적한다.
-        self.active.add('maze_cross' if target == 'maze_mode' else 'battle_rhythm')
+        self.active = {self.selected}  # 이전 제약을 교체하여 한 개만 적용한다.
         self.pending = None
         return target
 
