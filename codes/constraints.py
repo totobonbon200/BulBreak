@@ -38,7 +38,7 @@ class ConstraintNotice:
         return target
 
     def description(self, mode):
-        # 미로 제약은 도착 확인을 요구하며 전투 제약은 임시 무효과 상태다.
+        # 도착 확인·무효과 제약에 추가된 중앙 이동·리듬 입력을 안내한다.
         return '중앙 출구 6회·도착 확인' if mode == 'maze_mode' else '시범 따라 입력·±25ms'
 
     def draw(self, font, mode):
