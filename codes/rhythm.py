@@ -26,9 +26,9 @@ class Rhythm:
         # 시범 2초 뒤 같은 박자를 입력하고 다음 시범으로 진행한다.
         misses = 0
         # 구간 마지막 박자의 늦은 허용 범위까지 보존한다.
-        deadline = self.started + max(4, 2 + self.hits[-1] / 1000 + self.WINDOW)
-        while now > deadline:
-            deadline += 4
+        while (now > self.started + 4
+               and (self.index >= len(self.hits)
+                    or now > self.beat_times()[-1] + self.WINDOW)):
             misses += len(self.hits) - self.index
             self.segment += 1
             self.started += 4
