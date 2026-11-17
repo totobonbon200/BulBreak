@@ -29,7 +29,8 @@ class Rhythm:
             self.segment += 1
             self.started += 4
             self.index = 0
-        while self.index < len(self.hits) and now > self.started + 2 + self.hits[self.index] / 1000 + self.WINDOW:
+        while (self.index < len(self.hits)
+               and now > self.started + 2 + self.hits[self.index] / 1000 + self.WINDOW):
             misses += 1
             self.index += 1
         return misses
