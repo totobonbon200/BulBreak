@@ -197,7 +197,10 @@ class BattleMode:
         self.now = now
         if self.is_game_over or self.cleared:
             return
-        self.rules.update(now)
+        if self.rhythm is not None:
+            self.update_rhythm(now)
+        else:
+            self.rules.update(now)
         if self.player_animation.finished(now):
             self.show_idle()
             self.visual_state = 'idle'
