@@ -16,6 +16,7 @@ class Rhythm:
         self.started = now
         self.segment = 0
         self.index = 0
+        self.last_clap = now - .001  # 첫 박자도 한 번 재생한다.
 
     @property
     def hits(self):
