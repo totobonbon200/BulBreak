@@ -27,3 +27,13 @@ class ConstraintTests(unittest.TestCase):
         for segment in range(10):
             for hit in rhythm.hits:
                 self.assertGreaterEqual(hit, 0)
+                now = segment * 4 + 2 + hit / 1000
+                self.assertEqual(rhythm.advance(now), 0)
+                self.assertTrue(rhythm.press(now))
+                self.assertFalse(rhythm.press(now))
+            self.assertEqual(rhythm.advance((segment + 1) * 4 + .001), 0)
+
+    def test_timing_boundary_and_misses_consumed_once(self):
+        for offset in (-.025, .025):
+            self.assertTrue(Rhythm(0).press(2 + offset))
+        self.assertFalse(Rhythm(0).press(2.026))
