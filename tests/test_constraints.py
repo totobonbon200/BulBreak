@@ -21,7 +21,7 @@ class ConstraintTests(unittest.TestCase):
             position, result = maze.step(maze.entrance, delta)
             self.assertEqual(result == 'exit', position == maze.exit)
 
-    def test_all_patterns_exact_hits_and_no_duplicate(self):
+    def test_all_patterns_exact_hits_consume_one_beat(self):
         rhythm = Rhythm(0)
         self.assertEqual(len(rhythm.patterns), 10)
         for segment in range(10):
