@@ -65,3 +65,11 @@ class ConstraintTests(unittest.TestCase):
         notice = ConstraintNotice()
         notice.active.add('battle_rhythm')
         mode.framework = SimpleNamespace(notice=notice)
+        with patch('codes.battle.get_time', return_value=0):
+            mode.enter(False)
+            remaining = mode.rules.remaining
+            press(mode, SDLK_LEFT)
+        self.assertEqual(mode.rules.health, 2)
+        self.assertEqual(mode.rules.remaining, remaining)
+        mode.update(.5)
+        self.assertEqual(mode.rules.idle_remaining(.5), remaining)
