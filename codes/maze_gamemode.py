@@ -108,7 +108,8 @@ class MazeMode:
     def advance_maze(self):
         # 확인 입력은 이동에 쓰지 않고 직전 출구에서 다음 미로를 시작한다.
         self.now = get_time()
-        self.maze = Maze(self.size, self.maze.exit)
+        self.cross_count = 0
+        self.maze = CrossMaze() if self.cross_enabled else Maze(self.size, self.maze.exit)
         self.player.enter_maze(self.maze.entrance, self.now)
         self.framework.restart_stage_timer()
         self.awaiting_next_maze = False
