@@ -141,9 +141,6 @@ class BattleMode:
                 self.rules.health = max(0, self.rules.health - 1)
                 self.message = '박자 실패! 체력 1 감소'
                 return
-            sound = getattr(self.assets, 'clap_sound', None)
-            if sound is not None:
-                sound.play()  # 정확한 박자 입력을 박수로 들려준다.
         else:
             self.rules.record_action(self.now)
         if self.is_game_over:
