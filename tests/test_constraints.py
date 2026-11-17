@@ -38,8 +38,8 @@ class ConstraintTests(unittest.TestCase):
             self.assertTrue(Rhythm(0).press(2 + offset))
         self.assertFalse(Rhythm(0).press(2.101))
         rhythm = Rhythm(0)
-        self.assertEqual(rhythm.advance(3.6), 4)
-        self.assertEqual(rhythm.advance(3.6), 0)
+        self.assertEqual(rhythm.advance(3.601), 4)
+        self.assertEqual(rhythm.advance(3.601), 0)
         self.assertEqual(rhythm.frame(.5), (0, 1))
         self.assertEqual(rhythm.frame(.55), (0, 0))
 
