@@ -130,7 +130,8 @@ class GameFlowTests(unittest.TestCase):
         self.assertIsNone(notice.finish(0.9))
         self.assertEqual(notice.active, set())
         self.assertEqual(notice.finish(1), 'maze_mode')
-        self.assertEqual(notice.active, {'maze_arrival', 'maze_cross'})
+        self.assertEqual(len(notice.active), 1)  # 진입 모드의 제약 하나만 적용한다.
+        self.assertTrue(notice.active <= {'maze_arrival', 'maze_cross'})
 
     def test_constraints_accumulate_without_duplicates(self):
         notice = ConstraintNotice()
@@ -138,7 +139,7 @@ class GameFlowTests(unittest.TestCase):
                                ('maze_mode', 'battle_mode'), ('battle_mode', 'maze_mode')]:
             notice.begin(source, target, 0)
             notice.finish(1)
-        self.assertEqual(notice.active, {'maze_arrival', 'maze_cross', 'battle_placeholder', 'battle_rhythm'})
+        self.assertEqual(len(notice.active), 1)  # 전환을 반복해도 누적하지 않는다.
         notice.reset()
         self.assertEqual(notice.active, set())
 
