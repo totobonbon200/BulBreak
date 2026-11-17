@@ -34,7 +34,7 @@ class ConstraintTests(unittest.TestCase):
             self.assertEqual(rhythm.advance((segment + 1) * 4 + .001), 0)
 
     def test_timing_boundary_and_misses_consumed_once(self):
-        for offset in (-.075, .075):
+        for offset in (-.100, .100):
             self.assertTrue(Rhythm(0).press(2 + offset))
         self.assertFalse(Rhythm(0).press(2.076))
         rhythm = Rhythm(0)
