@@ -53,7 +53,7 @@ class Rhythm:
         return 0, int(pulse)
 
     def description(self, now):
-        return '시범 박자 확인' if now < self.started + 2 else '같은 박자 입력 (±25ms)'
+        return '시범 박자 확인' if now < self.started + 2 else '박수에 맞춰 입력 (±25ms)'
 
     def play_claps(self, now, sound):
         # 시범과 입력 박자를 모두 들려주며 오래 지난 소리는 버린다.
