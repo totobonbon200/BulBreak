@@ -256,5 +256,6 @@ class BattleMode:
         # 누락 피해는 한 번만 반영하고 일반 게임오버 시계를 고정한다.
         self.rules.health = max(0, self.rules.health - self.rhythm.advance(now))
         self.rules.last_update = now
+        self.rhythm.play_claps(now, getattr(self.assets, 'clap_sound', None))
         self.enemy.animation = Animation([self.rhythm.frame(now)], now, .15)
         self.message = self.rhythm.description(now)
