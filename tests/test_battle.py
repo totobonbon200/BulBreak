@@ -40,6 +40,13 @@ class BattleTests(unittest.TestCase):
             self.mode.enter(False)
         self.assertEqual(len(self.mode.rhythm.patterns), 2)
         self.assertEqual(self.mode.CLEAR_ATTACKS, sum(map(len, self.mode.rhythm.patterns)))
+        for segment, hits in enumerate(self.mode.rhythm.patterns):
+            for hit in hits:
+                with patch('codes.battle.get_time', return_value=segment * 4 + 2 + hit / 1000):
+                    press(self.mode, SDLK_DOWN)
+                self.assertEqual(self.mode.cleared, self.mode.successes == self.mode.CLEAR_ATTACKS)
+        self.assertTrue(self.mode.cleared)
+        self.assertEqual(self.mode.rules.health, 3)
 
     def setUp(self):
         self.assets = assets()
