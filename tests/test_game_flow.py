@@ -130,7 +130,7 @@ class GameFlowTests(unittest.TestCase):
         self.assertIsNone(notice.finish(0.9))
         self.assertEqual(notice.active, set())
         self.assertEqual(notice.finish(1), 'maze_mode')
-        self.assertEqual(notice.active, {'maze_arrival'})
+        self.assertEqual(notice.active, {'maze_arrival', 'maze_cross'})
 
     def test_constraints_accumulate_without_duplicates(self):
         notice = ConstraintNotice()
