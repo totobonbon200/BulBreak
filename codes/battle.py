@@ -192,6 +192,8 @@ class BattleMode:
                     self.display_action('hit', direction)
                 self.message = ('피격! 체력 1 감소·타이머 0.5초 차감' if vertical_hit
                                 else '피격! 타이머 0.5초 감소')
+                if self.rhythm is not None:
+                    self.message = '피격! 체력 1 감소' if vertical_hit else '방어 방향 불일치'
 
         if self.successes >= self.CLEAR_ATTACKS and not self.is_game_over:
             self.cleared = True
