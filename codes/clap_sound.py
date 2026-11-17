@@ -17,3 +17,11 @@ def load_clap():
     previous = 0.0
     for index in range(round(rate * .115)):
         elapsed = index / rate
+        envelope = .17 * math.exp(-elapsed * 45)
+        for offset, strength in ((0, .53), (.009, .36), (.018, .4)):
+            if elapsed >= offset:
+                envelope += strength * math.exp(-(elapsed - offset) * 230)
+        white = noise.uniform(-1, 1)
+        value = (white - previous * .7) * envelope * .65
+        samples.append(round(max(-1, min(1, value)) * 32767))
+        previous = white
