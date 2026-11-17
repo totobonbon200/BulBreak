@@ -100,3 +100,12 @@ class ConstraintTests(unittest.TestCase):
         sound.play.assert_not_called()
         rhythm.play_claps(4.5, sound)
         sound.play.assert_called_once_with()
+
+    def test_input_clap_accepts_action_without_a_second_sound(self):
+        mode = BattleMode(assets())
+        mode.assets.clap_sound = Mock()
+        notice = ConstraintNotice()
+        notice.active.add('battle_rhythm')
+        mode.framework = SimpleNamespace(notice=notice)
+        with patch('codes.battle.get_time', return_value=0):
+            mode.enter(False)
