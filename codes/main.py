@@ -1,5 +1,6 @@
 # 여기에다 게임 메인루프 만들고 BulBreak.py에는 canvas.open, close의 기능만을 사용하고 나머지는 클래스, 함수의 구성으로만 작성
 """게임 자원과 메인 루프."""
+# 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
 from pathlib import Path
 # 이걸로 상태머신 표현할 것: from transitions import *
 from pico2d import * # pico2d는 이걸로 불러올 것
