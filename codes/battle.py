@@ -137,7 +137,8 @@ class BattleMode:
                 self.rules.health = max(0, self.rules.health - 1)
                 self.message = '박자 실패! 체력 1 감소'
                 return
-        self.rules.record_action(self.now)
+        else:
+            self.rules.record_action(self.now)
         if self.is_game_over:
             return
 
