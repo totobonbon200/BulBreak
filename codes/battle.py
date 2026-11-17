@@ -7,6 +7,7 @@ from transitions import Machine
 
 from codes.animation import Animation, draw_frame
 from codes.enemy import Enemy
+from codes.rhythm import Rhythm
 from codes.gameover import GameOverRules
 from codes.hud import draw_hud, info_text as text
 
