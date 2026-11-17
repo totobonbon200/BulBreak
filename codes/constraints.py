@@ -32,6 +32,8 @@ class ConstraintNotice:
             return None
         target = self.pending[0]
         self.active.add(self.KEYS[target])
+        # 기존 제약과 새 동작 제약을 함께 누적한다.
+        self.active.add('maze_cross' if target == 'maze_mode' else 'battle_rhythm')
         self.pending = None
         return target
 
