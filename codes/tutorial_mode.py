@@ -79,3 +79,12 @@ class TutorialMode:
             if event.key not in self.held and not getattr(event, 'repeat', False):
                 self.held.add(event.key)
                 self.advance(event)
+
+    def advance(self, event):
+        if self.step == len(self.STEPS) - 1:
+            self.finish()
+            return
+        self.mode.handle_event(event)
+        self.step += 1
+        if self.step == len(self.MAZE_STEPS):
+            self.enter_battle()
