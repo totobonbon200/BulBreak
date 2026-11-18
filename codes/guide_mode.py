@@ -1,4 +1,5 @@
 """A separate guide screen describing the playable maze prototype."""
+# 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
 from pico2d import SDL_KEYDOWN, SDLK_RIGHT
 from codes.hud import text
 
@@ -36,7 +37,7 @@ class GuideMode:
             ('공통 15초 제한과 재시작', (
                 '선택된 기준과 관계없이 미로·전투 진입 후 15초가 지나면 게임오버됩니다.',
                 '다음 미로 진입 시 15초 제한은 초기화되며, 입력으로 늘어나지 않습니다.',
-                '게임오버 후 아래는 재시작, 위는 시작 화면으로 돌아가기입니다.',)),
+                '게임오버 메뉴는 위·아래로 고르고 왼쪽으로 실행합니다.',)),
             ('현재 구현 범위', (
                 '미로 2회 후 전투: 좌우 공격 10회 성공 시 다시 미로로 돌아갑니다.',)),
         )
