@@ -51,6 +51,16 @@ class GameFramework:
         if name != self.state:
             getattr(self, 'switch_to_' + name)()
 
+    @property
+    def practicing_constraint(self):
+        return self.previous_mode == 'instrument_mode' and self.state in self.TIMED_MODES
+
+    def play_constraint(self, target, key):
+        self.notice.reset()  # 선택한 제약만 적용한 뒤 새 판을 초기화한다.
+        self.notice.selected = key
+        self.notice.active = {key}
+        self._change_mode(target)
+
     def _leave(self):
         mode = self.modes.get(self.state)
         if mode is not None:
