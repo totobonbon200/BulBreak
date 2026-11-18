@@ -5,6 +5,7 @@ from unittest.mock import Mock, patch
 from types import SimpleNamespace
 from codes.cross_maze import CrossMaze
 from codes.rhythm import Rhythm
+from codes.rhythm_countdown import RhythmCountdown
 from codes.constraints import ConstraintNotice
 from test_battle import assets, press
 from codes.maze_gamemode import MazeMode
@@ -108,6 +109,15 @@ class ConstraintTests(unittest.TestCase):
         sound.play.assert_not_called()
         rhythm.play_claps(4.5, sound)
         sound.play.assert_called_once_with()
+
+    def test_countdown_places_go_sound_only_in_its_own_step(self):
+        countdown, sound = RhythmCountdown(0), Mock()
+        for index, label in enumerate(('3', '2', '1', 'GO')):
+            tick = index * countdown.STEP
+            self.assertEqual(countdown.frame(tick), (label, 1))
+            countdown.play_go(tick, sound)
+            countdown.play_go(tick + .1, sound)
+            self.assertEqual(sound.play.call_count, int(label == 'GO'))
 
     def test_input_clap_accepts_action_without_a_second_sound(self):
         mode = BattleMode(assets())
