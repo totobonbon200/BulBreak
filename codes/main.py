@@ -13,6 +13,7 @@ from codes.cat_constraint import CatEffect
 from codes.clap_sound import load_clap, load_glass_break
 from codes.game_framework import GameFramework
 from codes.menu_modes import create_menus
+from codes.tutorial_mode import TutorialMode
 
 
 class Assets:
@@ -55,6 +56,7 @@ def main():
                          start_font=assets.notice_font)
     modes['maze_mode'] = MazeMode(assets)
     modes['battle_mode'] = BattleMode(assets)
+    modes['tutorial_mode'] = TutorialMode(assets, Path(__file__).resolve().parents[1] / '.tutorial-complete')
     framework = GameFramework(modes, timeout_font=assets.timeout_font,
                               cat_effect=assets.cat_effect)
     for mode in modes.values():

@@ -339,6 +339,7 @@ class GameFlowTests(unittest.TestCase):
         events = [[key(SDLK_LEFT)], [], [],
                   [], [SimpleNamespace(type=SDL_QUIT)]]
         with patch.object(game, 'Assets', return_value=assets), \
+             patch.object(game, 'TutorialMode', return_value=SimpleNamespace(completed=True)), \
              patch.object(game, 'get_time', side_effect=[0, .1, .2, 10, 10.1]), \
              patch.object(game, 'get_events', side_effect=events), \
              patch.object(game, 'clear_canvas'), patch.object(game, 'update_canvas'), \
