@@ -58,16 +58,13 @@ class ConstraintNotice:
                 CAT_CONSTRAINT: f'{"미로" if mode == "maze_mode" else "전투"} 시야를 가리는 고양이',
                 'battle_rhythm': '두 패턴 따라 입력·±100ms'}.get(self.selected, '')
 
-    def draw(self, font, mode):
+    def draw(self, font):
         if self.pending is not None:
             panel(100, 100, 500, 500, dark=True, outline=False)
             draw_notice_title(font, self.title())
-        elif self.active:
-            info_text(font, 535, 440, self.title())
-            info_text(font, 535, 410, self.description(mode))
 
     def title(self):
-        # 선택한 제약 이름을 안내와 플레이 패널에 동일하게 표시한다.
+        # 전환 안내와 제약 한 판 선택 화면에서 같은 제목을 쓴다.
         return {'maze_arrival': '[미로] 도착 화면 확인', 'maze_cross': '[미로] 중앙 출구',
                 CAT_CONSTRAINT: '고양이다아아아아',
                 'battle_placeholder': '[전투] 임시 제약', 'battle_rhythm': '[전투] 리듬'}.get(self.selected, '')
