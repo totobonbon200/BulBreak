@@ -97,6 +97,16 @@ class StartMenu(SelectionMenu):
             draw_panel_choice(self.font, self.menu_image, 256 - index * 63, label, index == self.index)
 
 
+class GameOverMenu(SelectionMenu):
+    OPTIONS = ('다시시작', '돌아가기')
+
+    def __init__(self, start_menu, framework):
+        super().__init__(start_menu.font, '', (), {})
+        self.menu_image = start_menu.menu_image
+        self.framework = framework
+        self.index = 0
+
+
 class ConstraintMenu(SelectionMenu):
     # 제약 선택 순서와 각 제약이 실행될 플레이 모드를 정의한다.
     OPTIONS = (('maze_mode', 'maze_arrival'), ('maze_mode', 'maze_cross'),
