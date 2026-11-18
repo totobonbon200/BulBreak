@@ -23,6 +23,7 @@ class Assets:
         self.clap_sound = load_clap()
         root = Path(__file__).resolve().parents[1]
         self.main_image = load_image(str(root / 'resources/Main.png'))  # 시작 화면 로고
+        self.menu_image = load_image(str(root / 'resources/Menu.png'))  # 시작·게임 공용 패널
         self.maze_sheet = load_image(str(root / 'resources/maze_800x400.png'))
         self.character_sheet = load_image(str(root / 'resources/character_600x600.png'))
         self.character_attack_sheet = load_image(str(root / 'resources/character_attacks_800x400.png'))
@@ -43,7 +44,7 @@ class Assets:
 
 def main():
     assets = Assets()
-    modes = create_menus(assets.font, assets.main_image)
+    modes = create_menus(assets.font, assets.main_image, assets.menu_image)
     modes['maze_mode'] = MazeMode(assets)
     modes['battle_mode'] = BattleMode(assets)
     framework = GameFramework(modes, timeout_font=assets.timeout_font,
