@@ -1,7 +1,7 @@
 """방향키로 이동하는 시작 및 안내 화면."""
 # 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
 from pico2d import *
-from codes.constraints import ConstraintNotice
+from codes.constraints import CAT_CONSTRAINT, ConstraintNotice
 from codes.guide_mode import GuideMode
 from codes.hud import text
 
@@ -41,7 +41,8 @@ class MenuMode:
 class ConstraintMenu(MenuMode):
     # 제약 선택 순서와 각 제약이 실행될 플레이 모드를 정의한다.
     OPTIONS = (('maze_mode', 'maze_arrival'), ('maze_mode', 'maze_cross'),
-               ('battle_mode', 'battle_placeholder'), ('battle_mode', 'battle_rhythm'))
+               ('battle_mode', 'battle_placeholder'), ('battle_mode', 'battle_rhythm'),
+               ('maze_mode', CAT_CONSTRAINT), ('battle_mode', CAT_CONSTRAINT))
 
     def __init__(self, font):
         super().__init__(font, '제약 한 판', ['오른쪽: 다음 제약 / 왼쪽: 시작 화면 / 아래: 플레이'],
