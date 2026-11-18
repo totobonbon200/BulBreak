@@ -63,10 +63,12 @@ class GameFlowTests(unittest.TestCase):
         framework = GameFramework(modes)
         framework.change_mode('maze_mode')
         self.assertEqual(framework.current_mode, 'tutorial_mode')
+        self.assertIsNone(framework.stage_started)
         modes['tutorial_mode'].completed = True
         framework.change_mode('start_mode')
         framework.change_mode('maze_mode')
         self.assertEqual(framework.current_mode, 'maze_mode')
+
     def test_stage_timer_only_runs_in_gameplay_and_resets_on_entry(self):
         modes = {name: Mock() for name in GameFramework.MODES if name != 'quit_mode'}
         framework = GameFramework(modes, clock=lambda: 20)
