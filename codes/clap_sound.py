@@ -28,6 +28,15 @@ def load_clap():
     return load_pcm(samples, rate)
 
 
+def glass_sample(elapsed, noise):
+    # 짧은 파열 뒤에 서로 다른 높은 음이 빠르게 감쇠한다.
+    strike = noise * .26 * math.exp(-elapsed * 92)
+    partials = ((1730, .14, 28), (2860, .09, 38), (4370, .06, 53))
+    ringing = sum(gain * math.sin(math.tau * freq * elapsed) * math.exp(-decay * elapsed)
+                  for freq, gain, decay in partials)
+    return strike + ringing
+
+
 def load_pcm(samples, rate):
     # 로드 후 PCM은 믹서가 보관하므로 임시 파일은 바로 정리한다.
     with TemporaryDirectory(prefix='bulbreak-sound-') as directory:
