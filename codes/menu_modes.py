@@ -106,6 +106,10 @@ class GameOverMenu(SelectionMenu):
         self.framework = framework
         self.index = 0
 
+    def enter(self, first_visit):
+        super().enter(first_visit)
+        self.index = 0
+
     def confirm_selection(self):
         self.framework.resolve_game_over(restart=self.index == 0)
 

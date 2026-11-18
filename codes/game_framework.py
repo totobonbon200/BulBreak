@@ -7,6 +7,7 @@
 from transitions import Machine
 from codes.constraints import CAT_CONSTRAINT, ConstraintNotice
 from codes.hud import info_text as text
+from codes.menu_modes import GameOverMenu
 from pico2d import get_time, SDL_KEYDOWN, SDLK_DOWN, SDLK_UP
 
 
@@ -20,6 +21,7 @@ class GameFramework:
         self.notice = ConstraintNotice()  # 전환 안내와 일반 진행을 분리한다.
         self.cat_effect = cat_effect
         self.modes = modes
+        self.game_over_menu = GameOverMenu(modes['start_mode'], self)
         self.clock = clock or get_time
         self.timeout_font = timeout_font
         self.stage_started = None
@@ -73,6 +75,7 @@ class GameFramework:
         self.previous_mode = self.state
 
     def _enter(self):
+        self.game_over_menu.enter(False)
         self.stage_started = None
         self.stage_elapsed = 0.0
         self.stage_timed_out = False
