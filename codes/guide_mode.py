@@ -67,7 +67,6 @@ class GuideMode:
         info_text(self.font, 605, 72, '→ 시작 화면')
 
     def _draw_legacy(self):
-        text(self.font, 70, 540, 'BulBreak - 플레이 가이드')
         sections = (
             ('이동과 탈출', (
                 '방향키로 이동합니다. 출구에 도착하면 다음 미로로 넘어갑니다.',
@@ -76,12 +75,3 @@ class GuideMode:
             ('현재 구현 범위', (
                 '미로 2회 후 전투: 좌우 공격 10회 성공 시 다시 미로로 돌아갑니다.',)),
         )
-        y = 490
-        for title, lines in sections:
-            text(self.font, 70, y, title)
-            y -= 28
-            for line in lines:
-                text(self.font, 70, y, line)
-                y -= 26
-            y -= 18
-        text(self.font, 70, 45, '오른쪽 방향키: 시작 화면으로 돌아가기')
