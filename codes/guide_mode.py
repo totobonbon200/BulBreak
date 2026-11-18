@@ -74,12 +74,16 @@ class GuideMode:
 
     def draw_page(self):
         heading, lines = self.PAGES[self.page]
-        if self.page >= 2:
+        if self.page < 2:
+            self.draw_keys()
+            heading_y, detail_y = 467, 222
+        else:
             self.notice.selected = heading
             heading = self.notice.title()
-        info_text(self.title_font, 80, 420, heading)
+            heading_y, detail_y = 420, 355
+        info_text(self.title_font, 80, heading_y, heading)
         for index, line in enumerate(lines):
-            info_text(self.font, 80, 355 - index * 34, line)
+            info_text(self.font, 80, detail_y - index * 34, line)
 
     def draw(self):
         info_text(self.font, 80, 507, '가이드')
