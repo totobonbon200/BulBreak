@@ -33,6 +33,11 @@ class Assets:
         self.font = load_font('C:/Windows/Fonts/malgun.ttf', 15)
         self.notice_font = load_font('C:/Windows/Fonts/malgun.ttf', 24)
         self.timeout_font = load_font('C:/Windows/Fonts/malgun.ttf', 38)
+        # 미로와 전투가 같은 고양이 자원과 캔버스 경계를 사용한다.
+        self.cat_effect = CatEffect(
+            load_image(str(root / 'resources/manja-vitolic-gKXKBY-C-Dk-unsplash.jpg')),
+            load_image(str(root / 'resources/cat_yawn.png')),
+            get_canvas_width(), get_canvas_height())
 
 
 def main():
@@ -40,7 +45,8 @@ def main():
     modes = create_menus(assets.font)
     modes['maze_mode'] = MazeMode(assets)
     modes['battle_mode'] = BattleMode(assets)
-    framework = GameFramework(modes, timeout_font=assets.timeout_font)
+    framework = GameFramework(modes, timeout_font=assets.timeout_font,
+                              cat_effect=assets.cat_effect)
     for mode in modes.values():
         mode.framework = framework
     while framework.running:
