@@ -95,17 +95,20 @@ class StartMenu(SelectionMenu):
             self.font.draw(x - 153, y, label, color)
 
 
-class ConstraintMenu(MenuMode):
+class ConstraintMenu(SelectionMenu):
     # 제약 선택 순서와 각 제약이 실행될 플레이 모드를 정의한다.
     OPTIONS = (('maze_mode', 'maze_arrival'), ('maze_mode', 'maze_cross'),
                ('battle_mode', 'battle_placeholder'), ('battle_mode', 'battle_rhythm'),
                ('maze_mode', CAT_CONSTRAINT), ('battle_mode', CAT_CONSTRAINT))
 
     def __init__(self, font):
-        super().__init__(font, '제약 한 판', ['오른쪽: 다음 제약 / 왼쪽: 시작 화면 / 아래: 플레이'],
-                         {SDLK_LEFT: 'start_mode'})
+        super().__init__(font, '디버그모드', ['위·아래: 제약 선택 / 왼쪽: 플레이 / 오른쪽: 시작 화면'],
+                         {SDLK_RIGHT: 'start_mode'})
         self.index = 0
         self.preview = ConstraintNotice()  # 실제 플레이와 같은 이름과 설명을 표시한다.
+
+    def confirm_selection(self):
+        self.framework.play_constraint(*self.OPTIONS[self.index])
 
     def handle_event(self, event):
         if event.type != SDL_KEYDOWN or event.key not in (SDLK_RIGHT, SDLK_DOWN):
