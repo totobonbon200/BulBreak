@@ -71,9 +71,7 @@ class StartMenu(SelectionMenu):
                ('디버그모드', 'instrument_mode'), ('게임종료', 'quit_mode'))
 
     def __init__(self, font, image, menu_image):
-        super().__init__(font, '', (),
-                         {SDLK_UP: 'quit_mode', SDLK_DOWN: 'maze_mode',
-                          SDLK_LEFT: 'guide_mode', SDLK_RIGHT: 'instrument_mode'})
+        super().__init__(font, '', (), {})
         self.image = image
         self.menu_image = menu_image
         self.index = 0
@@ -83,8 +81,8 @@ class StartMenu(SelectionMenu):
 
     def draw(self):
         if self.image is not None:
-            scale = min(480 / self.image.w, 280 / self.image.h)
-            self.image.draw(400, 300, self.image.w * scale, self.image.h * scale)
+            scale = min(440 / self.image.w, 250 / self.image.h)
+            self.image.draw(256, 465, self.image.w * scale, self.image.h * scale)
         # 각 안내를 눌러야 하는 방향 쪽에 배치한다.
         labels = ((400, 485, 22, '↑ 종료'), (400, 115, 38, '↓ 게임 시작'),
                   (110, 300, 32, '← 가이드'), (700, 300, 45, '→ 제약 한 판'))
