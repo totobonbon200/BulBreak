@@ -39,3 +39,12 @@ class TutorialMode:
         self.completed = marker.is_file()
         self.framework = None
         self.held = set()
+
+    def enter(self, first_visit):
+        self.step = 0
+        self.held.clear()
+        self.now = self.framework.clock()
+        self.framework.notice.reset()
+        self.mode = self.framework.modes['maze_mode']
+        self.mode.enter(False)
+        self.prepare_maze()
