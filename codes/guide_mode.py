@@ -6,6 +6,16 @@ from codes.hud import info_text
 from codes.constraints import CAT_CONSTRAINT, ConstraintNotice
 
 
+def draw_key_outline(x, y):
+    # 네 모서리의 호 사이를 직선으로 이어 둥근 키 윤곽을 그린다.
+    corners = ((x + 60, y + 26), (x - 60, y + 26), (x - 60, y - 26), (x + 60, y - 26))
+    points = [(cx + 10 * cos(radians(angle)), cy + 10 * sin(radians(angle)))
+              for index, (cx, cy) in enumerate(corners)
+              for angle in range(90 * index, 90 * (index + 1) + 1, 15)]
+    for (x1, y1), (x2, y2) in zip(points, points[1:] + points[:1]):
+        draw_line(x1, y1, x2, y2, 255, 255, 255)
+
+
 class GuideMode:
     # 키 좌표와 역할은 위·왼쪽·아래·오른쪽 순서로 대응한다.
     KEYS = (('↑', 400, 400), ('←', 242, 311), ('↓', 400, 311), ('→', 558, 311))
