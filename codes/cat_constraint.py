@@ -1,7 +1,7 @@
 # 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
 """고양이 제약의 캔버스 반사와 시야 방해를 그린다."""
 from math import ceil, cos, sin, sqrt, tau
-from random import uniform
+from random import randint, uniform
 
 CAT_SIZE = 100
 CAT_MARGIN = ceil(CAT_SIZE / sqrt(2))  # 회전한 사각형도 캔버스 안에 둔다.
@@ -33,3 +33,11 @@ class CatEffect:
         self.backdrop, self.sprite = backdrop, sprite
         self.width, self.height = width, height
         self.started, self.cats = None, []
+
+    def sync(self, active, now):
+        if not active:
+            self.started, self.cats = None, []
+        elif self.started is None:
+            self.started = now
+            self.cats = [CatMotion(self.width, self.height) for _ in range(randint(3, 4))]
+        return active
