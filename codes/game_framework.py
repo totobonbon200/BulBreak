@@ -150,9 +150,15 @@ class GameFramework:
             return self.cat_effect
 
     def draw(self):
+        now = self.clock()
+        cats = self._active_cat_effect(now)
+        if cats is not None:
+            cats.draw_background()
         self.modes[self.state].draw()
+        if cats is not None:
+            cats.draw_cats(now)
         # 종류와 관계없이 현재 선택된 단일 제약의 패널을 표시한다.
-        if self.notice.pending is not None or self.notice.active:
+        if self.state in self.TIMED_MODES and (self.notice.pending is not None or self.notice.active):
             assets = self.modes[self.state].assets
             font = assets.notice_font if self.notice.pending is not None else assets.font
             self.notice.draw(font, self.state)
