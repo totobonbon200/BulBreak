@@ -15,7 +15,7 @@ class GameFramework:
     STAGE_LIMIT = 15.0
     TIMED_MODES = ('maze_mode', 'battle_mode')
     MODES = ('start_mode', 'instrument_mode', 'guide_mode', 'maze_mode',
-             'battle_mode', 'result_mode', 'quit_mode')
+             'battle_mode', 'tutorial_mode', 'result_mode', 'quit_mode')
 
     def __init__(self, modes, timeout_font=None, clock=None, cat_effect=None):
         self.notice = ConstraintNotice()  # 전환 안내와 일반 진행을 분리한다.
@@ -43,7 +43,7 @@ class GameFramework:
 
     @property
     def timer_paused(self):
-        return self.stage_timed_out or self.notice.pending is not None
+        return self.state == 'tutorial_mode' or self.stage_timed_out or self.notice.pending is not None
 
     @property
     def game_over_active(self):
@@ -149,6 +149,9 @@ class GameFramework:
             return self.cat_effect
 
     def draw(self):
+        if self.state == 'tutorial_mode':
+            self.modes[self.state].draw()
+            return  # 튜토리얼이 강조 표시와 고양이 연출을 직접 그린다.
         now = self.clock()
         cats = self._active_cat_effect(now)
         if cats is not None:
