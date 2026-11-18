@@ -38,6 +38,16 @@ class MenuMode:
             text(self.font, 100, 450 - 30 * index, line)
 
 
+class SelectionMenu(MenuMode):
+    # 메뉴 선택 키는 한 번 누를 때마다 한 번만 처리한다.
+    def handle_event(self, event):
+        if event.type != SDL_KEYDOWN or event.key not in (SDLK_UP, SDLK_DOWN, SDLK_LEFT):
+            return super().handle_event(event)
+        if event.key not in self.held and not getattr(event, 'repeat', False):
+            self.held.add(event.key)
+            self.select(event.key)
+
+
 class StartMenu(MenuMode):
     # 기존 방향키 연결에 시작 화면 전용 이미지를 더한다.
     def __init__(self, font, image, menu_image):
