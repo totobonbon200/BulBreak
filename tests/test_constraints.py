@@ -110,6 +110,16 @@ class ConstraintTests(unittest.TestCase):
         rhythm.play_claps(4.5, sound)
         sound.play.assert_called_once_with()
 
+    def test_first_pattern_cue_is_once_and_leaves_room_before_the_second(self):
+        rhythm = Rhythm(0)
+        rhythm.patterns = [[1937.5], [0]]
+        now = rhythm.beat_times()[0]
+        self.assertFalse(rhythm.take_next_pattern_cue(now))
+        self.assertTrue(rhythm.press(now))
+        self.assertTrue(rhythm.take_next_pattern_cue(now))
+        self.assertAlmostEqual(rhythm.next_start, now + rhythm.CUE_GAP)
+        self.assertFalse(rhythm.take_next_pattern_cue(now))
+
     def test_countdown_places_go_sound_only_in_its_own_step(self):
         countdown, sound = RhythmCountdown(0), Mock()
         for index, label in enumerate(('3', '2', '1', 'GO')):
