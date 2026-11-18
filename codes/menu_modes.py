@@ -86,9 +86,13 @@ class StartMenu(SelectionMenu):
         # 네 항목을 오른쪽 아래에 쌓는다.
         for index, (label, _) in enumerate(self.OPTIONS):
             x, y = 663, 256 - index * 63
+            selected = index == self.index
+            color = (255, 220, 0) if selected else (255, 255, 255)
+            if selected:
+                x -= 24
             if self.menu_image is not None:
-                self.menu_image.draw(x, y, 130, 42)
-            info_text(self.font, x - 153, y, label)
+                draw_start_panel(self.menu_image, x, y, color)
+            self.font.draw(x - 153, y, label, color)
 
 
 class ConstraintMenu(MenuMode):
