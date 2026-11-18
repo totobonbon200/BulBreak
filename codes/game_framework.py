@@ -45,6 +45,10 @@ class GameFramework:
     def timer_paused(self):
         return self.stage_timed_out or self.notice.pending is not None
 
+    @property
+    def game_over_active(self):
+        return self.stage_timed_out or getattr(self.modes[self.state], 'is_game_over', False) is True
+
     def change_mode(self, name):
         if name not in self.MODES:
             raise ValueError(name)
