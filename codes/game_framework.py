@@ -161,10 +161,7 @@ class GameFramework:
         self.modes[self.state].draw()
         if cats is not None:
             cats.draw_cats(now)
-        # 종류와 관계없이 현재 선택된 단일 제약의 패널을 표시한다.
-        if self.state in self.TIMED_MODES and (self.notice.pending is not None or self.notice.active):
-            assets = self.modes[self.state].assets
-            font = assets.notice_font if self.notice.pending is not None else assets.font
-            self.notice.draw(font, self.state)
+        if self.notice.pending is not None:
+            self.notice.draw(self.modes[self.state].assets.notice_font, self.state)
         if self.stage_timed_out and self.timeout_font is not None:
             text(self.timeout_font, 100, 380, '관심받고싶음? 옛다 관심', size=38)
