@@ -14,3 +14,13 @@ def dim_outside(focus):
                (left, 0, right, bottom), (left, top, right, height))
     for region in regions:
         draw_rectangle(*region, 0, 0, 0, 179, filled=True)
+
+
+class TutorialMode:
+    MAZE_STEPS = (
+        (SDLK_RIGHT, '→ 로 통로를 한 칸 이동하세요.', (100, 432, 234, 500)),
+        (SDLK_RIGHT, '→ 로 앞의 벽을 한 번 공격하세요.', (166, 432, 301, 500)),
+        (SDLK_RIGHT, '→ 를 다시 눌러 벽을 부수세요.', (166, 432, 301, 500)),
+        (SDLK_RIGHT, '→ 로 벽이 있던 칸에 들어가세요.', (166, 432, 301, 500)),
+        (SDLK_RIGHT, '→ 로 출구에 도착하세요.', (232, 432, 368, 500)),
+    )
