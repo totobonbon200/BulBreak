@@ -34,6 +34,15 @@ class Rhythm:
     def hits(self):
         return self.patterns[self.segment % len(self.patterns)]
 
+    def take_next_pattern_cue(self, now):
+        first_finished = self.segment == 1 or (self.segment == 0 and self.index == len(self.hits))
+        if not first_finished or self.next_cue_at is not None:
+            return False
+        self.next_cue_at = now
+        if self.segment == 1:
+            self.started = max(self.started, now + self.CUE_GAP)
+        return True
+
     def advance(self, now):
         # 시범 2초 뒤 같은 박자를 입력하고 다음 시범으로 진행한다.
         misses = 0
