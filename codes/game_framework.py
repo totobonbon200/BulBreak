@@ -105,8 +105,18 @@ class GameFramework:
                     self.change_mode('start_mode')
             return
         self.modes[self.state].handle_event(event)
+        self.finish_failed_practice()
 
     def update(self, now):
+        self._update_mode(now)
+        self.finish_failed_practice()
+
+    def finish_failed_practice(self):
+        # 일반 게임오버와 강제 종료 모두 제약 선택 화면으로 복귀한다.
+        if self.practicing_constraint and (self.stage_timed_out or self.modes[self.state].is_game_over):
+            self.change_mode('instrument_mode')
+
+    def _update_mode(self, now):
         if self.notice.pending is not None:
             target = self.notice.finish(now)
             if target is not None:
