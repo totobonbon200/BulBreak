@@ -106,6 +106,13 @@ class GameOverMenu(SelectionMenu):
         self.framework = framework
         self.index = 0
 
+    def confirm_selection(self):
+        self.framework.resolve_game_over(restart=self.index == 0)
+
+    def draw(self):
+        for index, label in enumerate(self.OPTIONS):
+            draw_panel_choice(self.font, self.menu_image, 130 - index * 63, label, index == self.index)
+
 
 class ConstraintMenu(SelectionMenu):
     # 제약 선택 순서와 각 제약이 실행될 플레이 모드를 정의한다.
