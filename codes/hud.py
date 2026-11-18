@@ -56,3 +56,13 @@ def draw_hud(assets, rules, now, completed, score=0, *, timer_paused=False):
         sheet.clip_draw(column * width, height, width, height,
                         64 + index * 80, 550, 64, 64)
     draw_timer(rules, now, timer_paused or rules.is_over)
+
+
+def draw_enemy_health(remaining, total):
+    # 리듬 목표가 길어도 적 아래의 표시 폭을 넘기지 않는다.
+    step = min(14, 164 / total)
+    radius = step * 0.36
+    for index in range(total):
+        x = 350 + (index - (total - 1) / 2) * step
+        draw_rectangle(round(x - radius), round(276 - radius), round(x + radius),
+                       round(276 + radius), 255, 255, 255, filled=index < remaining)
