@@ -124,9 +124,9 @@ class ConstraintMenu(MenuMode):
         text(self.font, 100, 335, self.preview.description(target))
 
 
-def create_menus(font, main_image=None, menu_image=None):
+def create_menus(font, main_image=None, menu_image=None, *, start_font=None):
     return {
-        'start_mode': StartMenu(font, main_image, menu_image),
+        'start_mode': StartMenu(start_font or font, main_image, menu_image),
         'guide_mode': GuideMode(font),
         'instrument_mode': ConstraintMenu(font),
         'battle_mode': MenuMode(font, 'Battle: planned',

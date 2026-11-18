@@ -47,7 +47,8 @@ class Assets:
 
 def main():
     assets = Assets()
-    modes = create_menus(assets.font, assets.main_image, assets.menu_image)
+    modes = create_menus(assets.font, assets.main_image, assets.menu_image,
+                         start_font=assets.notice_font)
     modes['maze_mode'] = MazeMode(assets)
     modes['battle_mode'] = BattleMode(assets)
     framework = GameFramework(modes, timeout_font=assets.timeout_font,
