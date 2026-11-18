@@ -8,6 +8,7 @@ from pathlib import Path
 
 class Rhythm:
     WINDOW = .100  # 사용자 요청에 따라 앞뒤 100ms까지 허용한다.
+    CUE_GAP = .16  # 0.15초 길이의 GO 소리가 끝난 뒤 시범을 시작한다.
 
     def __init__(self, now):
         # 사용자 원본을 수정하지 않고 시범 페이지의 박자 목록을 읽는다.
@@ -20,6 +21,14 @@ class Rhythm:
         self.segment = 0
         self.index = 0
         self.last_clap = now - .001  # 첫 박자도 한 번 재생한다.
+        self.next_cue_at = None
+
+    @property
+    def next_start(self):
+        nominal = self.started + 4
+        if self.segment == 0 and self.next_cue_at is not None:
+            return max(nominal, self.next_cue_at + self.CUE_GAP)
+        return nominal
 
     @property
     def hits(self):
