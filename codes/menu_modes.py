@@ -110,6 +110,15 @@ class ConstraintMenu(SelectionMenu):
     def confirm_selection(self):
         self.framework.play_constraint(*self.OPTIONS[self.index])
 
+    def option_title(self, target, key):
+        # 같은 고양이 제약도 실행할 모드에 따라 구분한다.
+        self.preview.selected = key
+        title = self.preview.title()
+        if key != CAT_CONSTRAINT:
+            return title
+        mode = '미로' if target == 'maze_mode' else '전투'
+        return f'[{mode}] {title}'
+
     def draw(self):
         super().draw()
         target, self.preview.selected = self.OPTIONS[self.index]
