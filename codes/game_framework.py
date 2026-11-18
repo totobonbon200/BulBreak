@@ -142,6 +142,13 @@ class GameFramework:
                 return
         mode.update(now)
 
+    def _active_cat_effect(self, now):
+        # 전환 안내와 메뉴에서는 효과를 지우고 새 적용을 기다린다.
+        active = (self.state in self.TIMED_MODES and self.notice.pending is None
+                  and CAT_CONSTRAINT in self.notice.active)
+        if self.cat_effect is not None and self.cat_effect.sync(active, now):
+            return self.cat_effect
+
     def draw(self):
         self.modes[self.state].draw()
         # 종류와 관계없이 현재 선택된 단일 제약의 패널을 표시한다.
