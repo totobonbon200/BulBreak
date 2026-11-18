@@ -311,7 +311,8 @@ class GameFlowTests(unittest.TestCase):
         self.assertEqual(mode.player.attack_direction, (0, 1))
 
     def test_main_menu_instructions_maze_and_overlay(self):
-        assets = SimpleNamespace(font=Mock(), timeout_font=Mock(), cat_effect=None, maze_sheet=Mock(w=400, h=200),
+        assets = SimpleNamespace(font=Mock(), timeout_font=Mock(), cat_effect=None, main_image=None,
+                                 maze_sheet=Mock(w=400, h=200),
                                  character_sheet=Mock(w=400, h=400), effect_sheet=Mock(w=800, h=400))
         key = lambda value: SimpleNamespace(type=SDL_KEYDOWN, key=value)
         events = [[key(SDLK_RIGHT)], [key(SDLK_LEFT)], [key(SDLK_DOWN)],
