@@ -165,10 +165,19 @@ class GameFlowTests(unittest.TestCase):
         framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_DOWN))
         framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_LEFT))
         self.assertEqual(framework.current_mode, 'guide_mode')
+        guide = modes['guide_mode']
+        self.assertEqual(guide.page, 0)
+        framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_DOWN))
+        framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_DOWN))
+        self.assertEqual(guide.page, 2)
+        framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_UP))
+        self.assertEqual(guide.page, 1)
         framework.update(100)
         framework.draw()
         framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_RIGHT))
         self.assertEqual(framework.current_mode, 'start_mode')
+        framework.change_mode('guide_mode')
+        self.assertEqual(guide.page, 0)
 
     def test_start_screen_confirms_game_start_and_quit(self):
         for index, expected in ((0, 'maze_mode'), (3, 'quit_mode')):
