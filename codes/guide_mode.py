@@ -1,7 +1,7 @@
-"""A separate guide screen describing the playable maze prototype."""
+"""기본 조작과 제약 요약을 페이지별로 보여준다."""
 # 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
 from pico2d import SDL_KEYDOWN, SDLK_DOWN, SDLK_RIGHT, SDLK_UP
-from codes.hud import info_text, text
+from codes.hud import info_text
 from codes.constraints import CAT_CONSTRAINT, ConstraintNotice
 
 
