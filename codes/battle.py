@@ -143,6 +143,8 @@ class BattleMode:
                 return
             if self.is_game_over:
                 return
+            if self.rhythm.index == len(self.rhythm.hits):
+                return  # 입력을 마친 뒤 다음 시범을 기다리는 동안에는 피해가 없다.
             if (self.now < self.rhythm.started + 2
                     and self.now < self.rhythm.beat_times()[0] - self.rhythm.WINDOW):
                 return  # 첫 입력 박자의 이른 허용 범위를 보존한다.
@@ -274,6 +276,12 @@ class BattleMode:
             finally:
                 sheet.opacify(1.0)
             text(self.assets.font, 180, 320, '아래: 재시작 / 위: 시작 화면')
+
+    def play_pattern_cue(self, now):
+        if not self.is_game_over and self.rhythm.take_next_pattern_cue(now):
+            sound = getattr(self.assets, 'go_sound', None)
+            if sound is not None:
+                sound.play()
 
     def update_rhythm(self, now):
         # 누락 피해는 한 번만 반영하고 일반 게임오버 시계를 고정한다.
