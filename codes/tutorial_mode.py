@@ -114,3 +114,12 @@ class TutorialMode:
         self.mode.draw()
         if cats is not None:
             cats.draw_cats(self.now)
+
+    def draw(self):
+        self.draw_scene()
+        _, message, focus = self.STEPS[self.step]
+        dim_outside(focus)
+        title = '고양이다아아아아' if self.showing_cats else '튜토리얼'
+        info_text(self.assets.notice_font, 100, 558, title)
+        info_text(self.assets.font, 665, 558, f'{self.step + 1} / {len(self.STEPS)}')
+        info_text(self.assets.notice_font, 100, 60, message)
