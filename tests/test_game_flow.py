@@ -117,7 +117,7 @@ class GameFlowTests(unittest.TestCase):
         # 도착 시트의 행·열과 출력 영역을 직접 확인한다.
         assets = SimpleNamespace(maze_sheet=Mock(w=800, h=400), font=Mock())
         with patch('codes.maze_gamemode.get_time', return_value=0), \
-             patch('codes.maze_gamemode.draw_hud'), patch('codes.maze_gamemode.text'):
+             patch('codes.maze_gamemode.draw_hud'):
             mode = MazeMode(assets)
             mode.awaiting_next_maze = True
             mode.draw()

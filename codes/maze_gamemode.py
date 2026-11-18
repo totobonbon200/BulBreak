@@ -5,7 +5,7 @@ from pico2d import *
 from codes.maze import Maze
 from codes.clap_sound import play_go_sound
 from codes.cross_maze import CrossMaze
-from codes.hud import draw_hud, info_text as text
+from codes.hud import draw_hud
 from codes.character import Character, PlayerState
 
 
@@ -152,4 +152,3 @@ class MazeMode:
                                 400, 300, 800, 600)
             finally:
                 sheet.opacify(1.0)
-            text(font, 180, 320, '아래: 재시작 / 위: 시작 화면')

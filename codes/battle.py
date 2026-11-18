@@ -11,7 +11,7 @@ from codes.enemy import Enemy
 from codes.rhythm import Rhythm
 from codes.rhythm_countdown import RhythmCountdown, draw_countdown_text
 from codes.gameover import GameOverRules
-from codes.hud import draw_enemy_health, draw_hud, info_text as text
+from codes.hud import draw_enemy_health, draw_hud
 
 
 class BattleMode:
@@ -279,7 +279,6 @@ class BattleMode:
                 draw_frame(sheet, 2, 4, (0, 3), 400, 300, 800, 600)
             finally:
                 sheet.opacify(1.0)
-            text(self.assets.font, 180, 320, '아래: 재시작 / 위: 시작 화면')
 
     def play_pattern_cue(self, now):
         if not self.is_game_over and self.rhythm.take_next_pattern_cue(now):
