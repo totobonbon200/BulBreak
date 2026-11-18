@@ -1,6 +1,9 @@
 # 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
 """리듬 시작 전에 같은 간격으로 숫자와 GO를 표시한다."""
 from math import pi, sin
+from pico2d import Image, draw_rectangle
+from sdl2 import SDL_Color, SDL_CreateTextureFromSurface, SDL_FreeSurface
+from sdl2.sdlttf import TTF_RenderUTF8_Blended
 
 
 class RhythmCountdown:
