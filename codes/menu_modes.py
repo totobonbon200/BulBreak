@@ -40,11 +40,12 @@ class MenuMode:
 
 class StartMenu(MenuMode):
     # 기존 방향키 연결에 시작 화면 전용 이미지를 더한다.
-    def __init__(self, font, image):
+    def __init__(self, font, image, menu_image):
         super().__init__(font, '', (),
                          {SDLK_UP: 'quit_mode', SDLK_DOWN: 'maze_mode',
                           SDLK_LEFT: 'guide_mode', SDLK_RIGHT: 'instrument_mode'})
         self.image = image
+        self.menu_image = menu_image
 
     def draw(self):
         if self.image is not None:
@@ -86,9 +87,9 @@ class ConstraintMenu(MenuMode):
         text(self.font, 100, 335, self.preview.description(target))
 
 
-def create_menus(font, main_image=None):
+def create_menus(font, main_image=None, menu_image=None):
     return {
-        'start_mode': StartMenu(font, main_image),
+        'start_mode': StartMenu(font, main_image, menu_image),
         'guide_mode': GuideMode(font),
         'instrument_mode': ConstraintMenu(font),
         'battle_mode': MenuMode(font, 'Battle: planned',
