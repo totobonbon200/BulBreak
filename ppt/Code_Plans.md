@@ -1,5 +1,9 @@
 # Python 파일별 구현 계획
 
+## 시작 화면 방향별 메뉴
+- `main.py`에서 `resources/Main.png`를 불러오고, `menu_modes.py`에서 원본 비율로 화면 가운데에 표시한다.
+- 이미지 위는 종료, 아래는 게임 시작, 왼쪽은 가이드, 오른쪽은 제약 한 판 메뉴를 표시한다. 기존 방향키 연결을 사용한다.
+
 ## 고양이 제약 구현
 - `constraints.py`에서 공통 단일 제약 추첨 및 제목 전용 전환 안내를 처리한다. `menu_modes.py`에는 미로·전투 연습을 각각 등록한다.
 - `cat_constraint.py`에서 `manja-vitolic-gKXKBY-C-Dk-unsplash.jpg`와 `girl-with-red-hat-x170FVylLLg-unsplash.jpg`에서 배경을 제거한 PNG를 사용해 각각 배경과 오브젝트를 그린다.
