@@ -155,7 +155,7 @@ class ConstraintMenu(SelectionMenu):
 def create_menus(font, main_image=None, menu_image=None, *, start_font=None):
     return {
         'start_mode': StartMenu(start_font or font, main_image, menu_image),
-        'guide_mode': GuideMode(font),
+        'guide_mode': GuideMode(font, title_font=start_font),
         'instrument_mode': ConstraintMenu(font),
         'battle_mode': MenuMode(font, 'Battle: planned',
                                ['Combat is not implemented yet.', 'LEFT: back'],

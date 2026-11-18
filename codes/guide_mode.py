@@ -2,7 +2,7 @@
 # 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
 from pico2d import SDL_KEYDOWN, SDLK_RIGHT
 from codes.hud import text
-from codes.constraints import CAT_CONSTRAINT
+from codes.constraints import CAT_CONSTRAINT, ConstraintNotice
 
 
 class GuideMode:
@@ -25,12 +25,15 @@ class GuideMode:
                           '움직이는 고양이는 화면 가장자리에서 튕깁니다.')),
     )
 
-    def __init__(self, font):
+    def __init__(self, font, title_font=None):
         self.font = font
+        self.title_font = title_font or font
+        self.notice = ConstraintNotice()
+        self.page = 0
         self.framework = None
 
     def enter(self, first_visit):
-        pass
+        self.page = 0
 
     def exit(self):
         pass
