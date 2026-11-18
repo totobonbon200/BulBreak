@@ -32,3 +32,10 @@ class TutorialMode:
     )
     CAT_STEP = (SDLK_DOWN, '고양이가 시야를 가립니다. ↓ 를 눌러 본 게임을 시작하세요.', (100, 100, 500, 500))
     STEPS = MAZE_STEPS + BATTLE_STEPS + (CAT_STEP,)
+
+    def __init__(self, assets, marker):
+        self.assets = assets
+        self.marker = marker
+        self.completed = marker.is_file()
+        self.framework = None
+        self.held = set()
