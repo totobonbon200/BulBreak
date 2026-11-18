@@ -152,6 +152,7 @@ class BattleMode:
                 self.rules.health = max(0, self.rules.health - 1)
                 self.message = '박자 실패! 체력 1 감소'
                 return
+            self.play_pattern_cue(self.now)
         else:
             self.rules.record_action(self.now)
         if self.is_game_over:
@@ -290,6 +291,7 @@ class BattleMode:
             self.countdown.play_go(now, getattr(self.assets, 'go_sound', None))
             return
         self.rules.health = max(0, self.rules.health - self.rhythm.advance(now))
+        self.play_pattern_cue(now)
         self.rhythm.play_claps(now, getattr(self.assets, 'clap_sound', None))
         self.enemy.animation = Animation([self.rhythm.frame(now)], now, .15)
         self.message = self.rhythm.description(now)
