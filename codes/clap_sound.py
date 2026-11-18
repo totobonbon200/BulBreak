@@ -1,5 +1,5 @@
 # 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
-"""외부 음원 없이 짧은 박수 효과음을 만든다."""
+"""외부 음원 없이 리듬 전투의 짧은 효과음을 만든다."""
 from array import array
 import math
 import random
@@ -25,9 +25,13 @@ def load_clap():
         value = (white - previous * .7) * envelope * .65
         samples.append(round(max(-1, min(1, value)) * 32767))
         previous = white
+    return load_pcm(samples, rate)
+
+
+def load_pcm(samples, rate):
     # 로드 후 PCM은 믹서가 보관하므로 임시 파일은 바로 정리한다.
-    with TemporaryDirectory(prefix='bulbreak-clap-') as directory:
-        path = Path(directory) / 'clap.wav'
+    with TemporaryDirectory(prefix='bulbreak-sound-') as directory:
+        path = Path(directory) / 'effect.wav'
         with wave.open(str(path), 'wb') as output:
             output.setparams((1, 2, rate, 0, 'NONE', 'not compressed'))
             output.writeframes(samples.tobytes())
