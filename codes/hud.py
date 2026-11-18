@@ -44,9 +44,8 @@ def draw_timer(rules, now, paused):
     if end > left:
         draw_rectangle(left, 481, end, 510, *color, filled=True)
 
-def draw_hud(assets, rules, now, completed, score=0):
-    font = assets.font
-    text = info_text
+
+def draw_hud(assets, rules, now, completed, score=0, *, timer_paused=False):
     assets.menu_image.draw(132, 550, 336, 90)  # 왼쪽 경사를 캔버스 밖에 둔다.
     assets.menu_image.draw(650, 345, 300, 490)
     draw_progress(assets, 2 if rules.mode == 'battle' else min(completed, 1))
@@ -56,6 +55,4 @@ def draw_hud(assets, rules, now, completed, score=0):
         column = 0 if index < rules.health else 1
         sheet.clip_draw(column * width, height, width, height,
                         64 + index * 80, 550, 64, 64)
-    text(font, 375, 575, '미로 주파' if rules.mode == 'maze' else '무행동')
-    text(font, 375, 550, f'{rules.idle_remaining(now):.1f}초')
-    text(font, 375, 525, f'최대 {rules.max_idle_time:.2f}')
+    draw_timer(rules, now, timer_paused or rules.is_over)
