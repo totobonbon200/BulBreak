@@ -62,3 +62,10 @@ class TutorialMode:
         self.mode = self.framework.modes['battle_mode']
         self.mode.enter(False)
         self.mode.enemy.directions = deque(('up', 'down', 'left', 'right', 'up'))
+
+    def update(self, now):
+        self.now = now
+        # 캐릭터 애니메이션은 진행하고 연습 타이머는 멈춘다.
+        rules = self.mode.player.rules if self.step < len(self.MAZE_STEPS) else self.mode.rules
+        rules.last_update = now
+        self.mode.update(now)
