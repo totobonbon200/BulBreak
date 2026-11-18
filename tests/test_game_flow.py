@@ -173,7 +173,8 @@ class GameFlowTests(unittest.TestCase):
         framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_UP))
         self.assertEqual(guide.page, 1)
         framework.update(100)
-        framework.draw()
+        with patch('codes.guide_mode.draw_line'):
+            framework.draw()
         framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_RIGHT))
         self.assertEqual(framework.current_mode, 'start_mode')
         framework.change_mode('guide_mode')
