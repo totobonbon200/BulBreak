@@ -94,14 +94,7 @@ class StartMenu(SelectionMenu):
             self.image.draw(256, 465, self.image.w * scale, self.image.h * scale)
         # 네 항목을 오른쪽 아래에 쌓는다.
         for index, (label, _) in enumerate(self.OPTIONS):
-            x, y = 663, 256 - index * 63
-            selected = index == self.index
-            color = (255, 220, 0) if selected else (255, 255, 255)
-            if selected:
-                x -= 24
-            if self.menu_image is not None:
-                draw_start_panel(self.menu_image, x, y, color)
-            self.font.draw(x - 153, y, label, color)
+            draw_panel_choice(self.font, self.menu_image, 256 - index * 63, label, index == self.index)
 
 
 class ConstraintMenu(SelectionMenu):
