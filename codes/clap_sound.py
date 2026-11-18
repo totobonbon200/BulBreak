@@ -28,6 +28,14 @@ def load_clap():
     return load_pcm(samples, rate)
 
 
+def load_glass_break():
+    rate = 44100
+    noise = random.Random(47)
+    samples = array('h', (round(32767 * glass_sample(index / rate, noise.uniform(-1, 1)))
+                          for index in range(round(rate * .15))))
+    return load_pcm(samples, rate)
+
+
 def glass_sample(elapsed, noise):
     # 짧은 파열 뒤에 서로 다른 높은 음이 빠르게 감쇠한다.
     strike = noise * .26 * math.exp(-elapsed * 92)
