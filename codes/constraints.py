@@ -1,7 +1,16 @@
 # 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md의 최신 기준을 확인한다.
 """무작위 단일 제약과 전환 안내를 관리한다."""
 from codes.hud import panel, info_text
+from ctypes import byref, c_int
+from sdl2.sdlttf import TTF_SizeUTF8
 import random
+
+
+def draw_notice_title(font, title):
+    # 실제 글자 폭으로 400×400 플레이 영역의 가운데를 맞춘다.
+    width = c_int()
+    TTF_SizeUTF8(font.font, title.encode('utf-8'), byref(width), None)
+    info_text(font, 300 - width.value / 2, 300, title)
 
 
 class ConstraintNotice:
