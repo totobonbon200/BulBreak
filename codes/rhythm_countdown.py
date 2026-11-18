@@ -6,6 +6,15 @@ from sdl2 import SDL_Color, SDL_CreateTextureFromSurface, SDL_FreeSurface
 from sdl2.sdlttf import TTF_RenderUTF8_Blended
 
 
+def draw_countdown_text(font, label, scale):
+    rgb = (255, 220, 0) if label == 'GO' else (255, 255, 255)
+    surface = TTF_RenderUTF8_Blended(font.font, label.encode('ascii'), SDL_Color(*rgb, 255))
+    renderer = draw_rectangle.__globals__['renderer']
+    image = Image(SDL_CreateTextureFromSurface(renderer, surface))
+    SDL_FreeSurface(surface)
+    image.draw(300, 300, image.w * scale, image.h * scale)
+
+
 class RhythmCountdown:
     LABELS = ('3', '2', '1', 'GO')
     STEP = 0.625
