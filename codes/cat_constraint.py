@@ -1,6 +1,6 @@
 # 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
 """고양이 제약의 캔버스 반사와 시야 방해를 그린다."""
-from math import ceil, sqrt
+from math import ceil, cos, sin, sqrt, tau
 from random import uniform
 
 CAT_SIZE = 100
@@ -18,3 +18,10 @@ class CatMotion:
                        uniform(CAT_MARGIN, height - CAT_MARGIN))
         self.heading = uniform(0, 2 * 3.141592653589793)
         self.speed = uniform(360, 480)
+
+    def pose(self, elapsed, width, height):
+        distance = elapsed * self.speed
+        x = bounce_position(self.origin[0], distance * cos(self.heading), width)
+        y = bounce_position(self.origin[1], distance * sin(self.heading), height)
+        angle = (self.heading + distance / (CAT_SIZE / 2) * 0.85) % tau
+        return x, y, angle
