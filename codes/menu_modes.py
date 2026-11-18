@@ -3,7 +3,7 @@
 from pico2d import *
 from codes.constraints import CAT_CONSTRAINT, ConstraintNotice
 from codes.guide_mode import GuideMode
-from codes.hud import text
+from codes.hud import info_text, text
 
 
 class MenuMode:
@@ -55,7 +55,9 @@ class StartMenu(MenuMode):
         labels = ((378, 485, '↑ 종료'), (362, 115, '↓ 게임 시작'),
                   (78, 300, '← 가이드'), (655, 300, '→ 제약 한 판'))
         for x, y, label in labels:
-            text(self.font, x, y, label)
+            if self.menu_image is not None:
+                self.menu_image.draw(x + 42, y, 130, 42)
+            info_text(self.font, x, y, label)
 
 
 class ConstraintMenu(MenuMode):
