@@ -10,7 +10,7 @@ from sdl2 import (SDL_SetHint, SDL_HINT_RENDER_SCALE_QUALITY,
 from codes.maze_gamemode import MazeMode
 from codes.battle import BattleMode
 from codes.cat_constraint import CatEffect
-from codes.clap_sound import load_clap
+from codes.clap_sound import load_clap, load_glass_break
 from codes.game_framework import GameFramework
 from codes.menu_modes import create_menus
 
@@ -21,6 +21,10 @@ class Assets:
         SDL_SetRenderDrawBlendMode(draw_rectangle.__globals__['renderer'], SDL_BLENDMODE_BLEND)
         # 시범과 정확한 입력이 같은 박수 효과음을 공유한다.
         self.clap_sound = load_clap()
+        self.go_sound = load_glass_break()
+        if self.go_sound is not None:
+            clap_volume = self.clap_sound.get_volume() if self.clap_sound is not None else 128
+            self.go_sound.set_volume(round(clap_volume * .85))
         root = Path(__file__).resolve().parents[1]
         self.main_image = load_image(str(root / 'resources/Main.png'))  # 시작 화면 로고
         self.menu_image = load_image(str(root / 'resources/Menu.png'))  # 시작·게임 공용 패널
