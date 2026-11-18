@@ -115,10 +115,8 @@ class GameFramework:
             self.notice.reset()
         if self.notice.pending is not None:
             return  # 안내 중 방향키는 다음 플레이에 전달하지 않는다.
-        if self.stage_timed_out:
-            if event.type == SDL_KEYDOWN:
-                if event.key in (SDLK_DOWN, SDLK_UP):
-                    self.resolve_game_over(restart=event.key == SDLK_DOWN)
+        if self.game_over_active:
+            self.game_over_menu.handle_event(event)
             return
         self.modes[self.state].handle_event(event)
         self.finish_failed_practice()

@@ -52,7 +52,7 @@ class GameFlowTests(unittest.TestCase):
             self.assertNotIn('GAME OVER', mode.message)
             framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_RIGHT))
             self.assertFalse(mode.player.is_playing)
-            framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_DOWN))
+            framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_LEFT))
             self.assertFalse(framework.stage_timed_out)
             self.assertTrue(mode.player.is_playing)
             self.assertEqual(framework.stage_elapsed, 0)
