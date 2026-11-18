@@ -47,12 +47,12 @@ class Rhythm:
         # 시범 2초 뒤 같은 박자를 입력하고 다음 시범으로 진행한다.
         misses = 0
         # 구간 마지막 박자의 늦은 허용 범위까지 보존한다.
-        while (now > self.started + 4
+        while (now >= self.next_start
                and (self.index >= len(self.hits)
                     or now > self.beat_times()[-1] + self.WINDOW)):
             misses += len(self.hits) - self.index
+            self.started = self.next_start
             self.segment += 1
-            self.started += 4
             self.index = 0
         while (self.index < len(self.hits)
                and now > self.beat_times()[self.index] + self.WINDOW):
