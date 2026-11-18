@@ -1,9 +1,19 @@
 """방향키로 이동하는 시작 및 안내 화면."""
 # 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
 from pico2d import *
+from sdl2 import SDL_SetTextureColorMod
 from codes.constraints import CAT_CONSTRAINT, ConstraintNotice
 from codes.guide_mode import GuideMode
 from codes.hud import info_text, text
+
+
+def draw_start_panel(image, x, y, color):
+    # 오른쪽 경사는 캔버스에서 잘리고, 색상은 다른 HUD에 남기지 않는다.
+    SDL_SetTextureColorMod(image.texture, *color)
+    try:
+        image.draw(x, y, 412, 52)
+    finally:
+        SDL_SetTextureColorMod(image.texture, 255, 255, 255)
 
 
 class MenuMode:
