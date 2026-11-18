@@ -88,3 +88,11 @@ class TutorialMode:
         self.step += 1
         if self.step == len(self.MAZE_STEPS):
             self.enter_battle()
+
+    def finish(self):
+        self.completed = True
+        try:
+            self.marker.touch(exist_ok=True)
+        except OSError:
+            pass  # 쓰기가 제한된 경우에도 현재 실행에서는 본 게임으로 넘어간다.
+        self.framework.change_mode('maze_mode')
