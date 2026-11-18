@@ -47,6 +47,13 @@ class SelectionMenu(MenuMode):
             self.held.add(event.key)
             self.select(event.key)
 
+    def select(self, key):
+        if key == SDLK_LEFT:
+            self.confirm_selection()
+        else:
+            step = -1 if key == SDLK_UP else 1
+            self.index = (self.index + step) % len(self.OPTIONS)
+
 
 class StartMenu(MenuMode):
     # 기존 방향키 연결에 시작 화면 전용 이미지를 더한다.
