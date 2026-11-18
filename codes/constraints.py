@@ -5,6 +5,7 @@ from ctypes import byref, c_int
 from sdl2.sdlttf import TTF_SizeUTF8
 import random
 
+CAT_CONSTRAINT = 'cat'
 
 def draw_notice_title(font, title):
     # 실제 글자 폭으로 400×400 플레이 영역의 가운데를 맞춘다.
@@ -35,7 +36,8 @@ class ConstraintNotice:
         if self.enabled and source != target and {source, target} == set(self.TITLES):
             # 안내를 시작할 때 진입 모드의 제약 하나만 미리 선택한다.
             self.selected = random.choice((self.KEYS[target],
-                                           'maze_cross' if target == 'maze_mode' else 'battle_rhythm'))
+                                           'maze_cross' if target == 'maze_mode' else 'battle_rhythm',
+                                           CAT_CONSTRAINT))
             self.pending = (target, now)
             return True
         return False
@@ -53,6 +55,7 @@ class ConstraintNotice:
         # 안내 시작 때 선택한 제약과 실제 적용 설명을 일치시킨다.
         return {'maze_arrival': '도착 후 방향키로 다음 미로', 'maze_cross': '중앙 출구 6회',
                 'battle_placeholder': '추가 효과 없음',
+                CAT_CONSTRAINT: f'{"미로" if mode == "maze_mode" else "전투"} 시야를 가리는 고양이',
                 'battle_rhythm': '두 패턴 따라 입력·±100ms'}.get(self.selected, '')
 
     def draw(self, font, mode):
@@ -66,4 +69,5 @@ class ConstraintNotice:
     def title(self):
         # 선택한 제약 이름을 안내와 플레이 패널에 동일하게 표시한다.
         return {'maze_arrival': '[미로] 도착 화면 확인', 'maze_cross': '[미로] 중앙 출구',
+                CAT_CONSTRAINT: '고양이다아아아아',
                 'battle_placeholder': '[전투] 임시 제약', 'battle_rhythm': '[전투] 리듬'}.get(self.selected, '')

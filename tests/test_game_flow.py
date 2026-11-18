@@ -6,7 +6,7 @@ from unittest.mock import Mock, patch
 
 from pico2d import SDL_KEYDOWN, SDL_QUIT, SDLK_RIGHT, SDLK_UP, SDLK_LEFT, SDLK_DOWN
 from codes.character import Character
-from codes.constraints import ConstraintNotice
+from codes.constraints import CAT_CONSTRAINT, ConstraintNotice
 from codes.game_framework import GameFramework
 from codes.gameover import GameOverRules
 from codes.maze import Maze
@@ -131,7 +131,7 @@ class GameFlowTests(unittest.TestCase):
         self.assertEqual(notice.active, set())
         self.assertEqual(notice.finish(1), 'maze_mode')
         self.assertEqual(len(notice.active), 1)  # 진입 모드의 제약 하나만 적용한다.
-        self.assertTrue(notice.active <= {'maze_arrival', 'maze_cross'})
+        self.assertTrue(notice.active <= {'maze_arrival', 'maze_cross', CAT_CONSTRAINT})
 
     def test_constraints_accumulate_without_duplicates(self):
         notice = ConstraintNotice()
