@@ -1,11 +1,17 @@
 """기본 조작과 제약 요약을 페이지별로 보여준다."""
 # 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
-from pico2d import SDL_KEYDOWN, SDLK_DOWN, SDLK_RIGHT, SDLK_UP
+from math import cos, radians, sin
+from pico2d import SDL_KEYDOWN, SDLK_DOWN, SDLK_RIGHT, SDLK_UP, draw_line
 from codes.hud import info_text
 from codes.constraints import CAT_CONSTRAINT, ConstraintNotice
 
 
 class GuideMode:
+    # 키 좌표와 역할은 위·왼쪽·아래·오른쪽 순서로 대응한다.
+    KEYS = (('↑', 400, 400), ('←', 242, 311), ('↓', 400, 311), ('→', 558, 311))
+    KEY_ROLES = (('위로 이동', '좌로 이동', '아래 이동', '우로 이동'),
+                 ('위로 회피', '좌측 공격', '아래 회피', '우측 공격'))
+
     # 기본 조작 안내는 제약이 없는 미로와 전투를 기준으로 한다.
     PAGES = (
         ('미로 조작방법', ('방향키로 한 칸 이동합니다.',
