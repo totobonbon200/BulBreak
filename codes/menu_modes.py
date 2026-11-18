@@ -38,6 +38,15 @@ class MenuMode:
             text(self.font, 100, 450 - 30 * index, line)
 
 
+class StartMenu(MenuMode):
+    # 기존 방향키 연결에 시작 화면 전용 이미지를 더한다.
+    def __init__(self, font, image):
+        super().__init__(font, '', (),
+                         {SDLK_UP: 'quit_mode', SDLK_DOWN: 'maze_mode',
+                          SDLK_LEFT: 'guide_mode', SDLK_RIGHT: 'instrument_mode'})
+        self.image = image
+
+
 class ConstraintMenu(MenuMode):
     # 제약 선택 순서와 각 제약이 실행될 플레이 모드를 정의한다.
     OPTIONS = (('maze_mode', 'maze_arrival'), ('maze_mode', 'maze_cross'),
