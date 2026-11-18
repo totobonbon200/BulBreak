@@ -8,6 +8,7 @@ from transitions import Machine
 from codes.animation import Animation, draw_frame
 from codes.enemy import Enemy
 from codes.rhythm import Rhythm
+from codes.rhythm_countdown import RhythmCountdown, draw_countdown_text
 from codes.gameover import GameOverRules
 from codes.hud import draw_enemy_health, draw_hud, info_text as text
 
@@ -22,6 +23,7 @@ class BattleMode:
     def __init__(self, assets):
         self.assets = assets
         self.held = set()
+        self.countdown = None
         self.pending_session = None
         self.machine = Machine(model=self,
                                states=['idle', 'attack', 'parry', 'dodge_up',
@@ -136,6 +138,8 @@ class BattleMode:
         if self.rhythm is not None:
             self.now = get_time()  # 프레임 시각 대신 실제 입력 시각을 사용한다.
             self.update_rhythm(self.now)
+            if self.countdown is not None and self.now < self.countdown.end:
+                return
             if self.is_game_over:
                 return
             if (self.now < self.rhythm.started + 2
@@ -268,8 +272,11 @@ class BattleMode:
 
     def update_rhythm(self, now):
         # 누락 피해는 한 번만 반영하고 일반 게임오버 시계를 고정한다.
-        self.rules.health = max(0, self.rules.health - self.rhythm.advance(now))
         self.rules.last_update = now
+        if self.countdown is not None and now < self.countdown.end:
+            self.countdown.play_go(now, getattr(self.assets, 'go_sound', None))
+            return
+        self.rules.health = max(0, self.rules.health - self.rhythm.advance(now))
         self.rhythm.play_claps(now, getattr(self.assets, 'clap_sound', None))
         self.enemy.animation = Animation([self.rhythm.frame(now)], now, .15)
         self.message = self.rhythm.description(now)
