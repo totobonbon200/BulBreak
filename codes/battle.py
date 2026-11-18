@@ -208,6 +208,10 @@ class BattleMode:
 
         if self.successes >= self.CLEAR_ATTACKS and not self.is_game_over:
             self.cleared = True
+            # 제약 한 판의 전투를 마치면 선택 화면으로 돌아간다.
+            if getattr(self.framework, 'practicing_constraint', False) is True:
+                self.framework.change_mode('instrument_mode')
+                return
             maze = self.framework.modes['maze_mode']
             maze.pending_session = (self.rules, self.score)
             self.framework.change_mode('maze_mode')
