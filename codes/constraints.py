@@ -56,11 +56,9 @@ class ConstraintNotice:
                 'battle_rhythm': '두 패턴 따라 입력·±100ms'}.get(self.selected, '')
 
     def draw(self, font, mode):
-        # 6×6 미로 기준 그림 자리는 비우고 오른쪽 두 줄만 표시한다.
         if self.pending is not None:
             panel(100, 100, 500, 500, dark=True, outline=False)
-            info_text(font, 300, 400, self.title())
-            info_text(font, 300, 333, self.description(self.pending[0]))
+            draw_notice_title(font, self.title())
         elif self.active:
             info_text(font, 535, 440, self.title())
             info_text(font, 535, 410, self.description(mode))

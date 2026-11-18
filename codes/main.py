@@ -30,6 +30,7 @@ class Assets:
         self.enemy_sheet = load_image(str(root / 'resources/enemy_animation_600x600.png'))
         self.result_sheet = load_image(str(root / 'resources/result_800x400.png'))
         self.font = load_font('C:/Windows/Fonts/malgun.ttf', 15)
+        self.notice_font = load_font('C:/Windows/Fonts/malgun.ttf', 24)
         self.timeout_font = load_font('C:/Windows/Fonts/malgun.ttf', 38)
 
 

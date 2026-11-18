@@ -145,6 +145,8 @@ class GameFramework:
         self.modes[self.state].draw()
         # 종류와 관계없이 현재 선택된 단일 제약의 패널을 표시한다.
         if self.notice.pending is not None or self.notice.active:
-            self.notice.draw(self.modes[self.state].assets.font, self.state)
+            assets = self.modes[self.state].assets
+            font = assets.notice_font if self.notice.pending is not None else assets.font
+            self.notice.draw(font, self.state)
         if self.stage_timed_out and self.timeout_font is not None:
             text(self.timeout_font, 100, 380, '관심받고싶음? 옛다 관심', size=38)
