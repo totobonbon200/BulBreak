@@ -6,6 +6,7 @@ import math
 from transitions import Machine
 
 from codes.animation import Animation, draw_frame
+from codes.clap_sound import play_go_sound
 from codes.enemy import Enemy
 from codes.rhythm import Rhythm
 from codes.rhythm_countdown import RhythmCountdown, draw_countdown_text
@@ -152,7 +153,6 @@ class BattleMode:
                 self.rules.health = max(0, self.rules.health - 1)
                 self.message = '박자 실패! 체력 1 감소'
                 return
-            self.play_pattern_cue(self.now)
         else:
             self.rules.record_action(self.now)
         if self.is_game_over:
@@ -181,6 +181,9 @@ class BattleMode:
             if attack_order_correct:
                 self.start_effect('player')
                 self.successes += 1
+                if self.rhythm is not None:
+                    self.rhythm.take_next_pattern_cue(self.now)  # 마지막 입력은 타격음과 전환음을 겸한다.
+                play_go_sound(self.assets)
                 self.next_attack_direction = 'right' if direction == 'left' else 'left'
                 self.message = f'공격 성공: {self.successes}/{self.CLEAR_ATTACKS}'
             else:
@@ -280,9 +283,7 @@ class BattleMode:
 
     def play_pattern_cue(self, now):
         if not self.is_game_over and self.rhythm.take_next_pattern_cue(now):
-            sound = getattr(self.assets, 'go_sound', None)
-            if sound is not None:
-                sound.play()
+            play_go_sound(self.assets)
 
     def update_rhythm(self, now):
         # 누락 피해는 한 번만 반영하고 일반 게임오버 시계를 고정한다.
