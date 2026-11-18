@@ -69,3 +69,13 @@ class TutorialMode:
         rules = self.mode.player.rules if self.step < len(self.MAZE_STEPS) else self.mode.rules
         rules.last_update = now
         self.mode.update(now)
+
+    def handle_event(self, event):
+        if event.type == SDL_KEYUP:
+            self.held.discard(event.key)
+            self.mode.handle_event(event)
+            return
+        if event.type == SDL_KEYDOWN and event.key == self.STEPS[self.step][0]:
+            if event.key not in self.held and not getattr(event, 'repeat', False):
+                self.held.add(event.key)
+                self.advance(event)
