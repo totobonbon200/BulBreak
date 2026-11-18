@@ -8,7 +8,7 @@ from transitions import Machine
 from codes.constraints import CAT_CONSTRAINT, ConstraintNotice
 from codes.hud import info_text as text
 from codes.menu_modes import GameOverMenu
-from pico2d import get_time, SDL_KEYDOWN, SDLK_DOWN, SDLK_UP
+from pico2d import get_time
 
 
 class GameFramework:
@@ -109,10 +109,6 @@ class GameFramework:
         self.game_over_menu.enter(False)
 
     def handle_event(self, event):
-        # 재시작은 이전 회차의 임시 제약도 비운다.
-        if (event.type == SDL_KEYDOWN and event.key == SDLK_DOWN
-                and (self.stage_timed_out or getattr(self.modes[self.state], 'is_game_over', False) is True)):
-            self.notice.reset()
         if self.notice.pending is not None:
             return  # 안내 중 방향키는 다음 플레이에 전달하지 않는다.
         if self.game_over_active:
