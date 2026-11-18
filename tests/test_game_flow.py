@@ -161,8 +161,7 @@ class GameFlowTests(unittest.TestCase):
         for mode in modes.values():
             mode.framework = framework
         framework.draw()
-        self.assertTrue(all(call.args[-1] == (255, 255, 255)
-                            for call in font.draw.call_args_list))
+        self.assertEqual(len(font.draw.call_args_list), 4)
         framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_DOWN))
         framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_LEFT))
         self.assertEqual(framework.current_mode, 'guide_mode')
@@ -171,7 +170,7 @@ class GameFlowTests(unittest.TestCase):
         framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_RIGHT))
         self.assertEqual(framework.current_mode, 'start_mode')
 
-    def test_start_screen_down_starts_and_up_quits(self):
+    def test_start_screen_confirms_game_start_and_quit(self):
         for index, expected in ((0, 'maze_mode'), (3, 'quit_mode')):
             menu = create_menus(Mock())['start_mode']
             menu.framework = Mock()
@@ -327,6 +326,7 @@ class GameFlowTests(unittest.TestCase):
              patch.object(game, 'clear_canvas'), patch.object(game, 'update_canvas'), \
              patch.object(game, 'draw_rectangle') as background, \
              patch.object(game, 'delay'), patch('pico2d.draw_rectangle'), \
+             patch('codes.menu_modes.draw_start_panel'), \
              patch('codes.maze_gamemode.get_time', return_value=0):
             game.main()
         background.assert_called_with(0, 0, 799, 599, 0, 0, 0, 255, filled=True)
