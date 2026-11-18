@@ -121,9 +121,12 @@ class ConstraintMenu(SelectionMenu):
 
     def draw(self):
         super().draw()
+        for index, option in enumerate(self.OPTIONS):
+            label = self.option_title(*option)
+            color = (255, 220, 0) if index == self.index else (255, 255, 255)
+            self.font.draw(100, 390 - index * 38, label, color)
         target, self.preview.selected = self.OPTIONS[self.index]
-        text(self.font, 100, 365, self.preview.title())
-        text(self.font, 100, 335, self.preview.description(target))
+        info_text(self.font, 100, 125, self.preview.description(target))
 
 
 def create_menus(font, main_image=None, menu_image=None, *, start_font=None):
