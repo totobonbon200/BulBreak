@@ -9,7 +9,7 @@ from codes.animation import Animation, draw_frame
 from codes.enemy import Enemy
 from codes.rhythm import Rhythm
 from codes.gameover import GameOverRules
-from codes.hud import draw_hud, info_text as text
+from codes.hud import draw_enemy_health, draw_hud, info_text as text
 
 
 class BattleMode:
@@ -256,9 +256,7 @@ class BattleMode:
                            *position, 110, 110)
         paused = self.rhythm is not None or self.cleared or self.framework.timer_paused is True
         draw_hud(self.assets, self.rules, self.now, 2, self.score, timer_paused=paused)
-        text(self.assets.font, 100, 85, f'공격 성공: {self.successes}/{self.CLEAR_ATTACKS}')
-        text(self.assets.font, 100, 60, self.message)
-        text(self.assets.font, 100, 35, '좌→우 교대 공격 / 상하: 회피 / 노란 화살표: 다음 공격')
+        draw_enemy_health(self.CLEAR_ATTACKS - self.successes, self.CLEAR_ATTACKS)
         if self.is_game_over:
             sheet = self.assets.maze_sheet
             sheet.opacify(0.5)
