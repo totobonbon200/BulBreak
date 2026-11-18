@@ -96,3 +96,12 @@ class TutorialMode:
         except OSError:
             pass  # 쓰기가 제한된 경우에도 현재 실행에서는 본 게임으로 넘어간다.
         self.framework.change_mode('maze_mode')
+
+    def exit(self):
+        self.mode.exit()
+        if self.assets.cat_effect is not None:
+            self.assets.cat_effect.sync(False, self.now)
+
+    @property
+    def showing_cats(self):
+        return self.step == len(self.STEPS) - 1
