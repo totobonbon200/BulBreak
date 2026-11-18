@@ -2,6 +2,7 @@
 """고양이 제약의 캔버스 반사와 시야 방해를 그린다."""
 from math import ceil, cos, sin, sqrt, tau
 from random import randint, uniform
+from sdl2 import SDL_BLENDMODE_BLEND, SDL_SetTextureBlendMode
 
 CAT_SIZE = 100
 CAT_MARGIN = ceil(CAT_SIZE / sqrt(2))  # 회전한 사각형도 캔버스 안에 둔다.
@@ -31,6 +32,8 @@ class CatEffect:
     # 공유 이미지와 활성 구간마다 새로 배치할 개체를 관리한다.
     def __init__(self, backdrop, sprite, width, height):
         self.backdrop, self.sprite = backdrop, sprite
+        SDL_SetTextureBlendMode(self.backdrop.texture, SDL_BLENDMODE_BLEND)
+        self.backdrop.opacify(0.55)
         self.width, self.height = width, height
         self.started, self.cats = None, []
 
@@ -45,7 +48,6 @@ class CatEffect:
     def draw_background(self):
         # 원본의 비율을 맞추고 캔버스를 채우도록 가운데를 확대한다.
         scale = max(self.width / self.backdrop.w, self.height / self.backdrop.h)
-        self.backdrop.opacify(0.55)
         self.backdrop.draw(self.width / 2, self.height / 2,
                            self.backdrop.w * scale, self.backdrop.h * scale)
 
