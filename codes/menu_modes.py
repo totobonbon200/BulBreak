@@ -56,13 +56,20 @@ class SelectionMenu(MenuMode):
 
 
 class StartMenu(MenuMode):
-    # 기존 방향키 연결에 시작 화면 전용 이미지를 더한다.
+    # 표시 문구와 선택할 모드를 같은 순서로 둔다.
+    OPTIONS = (('게임시작', 'maze_mode'), ('가이드', 'guide_mode'),
+               ('디버그모드', 'instrument_mode'), ('게임종료', 'quit_mode'))
+
     def __init__(self, font, image, menu_image):
         super().__init__(font, '', (),
                          {SDLK_UP: 'quit_mode', SDLK_DOWN: 'maze_mode',
                           SDLK_LEFT: 'guide_mode', SDLK_RIGHT: 'instrument_mode'})
         self.image = image
         self.menu_image = menu_image
+        self.index = 0
+
+    def confirm_selection(self):
+        self.framework.change_mode(self.OPTIONS[self.index][1])
 
     def draw(self):
         if self.image is not None:
