@@ -48,3 +48,11 @@ class CatEffect:
         self.backdrop.opacify(0.55)
         self.backdrop.draw(self.width / 2, self.height / 2,
                            self.backdrop.w * scale, self.backdrop.h * scale)
+
+    def draw_cats(self, now):
+        # PNG 위쪽의 빈 여백을 잘라 회전 중심을 고양이에 맞춘다.
+        elapsed = max(0.0, now - self.started)
+        for cat in self.cats:
+            x, y, angle = cat.pose(elapsed, self.width, self.height)
+            self.sprite.clip_composite_draw(0, 0, self.sprite.w, 1080, angle, '',
+                                            x, y, CAT_SIZE, CAT_SIZE)
