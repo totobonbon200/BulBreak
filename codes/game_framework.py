@@ -113,14 +113,8 @@ class GameFramework:
             return  # 안내 중 방향키는 다음 플레이에 전달하지 않는다.
         if self.stage_timed_out:
             if event.type == SDL_KEYDOWN:
-                if event.key == SDLK_DOWN:
-                    mode = self.modes[self.state]
-                    mode.enter(False)
-                    if isinstance(getattr(mode, 'held', None), set):
-                        mode.held.add(SDLK_DOWN)
-                    self.restart_stage_timer()
-                elif event.key == SDLK_UP:
-                    self.change_mode('start_mode')
+                if event.key in (SDLK_DOWN, SDLK_UP):
+                    self.resolve_game_over(restart=event.key == SDLK_DOWN)
             return
         self.modes[self.state].handle_event(event)
         self.finish_failed_practice()
