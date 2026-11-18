@@ -1,7 +1,7 @@
 """A separate guide screen describing the playable maze prototype."""
 # 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
 from pico2d import SDL_KEYDOWN, SDLK_DOWN, SDLK_RIGHT, SDLK_UP
-from codes.hud import text
+from codes.hud import info_text, text
 from codes.constraints import CAT_CONSTRAINT, ConstraintNotice
 
 
@@ -50,6 +50,14 @@ class GuideMode:
             step = -1 if event.key == SDLK_UP else 1
             self.page = max(0, min(self.page + step, len(self.PAGES) - 1))
 
+    def draw_page(self):
+        heading, lines = self.PAGES[self.page]
+        if self.page >= 2:
+            self.notice.selected = heading
+            heading = self.notice.title()
+        info_text(self.title_font, 80, 420, heading)
+        for index, line in enumerate(lines):
+            info_text(self.font, 80, 355 - index * 34, line)
     def draw(self):
         text(self.font, 70, 540, 'BulBreak - 플레이 가이드')
         sections = (
