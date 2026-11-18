@@ -58,7 +58,15 @@ class GuideMode:
         info_text(self.title_font, 80, 420, heading)
         for index, line in enumerate(lines):
             info_text(self.font, 80, 355 - index * 34, line)
+
     def draw(self):
+        info_text(self.font, 80, 507, '가이드')
+        info_text(self.font, 655, 507, f'{self.page + 1} / {len(self.PAGES)}')
+        self.draw_page()
+        info_text(self.font, 80, 72, '↑ 이전  ↓ 다음')
+        info_text(self.font, 605, 72, '→ 시작 화면')
+
+    def _draw_legacy(self):
         text(self.font, 70, 540, 'BulBreak - 플레이 가이드')
         sections = (
             ('이동과 탈출', (
