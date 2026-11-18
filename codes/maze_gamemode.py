@@ -141,7 +141,7 @@ class MazeMode:
             self.player.draw(self.assets.character_sheet, self.maze, self.now)
         framework = getattr(self, 'framework', None)
         paused = self.awaiting_next_maze or self.is_game_over or getattr(framework, 'timer_paused', False) is True
-        draw_hud(self.assets, self.player.rules, self.now, self.completed, self.score, timer_paused=paused)
+        draw_hud(self.assets, self.player.rules, self.now, self.completed, timer_paused=paused)
         if not self.player.is_playing:
             width, height = sheet.w // 4, sheet.h // 2
             sheet.opacify(0.5)

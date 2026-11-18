@@ -45,7 +45,7 @@ def draw_timer(rules, now, paused):
         draw_rectangle(left, 481, end, 510, *color, filled=True)
 
 
-def draw_hud(assets, rules, now, completed, score=0, *, timer_paused=False):
+def draw_hud(assets, rules, now, completed, *, timer_paused=False):
     assets.menu_image.draw(132, 550, 336, 90)  # 왼쪽 경사를 캔버스 밖에 둔다.
     assets.menu_image.draw(650, 345, 300, 490)
     draw_progress(assets, 2 if rules.mode == 'battle' else min(completed, 1))
