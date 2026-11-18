@@ -56,3 +56,9 @@ class TutorialMode:
         maze.walls.pop((0, 3), None)
         maze.walls[0, 2] = 2
         maze.exit = (0, 3)
+
+    def enter_battle(self):
+        self.mode.exit()
+        self.mode = self.framework.modes['battle_mode']
+        self.mode.enter(False)
+        self.mode.enemy.directions = deque(('up', 'down', 'left', 'right', 'up'))
