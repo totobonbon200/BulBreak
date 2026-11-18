@@ -34,6 +34,16 @@ def draw_progress(assets, current):
         info_text(assets.font, x, 552, '→')
 
 
+def draw_timer(rules, now, paused):
+    # 멈추면 남은 시간과 관계없이 막대 전체를 흰색으로 채운다.
+    left, right = 542, 754
+    draw_rectangle(left, 481, right, 510, 55, 55, 55, filled=True)
+    fraction = 1.0 if paused else min(1.0, rules.idle_remaining(now) / rules.max_idle_time)
+    color = (255, 255, 255) if paused else (255, 220, 0)
+    end = left + int((right - left) * fraction)
+    if end > left:
+        draw_rectangle(left, 481, end, 510, *color, filled=True)
+
 def draw_hud(assets, rules, now, completed, score=0):
     font = assets.font
     text = info_text
