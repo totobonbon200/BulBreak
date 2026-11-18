@@ -52,12 +52,12 @@ class StartMenu(MenuMode):
             scale = min(480 / self.image.w, 280 / self.image.h)
             self.image.draw(400, 300, self.image.w * scale, self.image.h * scale)
         # 각 안내를 눌러야 하는 방향 쪽에 배치한다.
-        labels = ((378, 485, '↑ 종료'), (362, 115, '↓ 게임 시작'),
-                  (78, 300, '← 가이드'), (655, 300, '→ 제약 한 판'))
-        for x, y, label in labels:
+        labels = ((400, 485, 22, '↑ 종료'), (400, 115, 38, '↓ 게임 시작'),
+                  (110, 300, 32, '← 가이드'), (700, 300, 45, '→ 제약 한 판'))
+        for x, y, label_offset, label in labels:
             if self.menu_image is not None:
-                self.menu_image.draw(x + 42, y, 130, 42)
-            info_text(self.font, x, y, label)
+                self.menu_image.draw(x, y, 130, 42)
+            info_text(self.font, x - label_offset, y, label)
 
 
 class ConstraintMenu(MenuMode):
