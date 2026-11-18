@@ -45,7 +45,8 @@ class BattleMode:
         self.rules.remaining = self.rules.max_idle_time
         # 무효과 제약은 유지하고 새 리듬 제약이 있을 때만 판정한다.
         active = getattr(getattr(self.framework, 'notice', None), 'active', set())
-        self.rhythm = Rhythm(self.now) if isinstance(active, set) and 'battle_rhythm' in active else None
+        self.countdown = RhythmCountdown(self.now) if isinstance(active, set) and 'battle_rhythm' in active else None
+        self.rhythm = Rhythm(self.countdown.end) if self.countdown is not None else None
         # 리듬은 원본 전체 박자 수를 목표로 삼고 일반 전투 진입 시 10회로 복구한다.
         self.CLEAR_ATTACKS = (sum(map(len, self.rhythm.patterns)) if self.rhythm
                               else type(self).CLEAR_ATTACKS)
