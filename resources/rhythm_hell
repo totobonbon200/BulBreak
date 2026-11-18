@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rhythm Hell 시범 리듬</title>
+<style>
+:root{color-scheme:light dark;font-family:system-ui,sans-serif}
+body{max-width:840px;margin:36px auto;padding:0 18px;line-height:1.5}
+h1{margin-bottom:0} p{margin-top:8px}
+.controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:22px 0 10px}
+button{font:inherit;cursor:pointer;padding:.45rem .75rem;border:1px solid GrayText;border-radius:.45rem}
+button:focus-visible{outline:2px solid #418aff;outline-offset:2px}
+article{display:grid;grid-template-columns:7rem 1fr auto;gap:12px;align-items:center;border-block-start:1px solid GrayText;padding:13px 0}
+article.active{background:color-mix(in srgb,#418aff 16%,transparent)}
+.track{height:20px;position:relative;background:repeating-linear-gradient(90deg,GrayText 0 1px,transparent 1px 25%);border-right:1px solid GrayText}
+.dot{position:absolute;top:6px;width:7px;height:7px;border-radius:50%;background:#418aff;transform:translateX(-50%)}
+small{display:block;margin-top:6px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+@media(max-width:520px){article{grid-template-columns:1fr auto}article .timing{grid-row:2;grid-column:1/-1}}
+</style>
+</head>
+<body>
+<h1>Rhythm Hell 시범 리듬</h1>
+<p>시범 소리의 추정 타이밍을 합성 박수로 재생합니다. 파란 점은 박수, 세로선은 500 ms마다 오는 기준 박입니다.</p>
+<div class="controls">
+<button id="all">전체 재생</button><button id="stop">정지</button>
+<label><input type="checkbox" id="loop"> 반복</label>
+<label><input type="checkbox" id="beat"> 기준 박 함께 듣기</label>
+</div>
+<p id="status" role="status">들을 구간을 선택하세요.</p>
+<main id="segments"></main>
+<script>
+const segments = [{"start": 2, "hits": [0.0, 500.0, 1000.0, 1500.0]}, {"start": 6, "hits": [0.0, 500.0, 750.0, 1000.0, 1500.0]}, {"start": 10, "hits": [0.0, 250.0, 500.0, 1000.0, 1250.0, 1500.0]}, {"start": 14, "hits": [0.0, 125.0, 375.0, 500.0, 750.0, 1000.0, 1125.0, 1375.0, 1500.0, 1750.0]}, {"start": 18, "hits": [250.0, 500.0, 666.7, 833.3, 1250.0, 1375.0, 1500.0, 1666.7, 1833.3]}, {"start": 22, "hits": [250.0, 750.0, 875.0, 1000.0, 1200.0, 1400.0, 1600.0, 1800.0]}, {"start": 26, "hits": [0.0, 222.2, 444.4, 666.7, 888.9, 1111.1, 1333.3, 1555.6, 1777.8]}, {"start": 30, "hits": [200.0, 600.0, 1166.7, 1500.0, 1833.3]}, {"start": 34, "hits": [0.0, 125.0, 250.0, 375.0, 500.0, 625.0, 750.0, 875.0, 937.5, 1000.0, 1125.0, 1250.0, 1375.0, 1500.0, 1625.0, 1750.0, 1812.5, 1875.0, 1937.5]}, {"start": 38, "hits": [1875.0]}];
+const rows = [];
+const status = document.querySelector('#status');
+const loop = document.querySelector('#loop');
+const beat = document.querySelector('#beat');
+let context, clap, click, output, timer, run = 0;
+
+for (const [index, segment] of segments.entries()) {
+  const row = document.createElement('article');
+  const label = document.createElement('strong');
+  label.textContent = segment.start + '–' + (segment.start + 2) + '초';
+  const timing = document.createElement('div');
+  timing.className = 'timing';
+  const track = document.createElement('div');
+  track.className = 'track';
+  track.setAttribute('aria-hidden', 'true');
+  for (const ms of segment.hits) {
+    const dot = document.createElement('span');
+    dot.className = 'dot';
+    dot.style.left = (ms / 20) + '%';
+    track.append(dot);
+  }
+  const times = document.createElement('small');
+  times.textContent = segment.hits.join(' · ') + ' ms';
+  const button = document.createElement('button');
+  button.textContent = '듣기';
+  button.setAttribute('aria-label', label.textContent + ' 듣기');
+  button.addEventListener('click', () => play([index]));
+  timing.append(track, times);
+  row.append(label, timing, button);
+  document.querySelector('#segments').append(row);
+  rows.push(row);
+}
+
+function makeSounds() {
+  const rate = context.sampleRate;
+  clap = context.createBuffer(1, Math.round(rate * .115), rate);
+  const noise = clap.getChannelData(0);
+  let previous = 0;
+  for (let i = 0; i < noise.length; i++) {
+    const t = i / rate;
+    const white = Math.random() * 2 - 1;
+    const burst = offset => t < offset ? 0 : Math.exp(-(t - offset) * 230);
+    const envelope = .53 * burst(0) + .36 * burst(.009) + .4 * burst(.018)
+      + .17 * Math.exp(-t * 45);
+    noise[i] = (white - previous * .7) * envelope * .65;
+    previous = white;
+  }
+  click = context.createBuffer(1, Math.round(rate * .045), rate);
+  const tick = click.getChannelData(0);
+  for (let i = 0; i < tick.length; i++) {
+    const t = i / rate;
+    tick[i] = Math.sin(2 * Math.PI * 620 * t) * Math.exp(-t * 110) * .27;
+  }
+}
+
+function schedule(buffer, when) {
+  const source = context.createBufferSource();
+  source.buffer = buffer;
+  source.connect(output);
+  source.start(when);
+}
+
+function stop(message = '정지했습니다.') {
+  run++;
+  clearInterval(timer);
+  if (output) {
+    output.disconnect();
+    output = null;
+  }
+  rows.forEach(row => row.classList.remove('active'));
+  status.textContent = message;
+}
+
+async function play(indices) {
+  stop('재생 준비 중…');
+  const id = run;
+  try {
+    if (!context) {
+      context = new AudioContext();
+      makeSounds();
+    }
+    await context.resume();
+    if (id !== run) return;
+    output = context.createGain();
+    output.connect(context.destination);
+    const gap = indices.length === 1 ? 0 : .4;
+    const period = 2 + gap;
+    const start = context.currentTime + .08;
+    let scheduled = 0;
+    let nextTime = start;
+    let active = -1;
+    function update() {
+      while (nextTime < context.currentTime + .18 && (scheduled < indices.length || loop.checked)) {
+        const index = indices[scheduled % indices.length];
+        for (const ms of segments[index].hits) schedule(clap, nextTime + ms / 1000);
+        if (beat.checked) for (let i = 0; i < 4; i++) schedule(click, nextTime + i * .5);
+        scheduled++;
+        nextTime += period;
+      }
+      const elapsed = context.currentTime - start;
+      const slot = Math.floor(elapsed / period);
+      if (scheduled > 0 && elapsed >= (scheduled - 1) * period + 2 && slot >= scheduled - 1 && !loop.checked && scheduled >= indices.length) {
+        stop('재생이 끝났습니다.');
+        return;
+      }
+      if (slot >= 0 && slot < scheduled && slot !== active) {
+        active = slot;
+        const index = indices[slot % indices.length];
+        rows.forEach((row, i) => row.classList.toggle('active', i === index));
+        status.textContent = segments[index].start + '–' + (segments[index].start + 2) + '초 시범 리듬 재생 중';
+      }
+    }
+    update();
+    timer = setInterval(update, 35);
+  } catch (error) {
+    if (id === run) stop('오디오를 시작할 수 없습니다. 브라우저에서 페이지를 다시 열어 주세요.');
+  }
+}
+
+document.querySelector('#all').addEventListener('click', () => play(segments.map((_, i) => i)));
+document.querySelector('#stop').addEventListener('click', () => stop());
+</script>
+</body>
+</html>
