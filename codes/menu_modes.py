@@ -49,6 +49,16 @@ class ConstraintMenu(MenuMode):
         self.index = 0
         self.preview = ConstraintNotice()  # 실제 플레이와 같은 이름과 설명을 표시한다.
 
+    def handle_event(self, event):
+        if event.type != SDL_KEYDOWN or event.key not in (SDLK_RIGHT, SDLK_DOWN):
+            return super().handle_event(event)
+        if event.key not in self.held and not getattr(event, 'repeat', False):
+            self.held.add(event.key)
+            if event.key == SDLK_RIGHT:
+                self.index = (self.index + 1) % len(self.OPTIONS)
+            else:
+                self.framework.play_constraint(*self.OPTIONS[self.index])
+
 
 def create_menus(font):
     return {
