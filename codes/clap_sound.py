@@ -9,6 +9,13 @@ import wave
 from pico2d import load_wav
 
 
+def play_go_sound(assets):
+    # 오디오를 사용할 수 없을 때는 게임 진행만 유지한다.
+    sound = getattr(assets, 'go_sound', None)
+    if sound is not None:
+        sound.play()
+
+
 def load_clap():
     # rhythm_hell의 세 번 겹친 잡음과 짧은 감쇠를 PCM으로 만든다.
     rate = 44100

@@ -3,6 +3,7 @@
 from pico2d import *
 
 from codes.maze import Maze
+from codes.clap_sound import play_go_sound
 from codes.cross_maze import CrossMaze
 from codes.hud import draw_hud, info_text as text
 from codes.character import Character, PlayerState
@@ -85,6 +86,7 @@ class MazeMode:
                             'moved': '방향키: 이동 / 벽은 두 번 공격',
                             'exit': '다음 미로'}[result]
             if result == 'exit':
+                play_go_sound(self.assets)
                 if self.cross_enabled:
                     self.cross_count += 1
                     if self.cross_count < 6:
