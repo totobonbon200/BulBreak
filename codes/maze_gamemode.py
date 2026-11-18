@@ -139,11 +139,9 @@ class MazeMode:
         else:
             self.maze.draw(sheet, font, self.now)
             self.player.draw(self.assets.character_sheet, self.maze, self.now)
-        draw_hud(self.assets, self.player.rules, self.now, self.completed, self.score)
-        if not self.player.is_playing and not self.stage_timed_out:
-            self.message = '체력이 모두 소진되었습니다'
-        text(font, 100, 70, self.message)
-        text(font, 100, 45, '방향키: 이동·벽 공격')
+        framework = getattr(self, 'framework', None)
+        paused = self.awaiting_next_maze or self.is_game_over or getattr(framework, 'timer_paused', False) is True
+        draw_hud(self.assets, self.player.rules, self.now, self.completed, self.score, timer_paused=paused)
         if not self.player.is_playing:
             width, height = sheet.w // 4, sheet.h // 2
             sheet.opacify(0.5)
