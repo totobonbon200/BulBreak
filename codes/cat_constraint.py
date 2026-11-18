@@ -16,7 +16,7 @@ class CatMotion:
         # 개체마다 시작 위치, 이동 방향과 속도를 따로 뽑는다.
         self.origin = (uniform(CAT_MARGIN, width - CAT_MARGIN),
                        uniform(CAT_MARGIN, height - CAT_MARGIN))
-        self.heading = uniform(0, 2 * 3.141592653589793)
+        self.heading = uniform(0, tau)
         self.speed = uniform(360, 480)
 
     def pose(self, elapsed, width, height):
@@ -25,3 +25,11 @@ class CatMotion:
         y = bounce_position(self.origin[1], distance * sin(self.heading), height)
         angle = (self.heading + distance / (CAT_SIZE / 2) * 0.85) % tau
         return x, y, angle
+
+
+class CatEffect:
+    # 공유 이미지와 활성 구간마다 새로 배치할 개체를 관리한다.
+    def __init__(self, backdrop, sprite, width, height):
+        self.backdrop, self.sprite = backdrop, sprite
+        self.width, self.height = width, height
+        self.started, self.cats = None, []
