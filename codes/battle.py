@@ -261,6 +261,10 @@ class BattleMode:
         paused = self.rhythm is not None or self.cleared or self.framework.timer_paused is True
         draw_hud(self.assets, self.rules, self.now, 2, timer_paused=paused)
         draw_enemy_health(self.CLEAR_ATTACKS - self.successes, self.CLEAR_ATTACKS)
+        if self.countdown is not None:
+            frame = self.countdown.frame(self.now)
+            if frame is not None:
+                draw_countdown_text(self.assets.timeout_font, *frame)
         if self.is_game_over:
             sheet = self.assets.maze_sheet
             sheet.opacify(0.5)
