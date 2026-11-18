@@ -86,13 +86,9 @@ class ConstraintMenu(MenuMode):
         text(self.font, 100, 335, self.preview.description(target))
 
 
-def create_menus(font):
+def create_menus(font, main_image=None):
     return {
-        'start_mode': MenuMode(font, 'BulBreak',
-                              ['DOWN: start maze', 'UP: quit',
-                               'LEFT: guide', '오른쪽: 제약 한 판'],
-                              {SDLK_DOWN: 'maze_mode', SDLK_UP: 'quit_mode',
-                               SDLK_RIGHT: 'instrument_mode', SDLK_LEFT: 'guide_mode'}),
+        'start_mode': StartMenu(font, main_image),
         'guide_mode': GuideMode(font),
         'instrument_mode': ConstraintMenu(font),
         'battle_mode': MenuMode(font, 'Battle: planned',
