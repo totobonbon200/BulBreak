@@ -254,7 +254,8 @@ class BattleMode:
             if effect is not None and not effect.finished(self.now):
                 draw_frame(self.assets.effect_attack_sheet, 1, 4, effect.frame(self.now),
                            *position, 110, 110)
-        draw_hud(self.assets, self.rules, self.now, 2, self.score)
+        paused = self.rhythm is not None or self.cleared or self.framework.timer_paused is True
+        draw_hud(self.assets, self.rules, self.now, 2, self.score, timer_paused=paused)
         text(self.assets.font, 100, 85, f'공격 성공: {self.successes}/{self.CLEAR_ATTACKS}')
         text(self.assets.font, 100, 60, self.message)
         text(self.assets.font, 100, 35, '좌→우 교대 공격 / 상하: 회피 / 노란 화살표: 다음 공격')

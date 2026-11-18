@@ -39,6 +39,10 @@ class GameFramework:
     def current_mode(self):
         return self.state
 
+    @property
+    def timer_paused(self):
+        return self.stage_timed_out or self.notice.pending is not None
+
     def change_mode(self, name):
         if name not in self.MODES:
             raise ValueError(name)
