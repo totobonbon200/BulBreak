@@ -94,6 +94,16 @@ class GameFramework:
         self.stage_elapsed = 0.0
         self.stage_timed_out = False
 
+    def resolve_game_over(self, restart):
+        if not restart:
+            self.change_mode('instrument_mode' if self.practicing_constraint else 'start_mode')
+            return
+        if not self.practicing_constraint:
+            self.notice.reset()
+        self.modes[self.state].enter(False)
+        self.restart_stage_timer()
+        self.game_over_menu.enter(False)
+
     def handle_event(self, event):
         # 재시작은 이전 회차의 임시 제약도 비운다.
         if (event.type == SDL_KEYDOWN and event.key == SDLK_DOWN
