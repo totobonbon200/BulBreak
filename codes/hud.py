@@ -1,4 +1,5 @@
 """게임 화면의 흰색 패널과 상태 표시."""
+# 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
 from pico2d import draw_rectangle
 
 
@@ -28,18 +29,15 @@ def info_text(font, x, y, message, size=15):
 def draw_hud(assets, rules, now, completed, score=0):
     font = assets.font
     text = info_text
-    panel(100, 510, 500, 590, dark=True)
-    panel(520, 510, 780, 590, dark=True)
-    panel(520, 100, 780, 500, dark=True)
-    text(font, 540, 475, '제약 시스템')
-    text(font, 640, 575, f'점수: {score}')
+    assets.menu_image.draw(132, 550, 336, 90)  # 왼쪽 경사를 캔버스 밖에 둔다.
+    assets.menu_image.draw(650, 345, 300, 490)
     text(font, 530, 535, '미로 → 미로 → 전투')
     sheet = assets.effect_sheet
     width, height = sheet.w // 4, sheet.h // 2
     for index in range(3):
         column = 0 if index < rules.health else 1
         sheet.clip_draw(column * width, height, width, height,
-                        145 + index * 85, 550, 64, 64)
+                        64 + index * 80, 550, 64, 64)
     text(font, 375, 575, '미로 주파' if rules.mode == 'maze' else '무행동')
     text(font, 375, 550, f'{rules.idle_remaining(now):.1f}초')
     text(font, 375, 525, f'최대 {rules.max_idle_time:.2f}')
