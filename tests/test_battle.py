@@ -18,6 +18,7 @@ from codes.menu_modes import create_menus
 
 def assets():
     return SimpleNamespace(font=Mock(), timeout_font=Mock(),
+                           notice_font=Mock(), menu_image=Mock(),
                            maze_sheet=Mock(w=800, h=400),
                            character_sheet=Mock(w=600, h=600),
                            character_attack_sheet=Mock(w=800, h=400),

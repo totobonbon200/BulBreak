@@ -23,6 +23,7 @@ class GameFlowTests(unittest.TestCase):
 
     def test_stage_deadline_ignores_input_and_shows_large_korean_message(self):
         assets = SimpleNamespace(font=Mock(), maze_sheet=Mock(w=800, h=400),
+                                 notice_font=Mock(), menu_image=Mock(),
                                  character_sheet=Mock(w=600, h=600), effect_sheet=Mock(w=800, h=400))
         with patch('codes.maze_gamemode.get_time', return_value=0):
             mode = MazeMode(assets)
@@ -312,6 +313,7 @@ class GameFlowTests(unittest.TestCase):
 
     def test_main_menu_instructions_maze_and_overlay(self):
         assets = SimpleNamespace(font=Mock(), timeout_font=Mock(), cat_effect=None, main_image=None, menu_image=Mock(),
+                                 notice_font=Mock(),
                                  maze_sheet=Mock(w=400, h=200),
                                  character_sheet=Mock(w=400, h=400), effect_sheet=Mock(w=800, h=400))
         key = lambda value: SimpleNamespace(type=SDL_KEYDOWN, key=value)

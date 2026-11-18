@@ -1,3 +1,4 @@
+# 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
 import unittest
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
@@ -9,6 +10,7 @@ class HealthDisplayTests(unittest.TestCase):
     def test_empty_health_appears_from_right_and_uses_top_row(self):
         for health in range(4):
             assets = SimpleNamespace(font=Mock(), effect_sheet=Mock(w=800, h=400))
+            assets.notice_font, assets.menu_image = Mock(), Mock()
             rules = GameOverRules()
             rules.health = health
             with patch('codes.hud.draw_rectangle'):
