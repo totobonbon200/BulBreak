@@ -5,7 +5,7 @@
     # 이곳에서는 초기화, 모드전환을 관리할 것
 """모드 초기화와 전환을 관리한다."""
 from transitions import Machine
-from codes.constraints import ConstraintNotice
+from codes.constraints import CAT_CONSTRAINT, ConstraintNotice
 from codes.hud import info_text as text
 from pico2d import get_time, SDL_KEYDOWN, SDLK_DOWN, SDLK_UP
 
@@ -16,8 +16,9 @@ class GameFramework:
     MODES = ('start_mode', 'instrument_mode', 'guide_mode', 'maze_mode',
              'battle_mode', 'result_mode', 'quit_mode')
 
-    def __init__(self, modes, timeout_font=None, clock=None):
+    def __init__(self, modes, timeout_font=None, clock=None, cat_effect=None):
         self.notice = ConstraintNotice()  # 전환 안내와 일반 진행을 분리한다.
+        self.cat_effect = cat_effect
         self.modes = modes
         self.clock = clock or get_time
         self.timeout_font = timeout_font
