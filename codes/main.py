@@ -32,9 +32,12 @@ class Assets:
         self.effect_attack_sheet = load_image(str(root / 'resources/effect_attack_800x200.png'))
         self.enemy_sheet = load_image(str(root / 'resources/enemy_animation_600x600.png'))
         self.result_sheet = load_image(str(root / 'resources/result_800x400.png'))
-        self.font = load_font('C:/Windows/Fonts/malgun.ttf', 15)
-        self.notice_font = load_font('C:/Windows/Fonts/malgun.ttf', 24)
-        self.timeout_font = load_font('C:/Windows/Fonts/malgun.ttf', 38)
+        font_path = root / 'resources/esamanru-Medium.ttf'
+        if not font_path.is_file():
+            raise FileNotFoundError('README.md의 실행 글꼴 안내에 따라 이사만루체를 설치하세요.')
+        self.font = load_font(str(font_path), 15)
+        self.notice_font = load_font(str(font_path), 24)
+        self.timeout_font = load_font(str(font_path), 38)
         # 미로와 전투가 같은 고양이 자원과 캔버스 경계를 사용한다.
         self.cat_effect = CatEffect(
             load_image(str(root / 'resources/manja-vitolic-gKXKBY-C-Dk-unsplash.jpg')),

@@ -10,6 +10,10 @@ BulBreak(벌브레이크)는 빠른 미로 탈출과 실시간 전투를 번갈�
 - 진행에 따라 벽 파괴 제한, 적 패턴 표시 제한 등 다양한 제약을 추가할 계획입니다.
 - 빠른 템포와 조작 숙련도의 재미를 목표로 합니다.
 
+## 실행 글꼴
+
+[공게임즈 공식 이사만루체 Windows TTF](https://www.gonggames.com/assets/fonts/esamanru_TTF%28Win%29.zip)를 내려받아 `esamanru Medium.ttf`를 `resources/esamanru-Medium.ttf`로 저장합니다. 글꼴 출처는 공게임즈입니다.
+
 ## 커밋 메시지 규칙
 
 커밋 메시지는 작업 영역에 따라 `분류 : 작업 내용` 형식으로 작성합니다.
