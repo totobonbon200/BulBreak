@@ -178,6 +178,14 @@ class GameFlowTests(unittest.TestCase):
             menu.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_LEFT))
             menu.framework.change_mode.assert_called_once_with(expected)
 
+    def test_debug_menu_uses_vertical_selection_and_horizontal_actions(self):
+        menu = create_menus(Mock())['instrument_mode']
+        menu.framework = Mock()
+        for key in (SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT):
+            menu.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=key))
+        menu.framework.play_constraint.assert_called_once_with('maze_mode', 'maze_cross')
+        menu.framework.change_mode.assert_called_once_with('start_mode')
+
     def test_game_over_restart_resets_session_and_blocks_held_key(self):
         with patch('codes.maze_gamemode.get_time', return_value=10):
             mode = MazeMode(Mock())
