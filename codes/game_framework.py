@@ -160,3 +160,5 @@ class GameFramework:
             self.notice.draw(self.modes[self.state].assets.notice_font)
         if self.stage_timed_out and self.timeout_font is not None:
             text(self.timeout_font, 100, 380, '관심받고싶음? 옛다 관심', size=38)
+        if self.game_over_active:
+            self.game_over_menu.draw()
