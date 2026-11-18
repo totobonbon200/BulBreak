@@ -59,6 +59,12 @@ class ConstraintMenu(MenuMode):
             else:
                 self.framework.play_constraint(*self.OPTIONS[self.index])
 
+    def draw(self):
+        super().draw()
+        target, self.preview.selected = self.OPTIONS[self.index]
+        text(self.font, 100, 365, self.preview.title())
+        text(self.font, 100, 335, self.preview.description(target))
+
 
 def create_menus(font):
     return {
