@@ -48,3 +48,11 @@ class TutorialMode:
         self.mode = self.framework.modes['maze_mode']
         self.mode.enter(False)
         self.prepare_maze()
+
+    def prepare_maze(self):
+        # 첫 줄에서 통로 한 칸, 벽 한 칸, 출구를 순서대로 밟는다.
+        maze = self.mode.maze
+        maze.walls.pop((0, 1), None)
+        maze.walls.pop((0, 3), None)
+        maze.walls[0, 2] = 2
+        maze.exit = (0, 3)
