@@ -105,3 +105,12 @@ class TutorialMode:
     @property
     def showing_cats(self):
         return self.step == len(self.STEPS) - 1
+
+    def draw_scene(self):
+        cats = self.assets.cat_effect if self.showing_cats else None
+        if cats is not None:
+            cats.sync(True, self.now)
+            cats.draw_background()
+        self.mode.draw()
+        if cats is not None:
+            cats.draw_cats(self.now)
