@@ -16,6 +16,15 @@ def draw_start_panel(image, x, y, color):
         SDL_SetTextureColorMod(image.texture, 255, 255, 255)
 
 
+def draw_panel_choice(font, image, y, label, selected):
+    # 시작 화면과 게임오버 메뉴가 같은 강조 위치와 색을 쓴다.
+    x = 639 if selected else 663
+    color = (255, 220, 0) if selected else (255, 255, 255)
+    if image is not None:
+        draw_start_panel(image, x, y, color)
+    font.draw(x - 153, y, label, color)
+
+
 class MenuMode:
     def __init__(self, font, title, lines, routes):
         self.font = font
