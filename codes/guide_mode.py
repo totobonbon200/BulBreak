@@ -2,6 +2,7 @@
 # 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
 from pico2d import SDL_KEYDOWN, SDLK_RIGHT
 from codes.hud import text
+from codes.constraints import CAT_CONSTRAINT
 
 
 class GuideMode:
@@ -18,6 +19,10 @@ class GuideMode:
         ('maze_cross', ('중앙에서 열린 출구 방향을 고릅니다.',
                         '올바른 출구를 여섯 번 고르면 미로 하나를 통과합니다.')),
         ('battle_placeholder', ('기본 전투와 동일하게 진행합니다.',)),
+        ('battle_rhythm', ('두 패턴의 시범을 듣고 아무 방향키로 박자를 따라 칩니다.',
+                           '판정 범위는 ±100ms이며, 틀리거나 놓치면 체력이 줄어듭니다.')),
+        (CAT_CONSTRAINT, ('미로와 전투에서 고양이 사진과 움직이는 고양이가 시야를 가립니다.',
+                          '움직이는 고양이는 화면 가장자리에서 튕깁니다.')),
     )
 
     def __init__(self, font):
