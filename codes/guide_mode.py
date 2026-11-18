@@ -66,6 +66,12 @@ class GuideMode:
             step = -1 if event.key == SDLK_UP else 1
             self.page = max(0, min(self.page + step, len(self.PAGES) - 1))
 
+    def draw_keys(self):
+        for (arrow, x, y), role in zip(self.KEYS, self.KEY_ROLES[self.page]):
+            draw_key_outline(x, y)
+            info_text(self.title_font, x - 12, y + 14, arrow)
+            self.title_font.draw(x - 46, y - 14, role, (255, 220, 0))
+
     def draw_page(self):
         heading, lines = self.PAGES[self.page]
         if self.page >= 2:
