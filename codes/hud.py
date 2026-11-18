@@ -26,12 +26,20 @@ def info_text(font, x, y, message, size=15):
     text(font, x, y, message, size=size, background=False, dark=True)
 
 
+def draw_progress(assets, current):
+    for index, label in enumerate(('미로', '미로', '전투')):
+        font = assets.notice_font if index == current else assets.font  # 현재 단계만 확대한다.
+        info_text(font, 542 + 80 * index, 552, label)
+    for x in (596, 676):
+        info_text(assets.font, x, 552, '→')
+
+
 def draw_hud(assets, rules, now, completed, score=0):
     font = assets.font
     text = info_text
     assets.menu_image.draw(132, 550, 336, 90)  # 왼쪽 경사를 캔버스 밖에 둔다.
     assets.menu_image.draw(650, 345, 300, 490)
-    text(font, 530, 535, '미로 → 미로 → 전투')
+    draw_progress(assets, 2 if rules.mode == 'battle' else min(completed, 1))
     sheet = assets.effect_sheet
     width, height = sheet.w // 4, sheet.h // 2
     for index in range(3):
