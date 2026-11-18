@@ -143,6 +143,16 @@ class GameFlowTests(unittest.TestCase):
         notice.reset()
         self.assertEqual(notice.active, set())
 
+    def test_cat_constraint_is_available_for_both_destinations(self):
+        for source, target in (('battle_mode', 'maze_mode'), ('maze_mode', 'battle_mode')):
+            notice = ConstraintNotice()
+            notice.enabled = True
+            with patch('codes.constraints.random.choice', return_value=CAT_CONSTRAINT) as choose:
+                self.assertTrue(notice.begin(source, target, 0))
+            self.assertIn(CAT_CONSTRAINT, choose.call_args.args[0])
+            self.assertEqual(notice.finish(notice.DURATION), target)
+            self.assertEqual(notice.active, {CAT_CONSTRAINT})
+
     def test_guide_round_trip_and_black_start_text(self):
         font = Mock()
         modes = create_menus(font)
