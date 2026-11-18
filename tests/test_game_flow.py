@@ -163,6 +163,7 @@ class GameFlowTests(unittest.TestCase):
         framework.draw()
         self.assertTrue(all(call.args[-1] == (255, 255, 255)
                             for call in font.draw.call_args_list))
+        framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_DOWN))
         framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_LEFT))
         self.assertEqual(framework.current_mode, 'guide_mode')
         framework.update(100)
@@ -171,10 +172,11 @@ class GameFlowTests(unittest.TestCase):
         self.assertEqual(framework.current_mode, 'start_mode')
 
     def test_start_screen_down_starts_and_up_quits(self):
-        for key, expected in ((SDLK_DOWN, 'maze_mode'), (SDLK_UP, 'quit_mode')):
+        for index, expected in ((0, 'maze_mode'), (3, 'quit_mode')):
             menu = create_menus(Mock())['start_mode']
             menu.framework = Mock()
-            menu.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=key))
+            menu.index = index
+            menu.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_LEFT))
             menu.framework.change_mode.assert_called_once_with(expected)
 
     def test_game_over_restart_resets_session_and_blocks_held_key(self):
@@ -317,7 +319,7 @@ class GameFlowTests(unittest.TestCase):
                                  maze_sheet=Mock(w=400, h=200),
                                  character_sheet=Mock(w=400, h=400), effect_sheet=Mock(w=800, h=400))
         key = lambda value: SimpleNamespace(type=SDL_KEYDOWN, key=value)
-        events = [[key(SDLK_RIGHT)], [key(SDLK_LEFT)], [key(SDLK_DOWN)],
+        events = [[key(SDLK_LEFT)], [], [],
                   [], [SimpleNamespace(type=SDL_QUIT)]]
         with patch.object(game, 'Assets', return_value=assets), \
              patch.object(game, 'get_time', side_effect=[0, .1, .2, 10, 10.1]), \

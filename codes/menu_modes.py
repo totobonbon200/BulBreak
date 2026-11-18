@@ -65,7 +65,7 @@ class SelectionMenu(MenuMode):
             self.index = (self.index + step) % len(self.OPTIONS)
 
 
-class StartMenu(MenuMode):
+class StartMenu(SelectionMenu):
     # 표시 문구와 선택할 모드를 같은 순서로 둔다.
     OPTIONS = (('게임시작', 'maze_mode'), ('가이드', 'guide_mode'),
                ('디버그모드', 'instrument_mode'), ('게임종료', 'quit_mode'))
