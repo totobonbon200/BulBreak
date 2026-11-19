@@ -1,5 +1,6 @@
 """중앙의 주인공을 향해 날아오는 노트를 맞히는 디버그 제약."""
 # 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
+from math import cos, sin, tau
 from pico2d import SDL_KEYDOWN, SDL_KEYUP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT, SDLK_UP
 from pico2d import draw_line, draw_rectangle
 from codes.animation import draw_frame
@@ -12,6 +13,7 @@ class OsmMode(MenuMode):
     CENTER = (300, 300)
     TRAVEL = 1.0
     RADIUS = 180
+    HIT_RADIUS = 100
     # 입력과 화살표는 노트가 출발한 쪽을 가리킨다.
     DIRECTIONS = {SDLK_UP: (0, 1), SDLK_DOWN: (0, -1),
                   SDLK_LEFT: (-1, 0), SDLK_RIGHT: (1, 0)}
@@ -67,7 +69,11 @@ class OsmMode(MenuMode):
         # 가로·세로 이동선과 중앙 판정 영역을 표시한다.
         draw_line(120, y, 480, y, 80, 80, 80)
         draw_line(x, 120, x, 480, 80, 80, 80)
-        draw_rectangle(x - 27, y - 27, x + 27, y + 27, 255, 255, 255)
+        # 원 둘레에 화살표의 중심이 닿는 순간을 판정한다.
+        points = [(round(x + self.HIT_RADIUS * cos(i * tau / 64)),
+                   round(y + self.HIT_RADIUS * sin(i * tau / 64))) for i in range(64)]
+        for start, end in zip(points, points[1:] + points[:1]):
+            draw_line(*start, *end, 150, 150, 150)
         sheet = self.assets.character_sheet
         width, height = sheet.w // 4, sheet.h // 4
         sheet.clip_draw(0, 3 * height, width, height, x, y, 44, 44)
@@ -85,7 +91,7 @@ class OsmMode(MenuMode):
         if remaining > self.TRAVEL:
             return
         dx, dy = self.DIRECTIONS[self.PATTERN[self.hits]]
-        distance = self.RADIUS * remaining / self.TRAVEL
+        distance = self.HIT_RADIUS + (self.RADIUS - self.HIT_RADIUS) * remaining / self.TRAVEL
         x, y = self.CENTER
         x, y = round(x + dx * distance), round(y + dy * distance)
         column = (SDLK_LEFT, SDLK_RIGHT, SDLK_UP, SDLK_DOWN).index(self.PATTERN[self.hits])
