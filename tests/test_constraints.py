@@ -64,8 +64,7 @@ class ConstraintTests(unittest.TestCase):
             delta = tuple(a - b for a, b in zip(mode.maze.exit, mode.maze.entrance))
             press(mode, keys[delta])
             self.assertEqual(mode.completed, int(index == 5))
-        self.assertTrue(mode.awaiting_next_maze)
-        mode.awaiting_next_maze = False
+        self.assertEqual(mode.cross_count, 0)  # 여섯 번째 출구에서 다음 미로를 바로 시작한다.
         mode.update(9)
         self.assertTrue(mode.is_game_over)
 
