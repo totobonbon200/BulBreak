@@ -95,11 +95,12 @@ class ConstraintTests(unittest.TestCase):
             for index, beat in enumerate(rhythm.beat_times()):
                 self.assertEqual(rhythm.advance(beat), 0)
                 rhythm.play_claps(beat, sound)
-                self.assertEqual(sound.play.call_count, len(rhythm.hits) + index + 1)
+                expected_claps = len(rhythm.hits) + (index + 1 if segment else 0)
+                self.assertEqual(sound.play.call_count, expected_claps)
                 self.assertEqual(rhythm.frame(beat), (0, 1))
                 self.assertTrue(rhythm.press(beat))
                 rhythm.play_claps(beat, sound)
-                self.assertEqual(sound.play.call_count, len(rhythm.hits) + index + 1)
+                self.assertEqual(sound.play.call_count, expected_claps)
 
     def test_claps_do_not_burst_after_a_delayed_frame(self):
         rhythm, sound = Rhythm(0), Mock()
@@ -136,6 +137,7 @@ class ConstraintTests(unittest.TestCase):
         mode.framework = SimpleNamespace(notice=notice)
         with patch('codes.battle.get_time', return_value=0):
             mode.enter(False)
+        mode.rhythm.segment, mode.rhythm.next_cue_at = 1, 0
         now = mode.rhythm.beat_times()[0]
         with patch('codes.battle.get_time', return_value=now):
             mode.update(now)
