@@ -9,6 +9,7 @@ class BuildingBattle:
     FLOOR, PLAYER_SIZE, FLOOR_HEIGHT = 130, 100, 42
     GRAVITY, HITS_PER_FLOOR = 1000, 10
     BUILDING_RATE = .5
+    CONTACT_SECONDS = .45  # 공중에서 밑면을 따라가는 시간이다.
 
     def __init__(self, now):
         self.floors = randint(3, 5)
@@ -17,6 +18,7 @@ class BuildingBattle:
         self.feet, self.jump_speed = self.FLOOR, 0
         self.player_gravity = self.GRAVITY
         self.follow_until = None
+        self.impact_at = None
         self.updated_at = now
 
     def fall(self, dt):
@@ -38,7 +40,8 @@ class BuildingBattle:
             return
         next_feet = self.feet + self.jump_speed * dt - .5 * self.player_gravity * dt ** 2
         if limit > self.FLOOR and next_feet >= limit:
-            self.follow_until = now + .15
+            self.follow_until = now + self.CONTACT_SECONDS
+            self.impact_at = now
             self.follow_bottom(limit, now)
             return
         self.feet = min(limit, max(self.FLOOR, next_feet))
