@@ -3,6 +3,7 @@
 from pico2d import SDL_KEYDOWN, SDL_KEYUP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT, SDLK_UP
 from pico2d import draw_circle, draw_line, draw_rectangle
 from codes.animation import draw_frame
+from codes.clap_sound import play_go_sound
 from codes.hud import info_text
 from codes.menu_modes import MenuMode
 from codes.rhythm import Rhythm
@@ -58,6 +59,7 @@ class OsmMode(MenuMode):
         now = self.framework.clock()
         on_time = Rhythm.is_on_time(now, self.arrival)
         if event.key == self.PATTERN[self.hits] and on_time:
+            play_go_sound(self.assets)  # 정확한 노트 입력에만 전구 파열음을 재생한다.
             self.hits += 1
             self.success_until = now + self.SUCCESS_SECONDS
             self.feedback = '성공'
