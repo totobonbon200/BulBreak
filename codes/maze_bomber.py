@@ -1,5 +1,5 @@
 # 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
-"""봄버맨 미로에서 폭탄 세 개의 위치와 판정 시각을 관리한다."""
+"""봄버맨 미로에서 폭탄의 위치와 판정 시각을 관리한다."""
 from random import choice, sample
 from pico2d import draw_rectangle
 from codes.animation import draw_frame
@@ -14,6 +14,7 @@ def choose_spawn(maze):
 
 
 class BomberRound:
+    BOMB_COUNT = 4  # 라운드마다 설치할 폭탄 수다.
     FUSE_SECONDS = 1.5  # 폭발 판정과 안내에 같은 시간을 사용한다.
     PLACEMENT_INTERVAL = 0.2  # 첫 폭탄부터 차례대로 표시하는 간격이다.
 
@@ -23,7 +24,7 @@ class BomberRound:
         safe_row, safe_col = self.nearby_shelter(maze, position)
         passages = [(row, col) for row in range(maze.size) if row != safe_row
                     for col in range(maze.size) if col != safe_col and (row, col) not in maze.walls]
-        self.bombs = sample(passages, 3)
+        self.bombs = sample(passages, self.BOMB_COUNT)
 
     def nearby_shelter(self, maze, position):
         # 한 번 움직여 갈 수 있는 통로를 우선 대피 칸으로 고른다.
@@ -51,7 +52,7 @@ class BomberRound:
     def draw(self, maze, assets, now):
         # 폭탄 표시에는 effect 시트의 첫 행 세 번째 칸을 사용한다.
         bombs = [bomb for index, bomb in enumerate(self.bombs)
-                 if now >= self.started_at + index * self.PLACEMENT_INTERVAL]
+                 if now >= self.started_at + round(index * self.PLACEMENT_INTERVAL, 3)]
         self.draw_blast(maze, bombs)
         size = maze.cell_size * .8
         for bomb in bombs:
