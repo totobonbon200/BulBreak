@@ -16,6 +16,7 @@ class BuildingBattle:
         self.bottom, self.fall_speed = 540, 0
         self.feet, self.jump_speed = self.FLOOR, 0
         self.player_gravity = self.GRAVITY
+        self.follow_until = None
         self.updated_at = now
 
     def fall(self, dt):
@@ -40,6 +41,15 @@ class BuildingBattle:
     def gap(self):
         # 주인공 머리에서 건물 밑면까지의 수직 간격이다.
         return self.bottom - (self.feet + self.PLAYER_SIZE)
+
+    def follow_bottom(self, limit, now):
+        # 접촉 중에는 건물의 실제 속도를 따르고, 놓이면 조금 더 빠르게 떨어진다.
+        self.feet = limit
+        self.jump_speed = self.fall_speed * self.BUILDING_RATE
+        if now >= self.follow_until:
+            self.follow_until = None
+            self.jump_speed = min(0, self.jump_speed) - 30
+            self.player_gravity = 300
 
     def jump(self):
         # 건물이 가까우면 건물을 띄우고, 떨어져 있으면 바닥에서만 점프한다.
