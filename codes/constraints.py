@@ -52,6 +52,7 @@ class ConstraintNotice:
     def description(self, mode):
         # 안내 시작 때 선택한 제약과 실제 적용 설명을 일치시킨다.
         return {'maze_cross': '중앙 출구 6회',
+                'maze_placeholder': '추가 효과 없이 출구에 도착',
                 'maze_darkness': '주인공 주변만 보이는 미로',
                 'maze_bomber': '2초 뒤 십자 폭탄 3개의 범위를 피하세요',
                 'battle_placeholder': '추가 효과 없음',
@@ -67,6 +68,7 @@ class ConstraintNotice:
     def title(self):
         # 전환 안내와 디버그 메뉴가 같은 제약 이름을 표시한다.
         return {'maze_cross': '[미로] 중앙 출구',
+                'maze_placeholder': '[미로] 기본',
                 'maze_darkness': '[미로] 어두ComCom',
                 'maze_bomber': '[미로] 봄버맨',
                 'battle_building': '[전투] 건물부수기',
