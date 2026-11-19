@@ -28,3 +28,13 @@ class OsmMode(MenuMode):
         self.feedback = ''
         self.now = self.framework.clock()
         self.arrival = self.now + self.TRAVEL
+
+    def next_note(self, now):
+        # 결과를 잠깐 보여 준 뒤 다음 노트가 바깥에서 출발한다.
+        self.arrival = now + self.TRAVEL + 0.2
+
+    def update(self, now):
+        self.now = now
+        if self.hits < len(self.PATTERN) and now > self.arrival + self.WINDOW:
+            self.feedback = '놓침 · 다시 시도'
+            self.next_note(now)
