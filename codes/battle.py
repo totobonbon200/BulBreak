@@ -182,8 +182,9 @@ class BattleMode:
                 self.start_effect('player')
                 self.successes += 1
                 if self.rhythm is not None:
-                    self.rhythm.take_next_pattern_cue(self.now)  # 마지막 입력은 타격음과 전환음을 겸한다.
-                play_go_sound(self.assets)
+                    self.rhythm.take_next_pattern_cue(self.now)  # 전환 시각은 기록하고 타격음은 생략한다.
+                else:
+                    play_go_sound(self.assets)
                 self.next_attack_direction = 'right' if direction == 'left' else 'left'
                 self.message = f'공격 성공: {self.successes}/{self.CLEAR_ATTACKS}'
             else:

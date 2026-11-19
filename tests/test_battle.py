@@ -36,6 +36,7 @@ def press(mode, key):
 class BattleTests(unittest.TestCase):
     def test_rhythm_selects_two_patterns_and_matches_clear_target(self):
         # 실제 무작위 선택 결과와 두 패턴의 마지막 입력 클리어를 검증한다.
+        self.assets.go_sound = Mock()
         self.mode.framework.notice.active = {'battle_rhythm'}
         with patch('codes.battle.get_time', return_value=0):
             self.mode.enter(False)
@@ -49,6 +50,7 @@ class BattleTests(unittest.TestCase):
                 self.assertEqual(self.mode.cleared, self.mode.successes == self.mode.CLEAR_ATTACKS)
         self.assertTrue(self.mode.cleared)
         self.assertEqual(self.mode.rules.health, 3)
+        self.assets.go_sound.play.assert_not_called()
 
     def setUp(self):
         self.assets = assets()
