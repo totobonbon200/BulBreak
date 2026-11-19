@@ -83,13 +83,7 @@ class MazeMode:
                         self.player.position = self.maze.entrance
                         self.message = f'출구 방향 선택: {self.cross_count}/6'
                         return
-                self.completed += 1
-                if self.completed == 2:
-                    battle = self.framework.modes['battle_mode']
-                    battle.pending_session = (self.player.rules, self.score)
-                    self.framework.change_mode('battle_mode')
-                    return
-                self.advance_maze()
+                self.complete_maze()
 
     def complete_maze(self):
         # 실제 출구와 폭탄 회피가 같은 미로 완료 흐름을 사용한다.
