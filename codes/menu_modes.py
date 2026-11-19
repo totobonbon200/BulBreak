@@ -84,17 +84,25 @@ class StartMenu(SelectionMenu):
         self.image = image
         self.menu_image = menu_image
         self.index = 0
+        self.progress = [0.0] * len(self.OPTIONS)
+        self.last_update = None
 
     def confirm_selection(self):
         self.framework.change_mode(self.OPTIONS[self.index][1])
 
+    def update(self, now):
+        # 항목마다 현재 위치에서 선택 또는 해제 방향으로 0.25초 동안 전환한다.
+        step = 0.0 if self.last_update is None else max(0.0, now - self.last_update) / 0.25
+        self.last_update = now
+        for index, progress in enumerate(self.progress):
+            self.progress[index] = min(1.0, progress + step) if index == self.index else max(0.0, progress - step)
     def draw(self):
         if self.image is not None:
             scale = min(440 / self.image.w, 250 / self.image.h)
             self.image.draw(256, 465, self.image.w * scale, self.image.h * scale)
         # 네 항목을 오른쪽 아래에 쌓는다.
         for index, (label, _) in enumerate(self.OPTIONS):
-            draw_panel_choice(self.font, self.menu_image, 256 - index * 63, label, index == self.index)
+            draw_panel_choice(self.font, self.menu_image, 256 - index * 63, label, self.progress[index], 36)
 
 
 class GameOverMenu(SelectionMenu):
