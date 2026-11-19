@@ -1,4 +1,5 @@
 """Player state and the top-row maze animation."""
+# 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
 
 from enum import Enum, auto
 from transitions import Machine
@@ -44,10 +45,10 @@ class Character:
         if self.is_playing and self.rules.is_over:
             self.state = PlayerState.GAME_OVER
 
-    def enter_maze(self, position, now):
+    def enter_maze(self, position, now, *, idle_limit=None):
         # Scene transitions do not consume idle time.
         self.position = position
-        self.rules.enter_maze(now)
+        self.rules.enter_maze(now, idle_limit=idle_limit)
         self.finish_action()
 
     def react(self, now, result='moved', direction=(0, 0)):

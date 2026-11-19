@@ -119,7 +119,7 @@ class MazeMode:
         self.now = get_time()
         self.cross_count = 0
         self.maze = CrossMaze() if self.cross_enabled else Maze(self.size, self.maze.exit)
-        self.player.enter_maze(self.maze.entrance, self.now)
+        self.player.enter_maze(self.maze.entrance, self.now, idle_limit=self.maze_idle_limit)
         if self.bomber is not None:
             self.start_bomber_round()
         self.message = '방향키: 이동 / 벽은 두 번 공격'
