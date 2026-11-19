@@ -147,7 +147,7 @@ class MazeMode:
 
     def draw(self):
         sheet, font = self.assets.maze_sheet, self.assets.font
-        # 봄버맨은 폭탄 회피로 완료하므로 도착점도 일반 통로로 그린다.
+        # 봄버맨은 폭발 판정으로 완료하므로 도착점도 일반 통로로 그린다.
         self.maze.draw(sheet, font, self.now, show_exit=self.bomber is None)
         if self.bomber is not None and self.player.is_playing:
             self.bomber.draw(self.maze, self.assets, self.now)
