@@ -48,7 +48,7 @@ class GuideMode(AnimatedSelectionMenu):
                              '바닥에서 깔리면 체력 1을 잃고 맨 아래층이 부서집니다.')),
         ('maze_bomber', (f'{BomberRound.FUSE_SECONDS:g}초 뒤 폭발하며, 체력이 남으면 다음 단계로 넘어갑니다.',
                          '폭발 범위 안에 있으면 체력이 1 줄어듭니다.')),
-        ('battle_hidden_enemy', ('적의 방향과 체력이 숨겨지고, X 위치가 주인공 공격 방향을 알려 줍니다.',)),
+        ('battle_hidden_enemy', ('적이 준비하면 적 위에 X가 뜹니다. 주인공 화살표와 적 체력은 숨겨집니다.',)),
         ('scene_rotation', ('캔버스 중앙 또는 각 객체 중심을 기준으로 플레이 화면이 회전합니다.',)),
     )
 

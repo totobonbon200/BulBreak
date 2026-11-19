@@ -61,7 +61,7 @@ class ConstraintNotice:
                 'maze_osm': '화살표가 원에 닿을 때 방향키를 8번 맞히세요',
                 'battle_placeholder': '추가 효과 없음',
                 'battle_building': '접촉 중 좌우 타격 · 위로 점프 또는 띄우기',
-                'battle_hidden_enemy': '적의 방향 화살표와 남은 체력이 보이지 않습니다',
+                'battle_hidden_enemy': '적 준비 표시는 X · 주인공 화살표와 적 체력 숨김',
                 'scene_rotation': '배경 위의 플레이 요소가 계속 회전합니다',
                 CAT_CONSTRAINT: f'{"미로" if mode == "maze_mode" else "전투"} 시야를 가리는 고양이',
                 'battle_rhythm': '두 패턴 따라 입력 · 실패한 패턴마다 체력 1 감소'}.get(self.selected, '')
