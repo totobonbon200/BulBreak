@@ -16,3 +16,10 @@ class SceneRotation:
         # 미로 또는 전투에 들어갈 때 회전 기준을 한 번 정한다.
         self.started = now
         self.around_canvas = choice((True, False))
+
+
+class RotatedDraw:
+    def __init__(self, angle, canvas_center):
+        self.angle = angle % 360
+        self.canvas_center = canvas_center
+        self.cosine, self.sine = cos(radians(self.angle)), sin(radians(self.angle))
