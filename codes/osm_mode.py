@@ -57,3 +57,5 @@ class OsmMode(MenuMode):
             self.hits += 1
             self.feedback = '성공'
             self.next_note(now)
+        elif now >= self.arrival - self.TRAVEL:
+            self.feedback = '중앙에서 화살표 방향으로 입력'
