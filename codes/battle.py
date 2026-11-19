@@ -226,10 +226,14 @@ class BattleMode:
         # 좌우 입력은 교대 순서 없이 닿아 있는 건물을 공격한다.
         if key == SDLK_DOWN:
             return
-        self.rules.record_action(self.now)
+        if key == SDLK_UP:
+            self.rules.record_action(self.now)
+        else:
+            self.rules.update(self.now)  # 빗나간 좌우 입력에는 회복을 적용하지 않는다.
         if key == SDLK_UP and not self.is_game_over and self.building.jump():
             self.display_action('dodge_up', self.player_direction)
         if not self.is_game_over and key in (SDLK_LEFT, SDLK_RIGHT) and self.building.attack():
+            self.rules.record_action(self.now)
             self.successes += 1
             self.display_action('attack', self.DIRECTIONS[key])
             self.finish_if_cleared()
