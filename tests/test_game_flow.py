@@ -124,7 +124,7 @@ class GameFlowTests(unittest.TestCase):
         self.assertEqual(notice.active, set())
         self.assertEqual(notice.finish(1), 'maze_mode')
         self.assertEqual(len(notice.active), 1)  # 진입 모드의 제약 하나만 적용한다.
-        self.assertTrue(notice.active <= {'maze_cross', CAT_CONSTRAINT})
+        self.assertTrue(notice.active <= {'maze_cross', CAT_CONSTRAINT, 'maze_darkness'})
 
     def test_constraints_accumulate_without_duplicates(self):
         notice = ConstraintNotice()
