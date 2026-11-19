@@ -307,6 +307,7 @@ class BattleMode:
             if effect is not None and not effect.finished(self.now):
                 draw_frame(self.assets.effect_attack_sheet, 1, 4, effect.frame(self.now),
                            *position, 110, 110)
+
     def draw_status(self):
         paused = self.rhythm is not None or self.cleared or self.framework.timer_paused is True
         draw_hud(self.assets, self.rules, self.now, 2, timer_paused=paused)

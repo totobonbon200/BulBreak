@@ -2,6 +2,7 @@
 """건물부수기의 낙하, 충돌과 층별 타격 상태를 관리한다."""
 from random import randint
 from pico2d import draw_line
+from codes.hud import info_text
 
 class BuildingBattle:
     CENTER_X, WIDTH = 350, 190
@@ -64,3 +65,7 @@ class BuildingBattle:
         for floor in range(self.floors):
             y = self.bottom + (floor + .5) * self.FLOOR_HEIGHT
             assets.menu_image.draw(self.CENTER_X, y, self.WIDTH, self.FLOOR_HEIGHT)
+        info_text(assets.font, 145, 85, '←·→ 타격   ↑ 점프 / 건물 띄우기')
+        if self.floors:
+            remaining = self.HITS_PER_FLOOR - self.hits
+            info_text(assets.font, 275, self.bottom + 21, f'맨 아래층 내구도 {remaining}')
