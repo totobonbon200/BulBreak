@@ -152,9 +152,10 @@ class BattleMode:
                     and self.now < self.rhythm.beat_times()[0] - self.rhythm.WINDOW):
                 return  # 첫 입력 박자의 이른 허용 범위를 보존한다.
             if not self.rhythm.press(self.now):
-                self.rules.health = max(0, self.rules.health - 1)
-                self.message = '박자 실패! 체력 1 감소'
+                self.rhythm.imperfect = True
+                self.message = '박자 실패 · 패턴 종료 시 판정'
                 return
+            self.rules.health = max(0, self.rules.health - self.rhythm.take_damage())
         else:
             self.rules.record_action(self.now)
         if self.is_game_over:
@@ -338,7 +339,7 @@ class BattleMode:
             play_go_sound(self.assets)
 
     def update_rhythm(self, now):
-        # 누락 피해는 한 번만 반영하고 일반 게임오버 시계를 고정한다.
+        # 패턴별 피해를 반영하고 일반 게임오버 시계를 고정한다.
         self.rules.last_update = now
         if self.countdown is not None and now < self.countdown.end:
             self.countdown.play_go(now, getattr(self.assets, 'go_sound', None))
