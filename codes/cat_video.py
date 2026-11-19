@@ -1,5 +1,6 @@
 # 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
 """고양이 제약의 MP4 영상에서 배경으로 쓸 프레임을 읽는다."""
+from itertools import islice
 from av import open as open_video
 from pico2d import Image, draw_rectangle
 from sdl2 import (SDL_CreateTexture, SDL_GetError, SDL_PIXELFORMAT_RGB24,
@@ -17,3 +18,9 @@ class LoopingVideo:
         if not texture:
             raise RuntimeError(SDL_GetError().decode())
         self.image = Image(texture)
+
+    def frame_at(self, elapsed):
+        # 일정한 프레임 간격의 원본 영상은 마지막 프레임 뒤에 처음으로 돌아간다.
+        index = int(elapsed * self.stream.average_rate) % self.stream.frames
+        self.container.seek(0, stream=self.stream)
+        return next(islice(self.container.decode(self.stream), index, None))
