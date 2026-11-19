@@ -33,7 +33,14 @@ class BuildingBattle:
         self.fall(dt * self.BUILDING_RATE)
         # 공중에서도 건물이 내려오면 주인공의 머리가 밑면을 통과하지 않는다.
         limit = self.bottom - self.PLAYER_SIZE
+        if self.follow_until is not None:
+            self.follow_bottom(limit, now)
+            return
         next_feet = self.feet + self.jump_speed * dt - .5 * self.player_gravity * dt ** 2
+        if limit > self.FLOOR and next_feet >= limit:
+            self.follow_until = now + .15
+            self.follow_bottom(limit, now)
+            return
         self.feet = min(limit, max(self.FLOOR, next_feet))
         self.jump_speed = self.jump_speed - self.player_gravity * dt if self.FLOOR < self.feet < limit else 0
 
@@ -58,6 +65,7 @@ class BuildingBattle:
             return True
         if self.feet == self.FLOOR:
             self.jump_speed = 520  # 자유 점프의 꼭짓점은 건물의 상승 높이보다 높다.
+            self.player_gravity = self.GRAVITY
             return True
         return False
 
@@ -67,6 +75,7 @@ class BuildingBattle:
             return False
         self.hits = (self.hits + 1) % self.HITS_PER_FLOOR
         if self.hits == 0:
+            self.follow_until = None
             self.floors -= 1
             self.bottom += self.FLOOR_HEIGHT
         return True
