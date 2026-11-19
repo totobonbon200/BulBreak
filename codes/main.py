@@ -14,6 +14,7 @@ from codes.cat_video import LoopingVideo
 from codes.clap_sound import load_clap, load_glass_break
 from codes.game_framework import GameFramework
 from codes.menu_modes import create_menus
+from codes.osm_mode import OsmMode
 from codes.tutorial_mode import TutorialMode
 
 
@@ -60,6 +61,7 @@ def main():
     modes = create_menus(assets.font, assets.main_image, assets.menu_image,
                          start_font=assets.notice_font)
     modes['maze_mode'] = MazeMode(assets)
+    modes['osm_mode'] = OsmMode(assets)  # 디버그 목록에서만 들어가는 연습 화면이다.
     modes['battle_mode'] = BattleMode(assets)
     modes['tutorial_mode'] = TutorialMode(assets, Path(__file__).resolve().parents[1] / '.tutorial-complete')
     framework = GameFramework(modes, cat_effect=assets.cat_effect)

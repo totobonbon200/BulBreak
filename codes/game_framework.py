@@ -13,7 +13,7 @@ from pico2d import get_time
 class GameFramework:
     TIMED_MODES = ('maze_mode', 'battle_mode')
     MODES = ('start_mode', 'instrument_mode', 'guide_mode', 'maze_mode',
-             'battle_mode', 'tutorial_mode', 'result_mode', 'quit_mode')
+             'battle_mode', 'osm_mode', 'tutorial_mode', 'result_mode', 'quit_mode')
 
     def __init__(self, modes, clock=None, cat_effect=None):
         self.notice = ConstraintNotice()  # 전환 안내와 일반 진행을 분리한다.
