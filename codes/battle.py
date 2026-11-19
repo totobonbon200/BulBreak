@@ -223,6 +223,10 @@ class BattleMode:
                 if self.rhythm is not None:
                     self.message = '피격! 체력 1 감소' if vertical_hit else '방어 방향 불일치'
 
+        self.finish_if_cleared()
+
+    def finish_if_cleared(self):
+        # 일반 공격과 건물 타격이 같은 완료 흐름을 사용한다.
         if self.successes >= self.CLEAR_ATTACKS and not self.is_game_over:
             self.cleared = True
             # 제약 한 판의 전투를 마치면 선택 화면으로 돌아간다.
