@@ -11,7 +11,7 @@ class OsmMode(MenuMode):
     TRAVEL = 1.0
     WINDOW = 0.15
     RADIUS = 180
-    # 입력 방향은 노트가 주인공을 향해 이동하는 방향이다.
+    # 입력과 화살표는 노트가 출발한 쪽을 가리킨다.
     DIRECTIONS = {SDLK_UP: (0, 1), SDLK_DOWN: (0, -1),
                   SDLK_LEFT: (-1, 0), SDLK_RIGHT: (1, 0)}
     PATTERN = (SDLK_RIGHT, SDLK_DOWN, SDLK_LEFT, SDLK_UP,
@@ -86,7 +86,7 @@ class OsmMode(MenuMode):
         dx, dy = self.DIRECTIONS[self.PATTERN[self.hits]]
         distance = self.RADIUS * remaining / self.TRAVEL
         x, y = self.CENTER
-        x, y = round(x - dx * distance), round(y - dy * distance)
+        x, y = round(x + dx * distance), round(y + dy * distance)
         # 판정 범위에 들어온 노트는 노란색으로 바꾼다.
         color = (255, 220, 0) if remaining <= self.WINDOW else (102, 210, 255)
         tip_x, tip_y = x + dx * 12, y + dy * 12
