@@ -31,17 +31,18 @@ class BomberRound:
                     and cell not in maze.walls]
         return choice(passages or [position])
 
-    def in_blast(self, position):
+    def in_blast(self, position, bombs=None):
         # 십자는 벽에 막히지 않고 미로 끝까지 이어진다.
         row, col = position
-        return any(row == bomb_row or col == bomb_col for bomb_row, bomb_col in self.bombs)
+        return any(row == bomb_row or col == bomb_col
+                   for bomb_row, bomb_col in (self.bombs if bombs is None else bombs))
 
-    def draw_blast(self, maze):
+    def draw_blast(self, maze, bombs=None):
         # 교차한 곳도 한 번만 칠해 폭발 범위를 같은 밝기로 보여준다.
         half = maze.cell_size / 2
         for row in range(maze.size):
             for col in range(maze.size):
-                if self.in_blast((row, col)):
+                if self.in_blast((row, col), bombs):
                     x, y = maze.center((row, col))
                     draw_rectangle(x - half, y - half, x + half, y + half, 240, 90, 25, 85, filled=True)
 
