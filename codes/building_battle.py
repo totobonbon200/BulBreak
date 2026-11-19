@@ -93,6 +93,16 @@ class BuildingBattle:
         self.floors -= 1
         self.bottom += self.FLOOR_HEIGHT
 
+    def crush_grounded(self, now):
+        # 압착된 층의 남은 내구도를 완료 진행에 반영한다.
+        remaining = self.HITS_PER_FLOOR - self.hits
+        self.break_floor()
+        self.hits = 0
+        self.fall_speed = self.jump_speed = 0
+        self.impact_at = now
+        self.slow_until = now + .6
+        return remaining
+
     def draw(self, assets):
         # 메뉴 패널을 한 층씩 쌓고 주인공이 서는 바닥을 표시한다.
         draw_line(120, self.FLOOR, 490, self.FLOOR, 255, 255, 255)
