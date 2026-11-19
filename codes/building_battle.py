@@ -21,18 +21,18 @@ class BuildingBattle:
         self.impact_at = None
         self.updated_at = now
 
-    def fall(self, dt):
+    def fall(self, dt, gravity):
         # 건물은 지면 위 주인공 머리 높이에서 멈춘다.
         rest = self.FLOOR + self.PLAYER_SIZE
-        self.bottom = max(rest, self.bottom + self.fall_speed * dt - .5 * self.GRAVITY * dt ** 2)
-        self.fall_speed = self.fall_speed - self.GRAVITY * dt if self.bottom > rest else 0
+        self.bottom = max(rest, self.bottom + self.fall_speed * dt - .5 * gravity * dt ** 2)
+        self.fall_speed = self.fall_speed - gravity * dt if self.bottom > rest else 0
 
     def update(self, now):
         if now <= self.updated_at:
             return
         dt = now - self.updated_at
         self.updated_at = now
-        self.fall(dt * self.BUILDING_RATE)
+        self.fall(dt * self.BUILDING_RATE, self.GRAVITY)
         # 공중에서도 건물이 내려오면 주인공의 머리가 밑면을 통과하지 않는다.
         limit = self.bottom - self.PLAYER_SIZE
         if self.follow_until is not None:
