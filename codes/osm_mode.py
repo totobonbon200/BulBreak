@@ -11,9 +11,9 @@ from codes.rhythm import Rhythm
 
 class OsmMode(MenuMode):
     CENTER = (300, 300)
-    TRAVEL = 1.0
+    TRAVEL = 0.5
     RADIUS = 180
-    HIT_RADIUS = 100
+    HIT_RADIUS = 67  # 6×6 미로 한 칸 너비에 맞춰 판정 원을 줄인다.
     SUCCESS_SECONDS = 0.2
     # 입력과 화살표는 노트가 출발한 쪽을 가리킨다.
     DIRECTIONS = {SDLK_UP: (0, 1), SDLK_DOWN: (0, -1),
