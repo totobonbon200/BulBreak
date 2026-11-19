@@ -16,3 +16,7 @@ class OsmMode(MenuMode):
                   SDLK_LEFT: (-1, 0), SDLK_RIGHT: (1, 0)}
     PATTERN = (SDLK_RIGHT, SDLK_DOWN, SDLK_LEFT, SDLK_UP,
                SDLK_LEFT, SDLK_DOWN, SDLK_RIGHT, SDLK_UP)
+
+    def __init__(self, assets):
+        super().__init__(assets.font, '[미로] OSM', (), {})
+        self.assets = assets
