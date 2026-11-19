@@ -27,7 +27,7 @@ class BuildingBattle:
             return
         dt = now - self.updated_at
         self.updated_at = now
-        self.fall(dt)
+        self.fall(dt * .5)  # 건물의 상승과 낙하에 걸리는 시간을 두 배로 늘린다.
         # 공중에서도 건물이 내려오면 주인공의 머리가 밑면을 통과하지 않는다.
         limit = self.bottom - self.PLAYER_SIZE
         next_feet = self.feet + self.jump_speed * dt - .5 * self.GRAVITY * dt ** 2
