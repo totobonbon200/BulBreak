@@ -123,7 +123,11 @@ class MazeMode:
     def update(self, now):
         self.now = now
         self.transitioned = False
+        if self.bomber is not None:
+            self.player.rules.last_update = now  # 폭탄 제약이 무행동 피해를 대신한다.
         self.player.update(now)
+        if self.bomber is not None and self.player.is_playing and now >= self.bomber.deadline:
+            self.resolve_bomber(now)
 
     def resolve_bomber(self, now):
         if self.bomber.in_blast(self.player.position):
@@ -138,11 +142,14 @@ class MazeMode:
     def draw(self):
         sheet, font = self.assets.maze_sheet, self.assets.font
         self.maze.draw(sheet, font, self.now)
+        if self.bomber is not None and self.player.is_playing:
+            self.bomber.draw(self.maze, self.assets, self.now)
         self.player.draw(self.assets.character_sheet, self.maze, self.now)
         if self.darkness:
             draw_darkness(*self.maze.center(self.player.position), self.maze.cell_size * 1.5)
         framework = getattr(self, 'framework', None)
-        paused = self.is_game_over or getattr(framework, 'timer_paused', False) is True
+        paused = (self.bomber is not None or self.is_game_over
+                  or getattr(framework, 'timer_paused', False) is True)
         draw_hud(self.assets, self.player.rules, self.now, self.completed, timer_paused=paused)
         if not self.player.is_playing:
             width, height = sheet.w // 4, sheet.h // 2
