@@ -76,4 +76,4 @@ class ConstraintNotice:
                 'maze_osm': '[미로] OSM',
                 'battle_building': '[전투] 건물부수기',
                 CAT_CONSTRAINT: '고양이다아아아아',
-                'battle_placeholder': '[전투] 기본', 'battle_rhythm': '[전투] 리듬'}.get(self.selected, '')
+                'battle_placeholder': '[전투] 기본', 'battle_rhythm': '[전투] 리듬 지옥'}.get(self.selected, '')
