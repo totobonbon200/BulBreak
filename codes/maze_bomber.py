@@ -15,8 +15,10 @@ def choose_spawn(maze):
 
 class BomberRound:
     FUSE_SECONDS = 1.5  # 폭발 판정과 안내에 같은 시간을 사용한다.
+    PLACEMENT_INTERVAL = 0.2  # 첫 폭탄부터 차례대로 표시하는 간격이다.
 
     def __init__(self, maze, position, now):
+        self.started_at = now
         self.deadline = now + self.FUSE_SECONDS
         safe_row, safe_col = self.nearby_shelter(maze, position)
         passages = [(row, col) for row in range(maze.size) if row != safe_row
@@ -48,8 +50,10 @@ class BomberRound:
 
     def draw(self, maze, assets, now):
         # 폭탄 표시에는 effect 시트의 첫 행 세 번째 칸을 사용한다.
-        self.draw_blast(maze)
+        bombs = [bomb for index, bomb in enumerate(self.bombs)
+                 if now >= self.started_at + index * self.PLACEMENT_INTERVAL]
+        self.draw_blast(maze, bombs)
         size = maze.cell_size * .8
-        for bomb in self.bombs:
+        for bomb in bombs:
             draw_frame(assets.effect_sheet, 2, 4, (0, 2), *maze.center(bomb), size, size)
         info_text(assets.font, 108, 78, f'폭발까지 {max(0, self.deadline - now):.1f}초')
