@@ -1,4 +1,4 @@
-"""15초 제한의 임시 전투: 실시간 입력과 적의 방향 FIFO를 연결한다."""
+"""실시간 입력과 적의 방향 FIFO를 연결하는 전투 모드."""
 # 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md의 최신 작성·커밋 기준을 확인한다.
 # 입력 판정과 표시를 연결한다. 코드 커밋은 관련 파일 3개·변경 10줄 이내로 나눈다.
 from pico2d import *
@@ -60,7 +60,6 @@ class BattleMode:
         self.next_attack_direction = 'left'
         self.failure_started = None
         self.horizontal_attack_parry = False
-        self.stage_timed_out = False
         self.cleared = False
         self.enemy = Enemy(self.now, self.rules.animation_frame_seconds)
         self.show_idle()
@@ -77,10 +76,6 @@ class BattleMode:
     @property
     def is_game_over(self):
         return self.rules.is_over
-
-    def on_stage_timeout(self):
-        self.stage_timed_out = True
-        self.rules.health = 0
 
     def make_player_animation(self, state, direction):
         # 가로공격 대응도 누른 방향의 공격 시트 행을 재생한다.
@@ -136,7 +131,6 @@ class BattleMode:
             if event.key == SDLK_DOWN:
                 self.enter(False)
                 self.held.add(SDLK_DOWN)
-                self.framework.restart_stage_timer()
             elif event.key == SDLK_UP:
                 self.framework.change_mode('start_mode')
             return

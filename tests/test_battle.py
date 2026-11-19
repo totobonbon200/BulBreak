@@ -323,7 +323,6 @@ class BattleTests(unittest.TestCase):
             framework.update(framework.notice.DURATION)
             self.mode.rules.remaining = 100
             framework.update(15)
-            self.assertFalse(framework.stage_timed_out)  # 리듬 제약은 제한 시계를 멈춘다.
             self.assertEqual(self.mode.rules.remaining, 100)
             self.assertTrue(self.mode.is_game_over)  # 누락 박자의 체력 피해는 유지한다.
 
