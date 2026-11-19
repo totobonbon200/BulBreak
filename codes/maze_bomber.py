@@ -3,10 +3,11 @@
 from random import choice, sample
 
 class BomberRound:
-    def __init__(self, maze, now):
+    def __init__(self, maze, position, now):
         self.deadline = now + 2.0
-        passages = [(row, col) for row in range(maze.size) for col in range(maze.size)
-                    if (row, col) not in maze.walls]
+        safe_row, safe_col = self.nearby_shelter(maze, position)
+        passages = [(row, col) for row in range(maze.size) if row != safe_row
+                    for col in range(maze.size) if col != safe_col and (row, col) not in maze.walls]
         self.bombs = sample(passages, 3)
 
     def nearby_shelter(self, maze, position):
