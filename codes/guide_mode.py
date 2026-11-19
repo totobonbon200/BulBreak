@@ -1,6 +1,7 @@
 """기본 조작과 제약 요약을 페이지별로 보여준다."""
 # 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
 from math import cos, radians, sin
+from textwrap import wrap
 from pico2d import SDL_KEYDOWN, SDLK_DOWN, SDLK_RIGHT, SDLK_UP, draw_line
 from codes.hud import info_text
 from codes.constraints import CAT_CONSTRAINT, ConstraintNotice
@@ -84,8 +85,10 @@ class GuideMode(AnimatedSelectionMenu):
             heading = self.notice.title()
             heading_y, detail_y = 420, 355
         info_text(self.title_font, 320, heading_y, heading)
-        for index, line in enumerate(lines):
-            info_text(self.font, 320, detail_y - index * 34, line)
+        # 긴 안내는 오른쪽 본문 영역 안에서 줄을 나눈다.
+        wrapped_lines = [part for line in lines for part in wrap(line, width=34)]
+        for index, line in enumerate(wrapped_lines):
+            info_text(self.font, 320, detail_y - index * 26, line)
 
     def draw(self):
         info_text(self.font, 80, 507, '가이드')
