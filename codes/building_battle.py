@@ -20,7 +20,9 @@ class BuildingBattle:
         self.fall_speed = self.fall_speed - self.GRAVITY * dt if self.bottom > rest else 0
 
     def update(self, now):
-        dt = max(0, now - self.updated_at)
+        if now <= self.updated_at:
+            return
+        dt = now - self.updated_at
         self.updated_at = now
         self.fall(dt)
         # 공중에서도 건물이 내려오면 주인공의 머리가 밑면을 통과하지 않는다.
@@ -28,3 +30,8 @@ class BuildingBattle:
         next_feet = self.feet + self.jump_speed * dt - .5 * self.GRAVITY * dt ** 2
         self.feet = min(limit, max(self.FLOOR, next_feet))
         self.jump_speed = self.jump_speed - self.GRAVITY * dt if self.FLOOR < self.feet < limit else 0
+
+    @property
+    def gap(self):
+        # 주인공 머리에서 건물 밑면까지의 수직 간격이다.
+        return self.bottom - (self.feet + self.PLAYER_SIZE)
