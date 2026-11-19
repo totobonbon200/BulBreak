@@ -55,7 +55,7 @@ class ConstraintTests(unittest.TestCase):
     def test_six_cross_exits_keep_original_gameover_timer(self):
         mode = MazeMode(assets())
         notice = ConstraintNotice()
-        notice.active.update(('maze_cross', 'maze_arrival'))
+        notice.active.add('maze_cross')
         mode.framework = SimpleNamespace(notice=notice, restart_stage_timer=lambda: None)
         with patch('codes.maze_gamemode.get_time', return_value=0):
             mode.enter(False)

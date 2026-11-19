@@ -91,10 +91,6 @@ class MazeMode:
                         self.message = f'출구 방향 선택: {self.cross_count}/6'
                         return
                 self.completed += 1
-                # 중앙 출구 제약은 미로 한 번을 마치면 돌아간다.
-                if self.cross_enabled and getattr(self.framework, 'practicing_constraint', False) is True:
-                    self.framework.change_mode('instrument_mode')
-                    return
                 if self.completed == 2:
                     battle = self.framework.modes['battle_mode']
                     battle.pending_session = (self.player.rules, self.score)
@@ -103,11 +99,11 @@ class MazeMode:
                 self.advance_maze()
 
     def advance_maze(self):
-        # 도착 화면을 확인하면 제약 한 판이 끝난다.
+        # 디버그 한 판은 출구에 도착하면 선택 목록으로 돌아간다.
         if getattr(self.framework, 'practicing_constraint', False) is True:
             self.framework.change_mode('instrument_mode')
             return
-        # 확인 입력은 이동에 쓰지 않고 직전 출구에서 다음 미로를 시작한다.
+        # 일반 진행에서는 직전 출구에서 다음 미로를 시작한다.
         self.now = get_time()
         self.cross_count = 0
         self.maze = CrossMaze() if self.cross_enabled else Maze(self.size, self.maze.exit)
