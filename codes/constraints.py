@@ -16,7 +16,8 @@ def draw_notice_title(font, title):
 
 class ConstraintNotice:
     DURATION = 1.0
-    KEYS = {'maze_mode': 'maze_arrival', 'battle_mode': 'battle_placeholder'}
+    OPTIONS = {'maze_mode': ('maze_cross', CAT_CONSTRAINT),
+               'battle_mode': ('battle_placeholder', 'battle_rhythm', CAT_CONSTRAINT)}
     TITLES = {"maze_mode": "[미로] 도착 화면 확인", "battle_mode": "[전투] 기본"}
 
     def __init__(self):
@@ -33,11 +34,9 @@ class ConstraintNotice:
         # 최초 미로에서 전투로 갈 때는 제약을 발동하지 않는다.
         if source == "battle_mode" and target == "maze_mode":
             self.enabled = True
-        if self.enabled and source != target and {source, target} == set(self.TITLES):
+        if self.enabled and source != target and {source, target} == set(self.OPTIONS):
             # 안내를 시작할 때 진입 모드의 제약 하나만 미리 선택한다.
-            self.selected = random.choice((self.KEYS[target],
-                                           'maze_cross' if target == 'maze_mode' else 'battle_rhythm',
-                                           CAT_CONSTRAINT))
+            self.selected = random.choice(self.OPTIONS[target])
             self.pending = (target, now)
             return True
         return False
