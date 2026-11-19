@@ -45,3 +45,13 @@ class BuildingBattle:
             self.jump_speed = 340
             return True
         return False
+
+    def attack(self):
+        # 맞닿은 맨 아래층의 내구도를 소모하며 윗층은 다시 떨어진다.
+        if self.floors == 0 or self.gap > 1:
+            return False
+        self.hits = (self.hits + 1) % self.HITS_PER_FLOOR
+        if self.hits == 0:
+            self.floors -= 1
+            self.bottom += self.FLOOR_HEIGHT
+        return True
