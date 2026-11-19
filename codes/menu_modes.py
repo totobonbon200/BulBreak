@@ -16,10 +16,10 @@ def draw_start_panel(image, x, y, color):
         SDL_SetTextureColorMod(image.texture, 255, 255, 255)
 
 
-def draw_panel_choice(font, image, y, label, selected):
-    # 시작 화면과 게임오버 메뉴가 같은 강조 위치와 색을 쓴다.
-    x = 639 if selected else 663
-    color = (255, 220, 0) if selected else (255, 255, 255)
+def draw_panel_choice(font, image, y, label, progress, distance=24):
+    # 선택 진행률에 맞춰 패널과 글자를 함께 이동시키고 글자색을 바꾼다.
+    x = 663 - round(distance * progress)
+    color = (255, round(255 - 35 * progress), round(255 * (1 - progress)))
     if image is not None:
         draw_start_panel(image, x, y, color)
     font.draw(x - 153, y, label, color)
