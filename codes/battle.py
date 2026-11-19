@@ -255,7 +255,10 @@ class BattleMode:
         else:
             self.rules.update(now)
         if self.building is not None:
+            previous_impact = self.building.impact_at
             self.building.update(now)
+            if self.building.impact_at != previous_impact:
+                self.display_action('hit', self.player_direction)  # 체력 변화 없이 충돌 모션만 재생한다.
         if self.player_animation.finished(now):
             self.show_idle()
             self.visual_state = 'idle'
