@@ -297,7 +297,7 @@ class BattleMode:
     def draw_standard_scene(self):
         draw_frame(self.assets.enemy_sheet, 4, 4, self.enemy.animation.frame(self.now),
                    350, 360, 150, 150)
-        if self.enemy.state == 'prepare':
+        if self.rhythm is None and self.enemy.state == 'prepare':
             column = ('left', 'right', 'up', 'down').index(self.enemy.direction)
             draw_frame(self.assets.effect_sheet, 2, 4, (1, column),
                        350, 465, 65, 65)
@@ -309,7 +309,8 @@ class BattleMode:
         column = 0 if self.next_attack_direction == 'left' else 1
         # 다음 공격 방향과 같은 쪽에 주인공과 간격을 두고 표시한다.
         arrow_x = player_x + (-101 if column == 0 else 101)
-        draw_frame(arrow_sheet, 1, 4, (0, column), arrow_x, player_y, 65, arrow_height)
+        if self.rhythm is None:  # 리듬 지옥에서는 공격 방향 표시를 숨긴다.
+            draw_frame(arrow_sheet, 1, 4, (0, column), arrow_x, player_y, 65, arrow_height)
         if (self.failure_started is not None
                 and 0 <= self.now - self.failure_started < self.FAILURE_EFFECT_SECONDS):
             draw_frame(self.assets.effect_sheet, 2, 4, (0, 1), 240, 230, 65, 65)
