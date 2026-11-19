@@ -137,16 +137,19 @@ class GameOverMenu(AnimatedSelectionMenu):
             draw_panel_choice(self.font, self.menu_image, 130 - index * 63, label, self.progress[index], 1 - index)
 
 
-class ConstraintMenu(SelectionMenu):
+class ConstraintMenu(AnimatedSelectionMenu):
     # 제약 선택 순서와 각 제약이 실행될 플레이 모드를 정의한다.
     OPTIONS = (('maze_mode', 'maze_arrival'), ('maze_mode', 'maze_cross'),
                ('battle_mode', 'battle_placeholder'), ('battle_mode', 'battle_rhythm'),
                ('maze_mode', CAT_CONSTRAINT), ('battle_mode', CAT_CONSTRAINT))
 
-    def __init__(self, font):
+    def __init__(self, font, menu_image=None):
         super().__init__(font, '디버그모드', ['위·아래: 제약 선택 / 왼쪽: 플레이 / 오른쪽: 시작 화면'],
                          {SDLK_RIGHT: 'start_mode'})
         self.index = 0
+        self.menu_image = menu_image
+        self.progress = [0.0] * len(self.OPTIONS)  # 디버그 목록도 항목별 선택 진행률을 관리한다.
+        self.last_update = None
         self.preview = ConstraintNotice()  # 실제 플레이와 같은 이름과 설명을 표시한다.
 
     def confirm_selection(self):
@@ -175,7 +178,7 @@ def create_menus(font, main_image=None, menu_image=None, *, start_font=None):
     return {
         'start_mode': StartMenu(start_font or font, main_image, menu_image),
         'guide_mode': GuideMode(font, title_font=start_font),
-        'instrument_mode': ConstraintMenu(font),
+        'instrument_mode': ConstraintMenu(font, menu_image),
         'battle_mode': MenuMode(font, 'Battle: planned',
                                ['Combat is not implemented yet.', 'LEFT: back'],
                                {SDLK_LEFT: 'start_mode'}),
