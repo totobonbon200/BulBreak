@@ -20,3 +20,11 @@ class OsmMode(MenuMode):
     def __init__(self, assets):
         super().__init__(assets.font, '[미로] OSM', (), {})
         self.assets = assets
+
+    def enter(self, first_visit):
+        super().enter(first_visit)
+        # 목록에서 다시 시작하면 첫 노트부터 진행한다.
+        self.hits = 0
+        self.feedback = ''
+        self.now = self.framework.clock()
+        self.arrival = self.now + self.TRAVEL
