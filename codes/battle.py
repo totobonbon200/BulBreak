@@ -144,7 +144,7 @@ class BattleMode:
             self.update_rhythm(self.now)
             if self.countdown is not None and self.now < self.countdown.end:
                 return
-            if self.is_game_over:
+            if self.is_game_over or self.cleared:
                 return
             if self.rhythm.index == len(self.rhythm.hits):
                 return  # 입력을 마친 뒤 다음 시범을 기다리는 동안에는 피해가 없다.
@@ -221,7 +221,8 @@ class BattleMode:
                 if self.rhythm is not None:
                     self.message = '피격! 체력 1 감소' if vertical_hit else '방어 방향 불일치'
 
-        self.finish_if_cleared()
+        if self.rhythm is None or self.rhythm.index == len(self.rhythm.hits):
+            self.finish_if_cleared()
 
     def handle_building(self, key):
         # 좌우 입력은 교대 순서 없이 닿아 있는 건물을 공격한다.
@@ -344,7 +345,12 @@ class BattleMode:
         if self.countdown is not None and now < self.countdown.end:
             self.countdown.play_go(now, getattr(self.assets, 'go_sound', None))
             return
+        previous_segment = self.rhythm.segment
         self.rules.health = max(0, self.rules.health - self.rhythm.advance(now))
+        if (self.rhythm.segment != previous_segment or self.rhythm.index == len(self.rhythm.hits)):
+            self.finish_if_cleared()  # 마지막 박자를 놓쳐도 누적 목표는 패턴 종료 때 확인한다.
+            if self.cleared:
+                return
         self.play_pattern_cue(now)
         self.rhythm.play_claps(now, getattr(self.assets, 'clap_sound', None))
         self.enemy.animation = Animation([self.rhythm.frame(now)], now, .15)
