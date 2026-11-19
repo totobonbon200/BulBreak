@@ -5,7 +5,7 @@ from textwrap import wrap
 from pico2d import SDL_KEYDOWN, SDLK_DOWN, SDLK_RIGHT, SDLK_UP, draw_line
 from codes.hud import info_text
 from codes.constraints import CAT_CONSTRAINT, ConstraintNotice
-from codes.menu_modes import AnimatedSelectionMenu, draw_panel_choice
+from codes.menu_modes import AnimatedSelectionMenu
 
 
 def draw_key_outline(x, y):
@@ -68,7 +68,7 @@ class GuideMode(AnimatedSelectionMenu):
             self.framework.change_mode('start_mode')
         elif event.key in (SDLK_UP, SDLK_DOWN):
             step = -1 if event.key == SDLK_UP else 1
-            self.page = max(0, min(self.page + step, len(self.PAGES) - 1))
+            self.page = (self.page + step) % len(self.PAGES)
 
     def draw_keys(self):
         for (arrow, x, y), role in zip(self.KEYS, self.KEY_ROLES[self.page]):
@@ -98,10 +98,8 @@ class GuideMode(AnimatedSelectionMenu):
 
     def draw(self):
         info_text(self.font, 24, 575, '가이드')
-        for index in range(len(self.PAGES)):
-            draw_panel_choice(self.font, self.menu_image, 530 - index * 53, self.page_title(index),
-                              self.progress[index], len(self.PAGES) - 1 - index, left=True)
+        self.draw_paged_options(len(self.PAGES), self.page_title)
         info_text(self.font, 655, 507, f'{self.page + 1} / {len(self.PAGES)}')
         self.draw_page()
-        info_text(self.font, 24, 72, '↑ 이전  ↓ 다음')
+        info_text(self.font, 24, 14, '↑ 이전  ↓ 다음')
         info_text(self.font, 605, 72, '→ 시작 화면')
