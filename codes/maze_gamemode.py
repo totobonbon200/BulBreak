@@ -3,6 +3,7 @@
 from pico2d import *
 
 from codes.maze import Maze
+from codes.maze_darkness import draw_darkness
 from codes.clap_sound import play_go_sound
 from codes.cross_maze import CrossMaze
 from codes.hud import draw_hud
@@ -24,6 +25,7 @@ class MazeMode:
         self.cross_count = 0  # 한 미로에서 출구 방향 선택 여섯 번을 센다.
         notice = getattr(getattr(self, 'framework', None), 'notice', None)
         self.cross_enabled = notice is not None and isinstance(notice.active, set) and 'maze_cross' in notice.active
+        self.darkness = notice is not None and isinstance(notice.active, set) and 'maze_darkness' in notice.active
         self.maze = CrossMaze() if self.cross_enabled else Maze(self.size)
         self.player = Character(self.maze.entrance, now)
         self.now = now
@@ -121,6 +123,8 @@ class MazeMode:
         sheet, font = self.assets.maze_sheet, self.assets.font
         self.maze.draw(sheet, font, self.now)
         self.player.draw(self.assets.character_sheet, self.maze, self.now)
+        if self.darkness:
+            draw_darkness(*self.maze.center(self.player.position), self.maze.cell_size * 1.5)
         framework = getattr(self, 'framework', None)
         paused = self.is_game_over or getattr(framework, 'timer_paused', False) is True
         draw_hud(self.assets, self.player.rules, self.now, self.completed, timer_paused=paused)
