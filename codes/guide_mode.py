@@ -42,7 +42,8 @@ class GuideMode(AnimatedSelectionMenu):
                           '움직이는 고양이는 화면 가장자리에서 튕깁니다.')),
         ('maze_darkness', ('주인공 주변 반지름 1.5칸만 보입니다.',)),
         ('battle_building', ('건물이 닿으면 좌우로 공격합니다. 층마다 열 번 타격하세요.',
-                             '위 방향키로 점프하거나 가까운 건물을 띄웁니다.')),
+                             '위 방향키로 점프하거나 가까운 건물을 띄웁니다.',
+                             '바닥에서 깔리면 체력 1을 잃고 맨 아래층이 부서집니다.')),
     )
 
     def __init__(self, font, title_font=None, menu_image=None):

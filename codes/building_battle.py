@@ -119,10 +119,10 @@ class BuildingBattle:
         self.draw_impact()
 
     def draw_impact(self):
-        # 공중 접촉 직후 밑면 양쪽에 짧은 충돌선을 표시한다.
+        # 밑층이 부서져도 주인공과 닿았던 높이에서 충돌선을 표시한다.
         if self.impact_at is None or self.updated_at - self.impact_at >= .18:
             return
-        x, y = self.CENTER_X, self.bottom
+        x, y = self.CENTER_X, min(self.bottom, self.feet + self.PLAYER_SIZE)
         for side in (-1, 1):
             draw_line(x + side * 44, y - 3, x + side * 68, y - 14, 255, 232, 105)
             draw_line(x + side * 43, y + 1, x + side * 64, y + 6, 255, 255, 255)
