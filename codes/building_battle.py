@@ -7,7 +7,7 @@ from codes.hud import info_text
 class BuildingBattle:
     CENTER_X, WIDTH = 350, 190
     FLOOR, PLAYER_SIZE, FLOOR_HEIGHT = 130, 100, 42
-    CRUSH_BOTTOM = FLOOR + PLAYER_SIZE - 10
+    CRUSH_BOTTOM = FLOOR + PLAYER_SIZE - 20  # 지상 피격 범위 안으로 20픽셀 들어오면 피해를 준다.
     GRAVITY, HITS_PER_FLOOR = 1000, 10
     BUILDING_RATE = .5
     CONTACT_SECONDS = .45  # 공중에서 밑면을 따라가는 시간이다.
