@@ -18,3 +18,13 @@ class BuildingBattle:
         rest = self.FLOOR + self.PLAYER_SIZE
         self.bottom = max(rest, self.bottom + self.fall_speed * dt - .5 * self.GRAVITY * dt ** 2)
         self.fall_speed = self.fall_speed - self.GRAVITY * dt if self.bottom > rest else 0
+
+    def update(self, now):
+        dt = max(0, now - self.updated_at)
+        self.updated_at = now
+        self.fall(dt)
+        # 공중에서도 건물이 내려오면 주인공의 머리가 밑면을 통과하지 않는다.
+        limit = self.bottom - self.PLAYER_SIZE
+        next_feet = self.feet + self.jump_speed * dt - .5 * self.GRAVITY * dt ** 2
+        self.feet = min(limit, max(self.FLOOR, next_feet))
+        self.jump_speed = self.jump_speed - self.GRAVITY * dt if self.FLOOR < self.feet < limit else 0
