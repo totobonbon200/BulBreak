@@ -7,7 +7,7 @@ from codes.maze_darkness import draw_darkness
 from codes.clap_sound import play_go_sound
 from codes.cross_maze import CrossMaze
 from codes.hud import draw_hud
-from codes.character import Character, PlayerState
+from codes.character import Character
 
 
 class MazeMode:
@@ -18,7 +18,6 @@ class MazeMode:
         self.reset(get_time())
 
     def reset(self, now):
-        self.stage_timed_out = False
         self.size = 6
         self.completed = 0
         self.score = 0
@@ -38,11 +37,6 @@ class MazeMode:
     @property
     def is_game_over(self):
         return not self.player.is_playing
-
-    def on_stage_timeout(self):
-        self.stage_timed_out = True
-        self.player.state = PlayerState.GAME_OVER
-        self.message = ''
 
     def enter(self, first_visit):
         self.held.clear()
