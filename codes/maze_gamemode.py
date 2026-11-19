@@ -4,7 +4,7 @@ from pico2d import *
 
 from codes.maze import Maze
 from codes.maze_bomber import BomberRound, choose_spawn
-from codes.maze_darkness import draw_darkness
+from codes.maze_darkness import draw_darkness, draw_exit_hint
 from codes.clap_sound import play_go_sound
 from codes.cross_maze import CrossMaze
 from codes.hud import draw_hud
@@ -148,12 +148,13 @@ class MazeMode:
     def draw(self):
         sheet, font = self.assets.maze_sheet, self.assets.font
         # 봄버맨은 폭발 판정으로 완료하므로 도착점도 일반 통로로 그린다.
-        self.maze.draw(sheet, font, self.now, show_exit=self.bomber is None)
+        self.maze.draw(sheet, font, self.now, show_exit=self.bomber is None and not self.darkness)
         if self.bomber is not None and self.player.is_playing:
             self.bomber.draw(self.maze, self.assets, self.now)
         self.player.draw(self.assets.character_sheet, self.maze, self.now)
         if self.darkness:
             draw_darkness(*self.maze.center(self.player.position), self.maze.cell_size * 1.5)
+            draw_exit_hint(sheet, self.maze, self.player.position)
         framework = getattr(self, 'framework', None)
         paused = (self.bomber is not None or self.is_game_over
                   or getattr(framework, 'timer_paused', False) is True)
