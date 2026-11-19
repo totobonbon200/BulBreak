@@ -2,6 +2,8 @@
 """봄버맨 미로에서 폭탄 세 개의 위치와 판정 시각을 관리한다."""
 from random import choice, sample
 from pico2d import draw_rectangle
+from codes.animation import draw_frame
+from codes.hud import info_text
 
 class BomberRound:
     def __init__(self, maze, position, now):
@@ -32,3 +34,11 @@ class BomberRound:
                 if self.in_blast((row, col)):
                     x, y = maze.center((row, col))
                     draw_rectangle(x - half, y - half, x + half, y + half, 240, 90, 25, 85, filled=True)
+
+    def draw(self, maze, assets, now):
+        # 폭탄 표시에는 effect 시트의 첫 행 세 번째 칸을 사용한다.
+        self.draw_blast(maze)
+        size = maze.cell_size * .8
+        for bomb in self.bombs:
+            draw_frame(assets.effect_sheet, 2, 4, (0, 2), *maze.center(bomb), size, size)
+        info_text(assets.font, 108, 78, f'폭발까지 {max(0, self.deadline - now):.1f}초')
