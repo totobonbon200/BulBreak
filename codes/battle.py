@@ -142,6 +142,9 @@ class BattleMode:
             return
         if self.cleared:
             return
+        if self.building is not None:
+            self.handle_building(event.key)
+            return
         if self.rhythm is not None:
             self.now = get_time()  # 프레임 시각 대신 실제 입력 시각을 사용한다.
             self.update_rhythm(self.now)
@@ -227,7 +230,11 @@ class BattleMode:
 
     def handle_building(self, key):
         # 좌우 입력은 교대 순서 없이 닿아 있는 건물을 공격한다.
+        if key == SDLK_DOWN:
+            return
         self.rules.record_action(self.now)
+        if key == SDLK_UP and not self.is_game_over and self.building.jump():
+            self.display_action('dodge_up', self.player_direction)
         if not self.is_game_over and key in (SDLK_LEFT, SDLK_RIGHT) and self.building.attack():
             self.successes += 1
             self.display_action('attack', self.DIRECTIONS[key])
