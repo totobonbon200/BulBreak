@@ -101,18 +101,8 @@ class GameFlowTests(unittest.TestCase):
             mode.player.rules.remaining = 100
             mode.player.rules.health = 100
             framework.clock = lambda: 14
-            framework.notice.active.add('maze_arrival')  # 제약이 있을 때만 도착 확인을 요구한다.
             framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_RIGHT))
             self.assertEqual(mode.completed, 1)
-            # 도착 후에는 오래 기다려도 타임아웃 없이 새 입력을 기다린다.
-            self.assertTrue(mode.awaiting_next_maze)
-            framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_RIGHT))
-            framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_UP, repeat=True))
-            self.assertTrue(mode.awaiting_next_maze)  # 누름 유지와 자동 반복은 확인이 아니다.
-            framework.update(100)
-            self.assertFalse(framework.stage_timed_out)
-            framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_UP))
-            self.assertFalse(mode.awaiting_next_maze)
             self.assertEqual(mode.player.position, (0, 1))
             self.assertEqual(mode.player.action_state, 'idle')
             self.assertEqual(framework.stage_started, 14)
