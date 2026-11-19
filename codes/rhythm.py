@@ -44,7 +44,7 @@ class Rhythm:
             self.started = max(self.started, now + self.CUE_GAP)
         return True
 
-    def advance(self, now):
+    def advance(self, now, *, stop_after_pattern=False):
         # 시범 2초 뒤 같은 박자를 입력하고 다음 시범으로 진행한다.
         misses = 0
         # 구간 마지막 박자의 늦은 허용 범위까지 보존한다.
@@ -54,6 +54,8 @@ class Rhythm:
             self.imperfect |= self.index < len(self.hits)
             self.index = len(self.hits)
             misses += self.take_damage()
+            if stop_after_pattern:  # 클리어를 기다리면 현재 패턴까지만 판정한다.
+                return misses
             self.started = self.next_start
             self.segment += 1
             self.index = 0

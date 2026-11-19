@@ -345,9 +345,9 @@ class BattleMode:
         if self.countdown is not None and now < self.countdown.end:
             self.countdown.play_go(now, getattr(self.assets, 'go_sound', None))
             return
-        previous_segment = self.rhythm.segment
-        self.rules.health = max(0, self.rules.health - self.rhythm.advance(now))
-        if (self.rhythm.segment != previous_segment or self.rhythm.index == len(self.rhythm.hits)):
+        damage = self.rhythm.advance(now, stop_after_pattern=self.successes >= self.CLEAR_ATTACKS)
+        self.rules.health = max(0, self.rules.health - damage)
+        if self.rhythm.index == len(self.rhythm.hits):
             self.finish_if_cleared()  # 마지막 박자를 놓쳐도 누적 목표는 패턴 종료 때 확인한다.
             if self.cleared:
                 return
