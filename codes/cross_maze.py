@@ -19,12 +19,12 @@ class CrossMaze(Maze):
         target = tuple(a + b for a, b in zip(self.entrance, direction))
         return (target, 'exit') if target == self.exit else (self.entrance, 'blocked')
 
-    def draw(self, sheet, font, now=0.0):
+    def draw(self, sheet, font, now=0.0, *, show_exit=True):
         # 십자형 다섯 칸만 기존 미로 자원으로 표시한다.
         width, height = sheet.w // 4, sheet.h // 2
         for cell in [self.entrance] + self.neighbors:
             x, y = self.center(cell)
-            sheet.clip_draw(0 if cell == self.exit else width, height,
+            sheet.clip_draw(0 if show_exit and cell == self.exit else width, height,
                             width, height, x, y, self.cell_size, self.cell_size)
             if cell in self.walls:
                 sheet.clip_draw(0, 0, width, height, x, y, self.cell_size * .55, self.cell_size * .55)

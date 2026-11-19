@@ -1,5 +1,6 @@
 """Maze rules; coordinates are (row, column), starting at the top left."""
 # 이곳은 maze_gamemode에서 작동되며 이곳에서 미로에서 판정해야될 코드를 구현할 것
+# 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
 import random
 
 
@@ -56,7 +57,7 @@ class Maze:
         row, col = position
         return 100 + (col + 0.5) * cell, 500 - (row + 0.5) * cell
 
-    def draw(self, sheet, font, now=0.0):
+    def draw(self, sheet, font, now=0.0, *, show_exit=True):
         from pico2d import draw_rectangle
         cell = self.cell_size
         width, height = sheet.w // 4, sheet.h // 2
@@ -75,7 +76,7 @@ class Maze:
                     sheet.clip_draw(frame * width, 0, width, height,
                                     x, y, cell * .55, cell * .55)
                     font.draw(x - 4, y, str(hp), (255, 255, 255))
-                if position == self.exit:
+                if show_exit and position == self.exit:
                     sheet.clip_draw(0, height, width, height,
                                     x, y, cell, cell)
                 draw_rectangle(x - cell / 2, y - cell / 2,
