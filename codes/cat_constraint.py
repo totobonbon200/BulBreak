@@ -5,7 +5,7 @@ from random import randint, uniform
 from sdl2 import SDL_BLENDMODE_BLEND, SDL_SetTextureBlendMode
 from codes.cat_video import LoopingVideo
 
-CAT_SIZE = 100
+CAT_SIZE = 150  # 오브젝트의 가장 긴 변을 150픽셀로 그린다.
 CAT_MARGIN = ceil(CAT_SIZE / sqrt(2))  # 회전한 사각형도 캔버스 안에 둔다.
 
 def bounce_position(origin, distance, size):
@@ -44,7 +44,7 @@ class CatEffect:
             self.started, self.cats = None, []
         elif self.started is None:
             self.started = now
-            self.cats = [CatMotion(self.width, self.height) for _ in range(randint(3, 4))]
+            self.cats = [CatMotion(self.width, self.height) for _ in range(randint(5, 6))]
         return active
 
     def draw_background(self, now):
