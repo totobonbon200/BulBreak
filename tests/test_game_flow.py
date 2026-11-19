@@ -45,7 +45,7 @@ class GameFlowTests(unittest.TestCase):
         framework = GameFramework(modes)
         framework.change_mode('maze_mode')
         self.assertEqual(framework.current_mode, 'tutorial_mode')
-        self.assertIsNone(framework.stage_started)
+        self.assertTrue(framework.timer_paused)
         modes['tutorial_mode'].completed = True
         framework.change_mode('start_mode')
         framework.change_mode('maze_mode')

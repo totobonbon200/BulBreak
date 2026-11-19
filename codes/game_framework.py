@@ -11,7 +11,6 @@ from pico2d import get_time
 
 
 class GameFramework:
-    STAGE_LIMIT = 15.0
     TIMED_MODES = ('maze_mode', 'battle_mode')
     MODES = ('start_mode', 'instrument_mode', 'guide_mode', 'maze_mode',
              'battle_mode', 'tutorial_mode', 'result_mode', 'quit_mode')
@@ -23,9 +22,6 @@ class GameFramework:
         self.game_over_menu = GameOverMenu(modes['start_mode'], self)
         self.clock = clock or get_time
         self.timeout_font = timeout_font
-        self.stage_started = None
-        self.stage_elapsed = 0.0
-        self.stage_timed_out = False
         self.previous_mode = None
         self.visited = set()
         self.running = True
@@ -82,9 +78,6 @@ class GameFramework:
 
     def _enter(self):
         self.game_over_menu.enter(False)
-        self.stage_started = None
-        self.stage_elapsed = 0.0
-        self.stage_timed_out = False
         if self.state == 'quit_mode':
             self.running = False
             return
