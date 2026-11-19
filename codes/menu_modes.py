@@ -88,6 +88,15 @@ class AnimatedSelectionMenu(SelectionMenu):
             self.progress[index] = min(1.0, progress + step) if index == self.index else max(0.0, progress - step)
 
 
+    def draw_paged_options(self, count, label_for):
+        # 선택 항목이 속한 10개 묶음만 왼쪽 목록에 그린다.
+        first = self.index // 10 * 10
+        end = min(count, first + 10)
+        for index in range(first, end):
+            draw_panel_choice(self.font, self.menu_image, 530 - (index - first) * 53,
+                              label_for(index), self.progress[index], end - 1 - index, left=True)
+
+
 class StartMenu(AnimatedSelectionMenu):
     # 표시 문구와 선택할 모드를 같은 순서로 둔다.
     OPTIONS = (('게임시작', 'maze_mode'), ('가이드', 'guide_mode'),
