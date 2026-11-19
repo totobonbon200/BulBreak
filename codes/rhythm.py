@@ -60,12 +60,17 @@ class Rhythm:
             self.index += 1
         return misses
 
+    @classmethod
+    def is_on_time(cls, now, expected):
+        # 리듬 전투와 OSM이 같은 입력 허용 범위를 쓴다.
+        return abs(now - expected) <= cls.WINDOW + 1e-9
+
     def press(self, now):
         # 박자 하나를 한 번만 소비하며 구간 밖 입력도 실패로 판정한다.
         if self.index >= len(self.hits):
             return False
         expected = self.beat_times()[self.index]
-        if abs(now - expected) > self.WINDOW + 1e-9:
+        if not self.is_on_time(now, expected):
             return False
         self.index += 1
         return True
