@@ -254,11 +254,15 @@ class BattleMode:
             self.update_rhythm(now)
         else:
             self.rules.update(now)
-        if self.building is not None:
+        if self.building is not None and not self.is_game_over:
             previous_impact = self.building.impact_at
-            self.building.update(now)
+            crushed_hits = self.building.update(now)
             if self.building.impact_at != previous_impact:
-                self.display_action('hit', self.player_direction)  # 체력 변화 없이 충돌 모션만 재생한다.
+                self.display_action('hit', self.player_direction)
+            if crushed_hits:
+                self.successes += crushed_hits
+                self.rules.health -= 1
+                self.finish_if_cleared()
         if self.player_animation.finished(now):
             self.show_idle()
             self.visual_state = 'idle'
