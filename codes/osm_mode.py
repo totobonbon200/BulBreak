@@ -2,14 +2,15 @@
 # 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
 from pico2d import SDL_KEYDOWN, SDL_KEYUP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT, SDLK_UP
 from pico2d import draw_line, draw_rectangle
+from codes.animation import draw_frame
 from codes.hud import info_text
 from codes.menu_modes import MenuMode
+from codes.rhythm import Rhythm
 
 
 class OsmMode(MenuMode):
     CENTER = (300, 300)
     TRAVEL = 1.0
-    WINDOW = 0.15
     RADIUS = 180
     # 입력과 화살표는 노트가 출발한 쪽을 가리킨다.
     DIRECTIONS = {SDLK_UP: (0, 1), SDLK_DOWN: (0, -1),
@@ -35,7 +36,7 @@ class OsmMode(MenuMode):
 
     def update(self, now):
         self.now = now
-        if self.hits < len(self.PATTERN) and now > self.arrival + self.WINDOW:
+        if self.hits < len(self.PATTERN) and now > self.arrival + Rhythm.WINDOW:
             self.feedback = '놓침 · 다시 시도'
             self.next_note(now)
 
@@ -52,7 +53,7 @@ class OsmMode(MenuMode):
                 self.framework.change_mode('instrument_mode')
             return
         now = self.framework.clock()
-        on_time = self.arrival - self.WINDOW <= now <= self.arrival + self.WINDOW
+        on_time = Rhythm.is_on_time(now, self.arrival)
         if event.key == self.PATTERN[self.hits] and on_time:
             self.hits += 1
             self.feedback = '성공'
@@ -88,7 +89,7 @@ class OsmMode(MenuMode):
         x, y = self.CENTER
         x, y = round(x + dx * distance), round(y + dy * distance)
         # 판정 범위에 들어온 노트는 노란색으로 바꾼다.
-        color = (255, 220, 0) if remaining <= self.WINDOW else (102, 210, 255)
+        color = (255, 220, 0) if remaining <= Rhythm.WINDOW else (102, 210, 255)
         tip_x, tip_y = x + dx * 12, y + dy * 12
         tail_x, tail_y = x - dx * 12, y - dy * 12
         draw_line(tail_x, tail_y, tip_x, tip_y, *color)
