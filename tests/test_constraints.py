@@ -95,7 +95,7 @@ class ConstraintTests(unittest.TestCase):
             for index, beat in enumerate(rhythm.beat_times()):
                 self.assertEqual(rhythm.advance(beat), 0)
                 rhythm.play_claps(beat, sound)
-                expected_claps = len(rhythm.hits) + (index + 1 if segment else 0)
+                expected_claps = len(rhythm.hits)
                 self.assertEqual(sound.play.call_count, expected_claps)
                 self.assertEqual(rhythm.frame(beat), (0, 1))
                 self.assertTrue(rhythm.press(beat))
@@ -129,7 +129,7 @@ class ConstraintTests(unittest.TestCase):
             countdown.play_go(tick + .1, sound)
             self.assertEqual(sound.play.call_count, int(label == 'GO'))
 
-    def test_input_clap_accepts_action_without_a_second_sound(self):
+    def test_second_pattern_demo_claps_without_input_clap(self):
         mode = BattleMode(assets())
         mode.assets.clap_sound = Mock()
         notice = ConstraintNotice()
@@ -138,6 +138,7 @@ class ConstraintTests(unittest.TestCase):
         with patch('codes.battle.get_time', return_value=0):
             mode.enter(False)
         mode.rhythm.segment, mode.rhythm.next_cue_at = 1, 0
+        mode.update(mode.rhythm.beat_times(False)[0])
         now = mode.rhythm.beat_times()[0]
         with patch('codes.battle.get_time', return_value=now):
             mode.update(now)

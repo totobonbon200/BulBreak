@@ -102,8 +102,8 @@ class Rhythm:
         return '시범 박자 확인' if now < self.started + 2 else '시범 박자에 맞춰 입력 (±100ms)'
 
     def play_claps(self, now, sound):
-        # 첫 패턴의 응답 구간에는 성공 공격음이 박수를 대신한다.
-        for onset in self.beat_times(False) + (self.beat_times() if self.segment else []):
+        # 두 패턴 모두 적의 시범 박자에만 박수를 재생한다.
+        for onset in self.beat_times(False):
             if self.last_clap < onset <= now and now - onset < .05:
                 if sound is not None:
                     sound.play()
