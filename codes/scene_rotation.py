@@ -70,3 +70,13 @@ class RotatedDraw:
         names = ('RenderCopy', 'RenderCopyEx', 'RenderDrawLine', 'RenderDrawRect', 'RenderFillRect')
         return dict(zip(('SDL_' + name for name in names),
                         (self.copy, self.copy_ex, self.line, self.outline, self.fill)))
+
+    @contextmanager
+    def applied(self):
+        hooks = self.hooks()
+        originals = {name: getattr(pico, name) for name in hooks}
+        try:
+            vars(pico).update(hooks)
+            yield
+        finally:
+            vars(pico).update(originals)
