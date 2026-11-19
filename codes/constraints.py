@@ -60,7 +60,7 @@ class ConstraintNotice:
                 'battle_placeholder': '추가 효과 없음',
                 'battle_building': '접촉 중 좌우 타격 · 위로 점프 또는 띄우기',
                 CAT_CONSTRAINT: f'{"미로" if mode == "maze_mode" else "전투"} 시야를 가리는 고양이',
-                'battle_rhythm': '두 패턴 따라 입력·±100ms'}.get(self.selected, '')
+                'battle_rhythm': '두 패턴 따라 입력 · 실패한 패턴마다 체력 1 감소'}.get(self.selected, '')
 
     def draw(self, font):
         if self.pending is not None:
