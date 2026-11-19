@@ -93,3 +93,13 @@ class BuildingBattle:
         if self.floors:
             remaining = self.HITS_PER_FLOOR - self.hits
             info_text(assets.font, 95, self.bottom + 21, f'맨 아래층 내구도 {remaining}')
+        self.draw_impact()
+
+    def draw_impact(self):
+        # 공중 접촉 직후 밑면 양쪽에 짧은 충돌선을 표시한다.
+        if self.impact_at is None or self.updated_at - self.impact_at >= .18:
+            return
+        x, y = self.CENTER_X, self.bottom
+        for side in (-1, 1):
+            draw_line(x + side * 44, y - 3, x + side * 68, y - 14, 255, 232, 105)
+            draw_line(x + side * 43, y + 1, x + side * 64, y + 6, 255, 255, 255)
