@@ -13,3 +13,13 @@ def draw_darkness(x, y, radius):
         half = sqrt(max(0, radius ** 2 - (row - y) ** 2))
         draw_line(100, row, max(100, x - half), row, 0, 0, 0)
         draw_line(min(500, x + half), row, 500, row, 0, 0, 0)
+
+def draw_exit_hint(sheet, maze, position):
+    opacity = exit_hint_opacity(maze.exit, position)
+    if opacity:
+        width, height = sheet.w // 4, sheet.h // 2
+        sheet.opacify(opacity)
+        try:
+            sheet.clip_draw(0, height, width, height, *maze.center(maze.exit), maze.cell_size, maze.cell_size)
+        finally:
+            sheet.opacify(1.0)
