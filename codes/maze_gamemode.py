@@ -74,9 +74,6 @@ class MazeMode:
                 return
             if self.transitioned:
                 return
-            if self.awaiting_next_maze:
-                self.advance_maze()
-                return  # 확인에 쓴 방향으로 캐릭터를 이동시키지 않는다.
             self.player.position, result = self.maze.step(
                 self.player.position, directions[event.key])
             self.player.react(self.now, result, directions[event.key])
@@ -117,7 +114,6 @@ class MazeMode:
         self.maze = CrossMaze() if self.cross_enabled else Maze(self.size, self.maze.exit)
         self.player.enter_maze(self.maze.entrance, self.now)
         self.framework.restart_stage_timer()
-        self.awaiting_next_maze = False
         self.message = '방향키: 이동 / 벽은 두 번 공격'
         self.transitioned = True
 
@@ -132,7 +128,7 @@ class MazeMode:
         self.maze.draw(sheet, font, self.now)
         self.player.draw(self.assets.character_sheet, self.maze, self.now)
         framework = getattr(self, 'framework', None)
-        paused = self.awaiting_next_maze or self.is_game_over or getattr(framework, 'timer_paused', False) is True
+        paused = self.is_game_over or getattr(framework, 'timer_paused', False) is True
         draw_hud(self.assets, self.player.rules, self.now, self.completed, timer_paused=paused)
         if not self.player.is_playing:
             width, height = sheet.w // 4, sheet.h // 2
