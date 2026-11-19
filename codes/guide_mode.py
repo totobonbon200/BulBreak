@@ -4,6 +4,7 @@ from math import cos, radians, sin
 from pico2d import SDL_KEYDOWN, SDLK_DOWN, SDLK_RIGHT, SDLK_UP, draw_line
 from codes.hud import info_text
 from codes.constraints import CAT_CONSTRAINT, ConstraintNotice
+from codes.menu_modes import AnimatedSelectionMenu, draw_panel_choice
 
 
 def draw_key_outline(x, y):
@@ -16,7 +17,8 @@ def draw_key_outline(x, y):
         draw_line(x1, y1, x2, y2, 255, 255, 255)
 
 
-class GuideMode:
+class GuideMode(AnimatedSelectionMenu):
+    index = property(lambda self: self.page)  # 현재 페이지가 목록의 선택 항목이다.
     # 키 좌표와 역할은 위·왼쪽·아래·오른쪽 순서로 대응한다.
     KEYS = (('↑', 400, 400), ('←', 242, 311), ('↓', 400, 311), ('→', 558, 311))
     KEY_ROLES = (('위로 이동', '좌측 이동', '아래 이동', '우측 이동'),
@@ -42,12 +44,11 @@ class GuideMode:
     )
 
     def __init__(self, font, title_font=None, menu_image=None):
-        self.font = font
+        super().__init__(font, '가이드', (), {})
         self.title_font = title_font or font
         self.menu_image = menu_image
         self.notice = ConstraintNotice()
         self.page = 0
-        self.framework = None
         self.progress = [0.0] * len(self.PAGES)  # 가이드 페이지마다 선택 전환을 기록한다.
         self.last_update = None
 
@@ -55,9 +56,6 @@ class GuideMode:
         self.page = 0
 
     def exit(self):
-        pass
-
-    def update(self, now):
         pass
 
     def handle_event(self, event):
