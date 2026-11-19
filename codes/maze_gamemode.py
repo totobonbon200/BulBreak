@@ -91,6 +91,16 @@ class MazeMode:
                     return
                 self.advance_maze()
 
+    def complete_maze(self):
+        # 실제 출구와 폭탄 회피가 같은 미로 완료 흐름을 사용한다.
+        self.completed += 1
+        if self.completed == 2:
+            battle = self.framework.modes['battle_mode']
+            battle.pending_session = (self.player.rules, self.score)
+            self.framework.change_mode('battle_mode')
+            return
+        self.advance_maze()
+
     def advance_maze(self):
         # 디버그 한 판은 출구에 도착하면 선택 목록으로 돌아간다.
         if getattr(self.framework, 'practicing_constraint', False) is True:
