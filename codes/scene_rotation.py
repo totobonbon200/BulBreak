@@ -17,6 +17,13 @@ class SceneRotation:
         self.started = now
         self.around_canvas = choice((True, False))
 
+    def draw(self, now, draw_mode):
+        # 배경과 메뉴는 이 호출 바깥에서 원래 좌표로 그린다.
+        center = (pico.get_canvas_width() / 2, pico.get_canvas_height() / 2) if self.around_canvas else None
+        rotation = RotatedDraw((now - self.started) * self.SPEED, center)
+        with rotation.applied():
+            draw_mode()
+
 
 class RotatedDraw:
     def __init__(self, angle, canvas_center):
