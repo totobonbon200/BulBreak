@@ -281,12 +281,8 @@ class BattleMode:
             column = ('left', 'right', 'up', 'down').index(self.enemy.direction)
             draw_frame(self.assets.effect_sheet, 2, 4, (1, column),
                        350, 465, 65, 65)
-        attack_sheet = self.visual_state in ('attack', 'parry')
-        sheet = self.assets.character_attack_sheet if attack_sheet else self.assets.character_sheet
         player_x, player_y = 240, 200
-        draw_frame(sheet, 2 if attack_sheet else 4, 4,
-                   self.player_animation.frame(self.now), player_x, player_y, 130, 130,
-                   rotation=self.failure_rotation())
+        self.draw_player(player_x, player_y, 130)
         arrow_sheet = self.assets.yellow_arrow_sheet
         # 원본 생성 시트의 셀 종횡비를 보존해 화살표가 찌그러지지 않게 한다.
         arrow_height = 65 * arrow_sheet.h / (arrow_sheet.w / 4)
