@@ -8,12 +8,14 @@ class BuildingBattle:
     CENTER_X, WIDTH = 350, 190
     FLOOR, PLAYER_SIZE, FLOOR_HEIGHT = 130, 100, 42
     GRAVITY, HITS_PER_FLOOR = 1000, 10
+    BUILDING_RATE = .5
 
     def __init__(self, now):
         self.floors = randint(3, 5)
         self.hits = 0
         self.bottom, self.fall_speed = 540, 0
         self.feet, self.jump_speed = self.FLOOR, 0
+        self.player_gravity = self.GRAVITY
         self.updated_at = now
 
     def fall(self, dt):
@@ -27,12 +29,12 @@ class BuildingBattle:
             return
         dt = now - self.updated_at
         self.updated_at = now
-        self.fall(dt * .5)  # 건물의 상승과 낙하에 걸리는 시간을 두 배로 늘린다.
+        self.fall(dt * self.BUILDING_RATE)
         # 공중에서도 건물이 내려오면 주인공의 머리가 밑면을 통과하지 않는다.
         limit = self.bottom - self.PLAYER_SIZE
-        next_feet = self.feet + self.jump_speed * dt - .5 * self.GRAVITY * dt ** 2
+        next_feet = self.feet + self.jump_speed * dt - .5 * self.player_gravity * dt ** 2
         self.feet = min(limit, max(self.FLOOR, next_feet))
-        self.jump_speed = self.jump_speed - self.GRAVITY * dt if self.FLOOR < self.feet < limit else 0
+        self.jump_speed = self.jump_speed - self.player_gravity * dt if self.FLOOR < self.feet < limit else 0
 
     @property
     def gap(self):
@@ -45,7 +47,7 @@ class BuildingBattle:
             self.fall_speed = 475
             return True
         if self.feet == self.FLOOR:
-            self.jump_speed = 340
+            self.jump_speed = 520  # 자유 점프의 꼭짓점은 건물의 상승 높이보다 높다.
             return True
         return False
 
