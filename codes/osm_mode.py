@@ -69,3 +69,12 @@ class OsmMode(MenuMode):
         draw_rectangle(x - 27, y - 27, x + 27, y + 27, 255, 255, 255)
         sheet = self.assets.character_sheet
         width, height = sheet.w // 4, sheet.h // 4
+        sheet.clip_draw(0, 3 * height, width, height, x, y, 44, 44)
+        info_text(self.assets.notice_font, 100, 550, self.title)
+        info_text(self.font, 530, 400, f'성공 {self.hits}/{len(self.PATTERN)}')
+        info_text(self.font, 530, 360, '중앙에서 화살표 방향키')
+        if self.hits == len(self.PATTERN):
+            info_text(self.font, 530, 320, '클리어 · 오른쪽으로 복귀')
+        else:
+            info_text(self.font, 530, 320, self.feedback)
+            self.draw_note()
