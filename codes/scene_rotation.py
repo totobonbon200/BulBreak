@@ -7,3 +7,12 @@ from random import choice
 
 from pico2d import pico2d as pico
 import sdl2
+
+
+class SceneRotation:
+    SPEED = 45.0
+
+    def __init__(self, now):
+        # 미로 또는 전투에 들어갈 때 회전 기준을 한 번 정한다.
+        self.started = now
+        self.around_canvas = choice((True, False))
