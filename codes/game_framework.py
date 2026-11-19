@@ -15,13 +15,12 @@ class GameFramework:
     MODES = ('start_mode', 'instrument_mode', 'guide_mode', 'maze_mode',
              'battle_mode', 'tutorial_mode', 'result_mode', 'quit_mode')
 
-    def __init__(self, modes, timeout_font=None, clock=None, cat_effect=None):
+    def __init__(self, modes, clock=None, cat_effect=None):
         self.notice = ConstraintNotice()  # 전환 안내와 일반 진행을 분리한다.
         self.cat_effect = cat_effect
         self.modes = modes
         self.game_over_menu = GameOverMenu(modes['start_mode'], self)
         self.clock = clock or get_time
-        self.timeout_font = timeout_font
         self.previous_mode = None
         self.visited = set()
         self.running = True

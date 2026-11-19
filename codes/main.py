@@ -62,8 +62,7 @@ def main():
     modes['maze_mode'] = MazeMode(assets)
     modes['battle_mode'] = BattleMode(assets)
     modes['tutorial_mode'] = TutorialMode(assets, Path(__file__).resolve().parents[1] / '.tutorial-complete')
-    framework = GameFramework(modes, timeout_font=assets.timeout_font,
-                              cat_effect=assets.cat_effect)
+    framework = GameFramework(modes, cat_effect=assets.cat_effect)
     for mode in modes.values():
         mode.framework = framework
     while framework.running:
