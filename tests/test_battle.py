@@ -324,7 +324,8 @@ class BattleTests(unittest.TestCase):
             self.mode.rules.remaining = 100
             framework.update(15)
             self.assertEqual(self.mode.rules.remaining, 100)
-            self.assertTrue(self.mode.is_game_over)  # 누락 박자의 체력 피해는 유지한다.
+            self.assertTrue(self.mode.cleared)  # 두 패턴을 놓쳐도 체력이 남으면 전환한다.
+            self.assertEqual(self.mode.rules.health, 1)
 
     def test_attacks_must_alternate_and_dodge_does_not_change_order(self):
         self.assertEqual(self.mode.next_attack_direction, 'left')

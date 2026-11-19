@@ -244,7 +244,8 @@ class BattleMode:
 
     def finish_if_cleared(self):
         # 일반 공격과 건물 타격이 같은 완료 흐름을 사용한다.
-        if self.successes >= self.CLEAR_ATTACKS and not self.is_game_over:
+        ready = self.rhythm.finished if self.rhythm is not None else self.successes >= self.CLEAR_ATTACKS
+        if ready and not self.is_game_over:
             self.cleared = True
             # 제약 한 판의 전투를 마치면 선택 화면으로 돌아간다.
             if getattr(self.framework, 'practicing_constraint', False) is True:
@@ -345,10 +346,10 @@ class BattleMode:
         if self.countdown is not None and now < self.countdown.end:
             self.countdown.play_go(now, getattr(self.assets, 'go_sound', None))
             return
-        damage = self.rhythm.advance(now, stop_after_pattern=self.successes >= self.CLEAR_ATTACKS)
+        damage = self.rhythm.advance(now)
         self.rules.health = max(0, self.rules.health - damage)
         if self.rhythm.index == len(self.rhythm.hits):
-            self.finish_if_cleared()  # 마지막 박자를 놓쳐도 누적 목표는 패턴 종료 때 확인한다.
+            self.finish_if_cleared()  # 마지막 박자를 놓쳐도 패턴 종료 때 확인한다.
             if self.cleared:
                 return
         self.play_pattern_cue(now)
