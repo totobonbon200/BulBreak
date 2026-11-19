@@ -50,7 +50,7 @@ class BattleTests(unittest.TestCase):
                 self.assertEqual(self.mode.cleared, self.mode.successes == self.mode.CLEAR_ATTACKS)
         self.assertTrue(self.mode.cleared)
         self.assertEqual(self.mode.rules.health, 3)
-        self.assertEqual(self.assets.go_sound.play.call_count, len(self.mode.rhythm.patterns[0]))
+        self.assertEqual(self.assets.go_sound.play.call_count, self.mode.CLEAR_ATTACKS)
 
     def setUp(self):
         self.assets = assets()

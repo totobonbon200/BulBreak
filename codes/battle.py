@@ -186,10 +186,7 @@ class BattleMode:
                 self.successes += 1
                 if self.rhythm is not None:
                     self.rhythm.take_next_pattern_cue(self.now)
-                    if self.rhythm.segment == 0:  # 첫 패턴의 성공 공격에 전구 파열음을 낸다.
-                        play_go_sound(self.assets)
-                else:
-                    play_go_sound(self.assets)
+                play_go_sound(self.assets)  # 리듬 지옥의 두 패턴도 성공 공격마다 전구 파열음을 낸다.
                 self.next_attack_direction = 'right' if direction == 'left' else 'left'
                 self.message = f'공격 성공: {self.successes}/{self.CLEAR_ATTACKS}'
             else:
