@@ -6,6 +6,7 @@ import math
 from transitions import Machine
 
 from codes.animation import Animation, draw_frame
+from codes.building_battle import BuildingBattle
 from codes.clap_sound import play_go_sound
 from codes.enemy import Enemy
 from codes.rhythm import Rhythm
@@ -48,9 +49,13 @@ class BattleMode:
         active = getattr(getattr(self.framework, 'notice', None), 'active', set())
         self.countdown = RhythmCountdown(self.now) if isinstance(active, set) and 'battle_rhythm' in active else None
         self.rhythm = Rhythm(self.countdown.end) if self.countdown is not None else None
+        self.building = (BuildingBattle(self.now)
+                         if isinstance(active, set) and 'battle_building' in active else None)
         # 리듬은 원본 전체 박자 수를 목표로 삼고 일반 전투 진입 시 10회로 복구한다.
         self.CLEAR_ATTACKS = (sum(map(len, self.rhythm.patterns)) if self.rhythm
                               else type(self).CLEAR_ATTACKS)
+        if self.building is not None:
+            self.CLEAR_ATTACKS = self.building.floors * self.building.HITS_PER_FLOOR
         self.successes = 0
         self.next_attack_direction = 'left'
         self.failure_started = None
@@ -236,6 +241,8 @@ class BattleMode:
             self.update_rhythm(now)
         else:
             self.rules.update(now)
+        if self.building is not None:
+            self.building.update(now)
         if self.player_animation.finished(now):
             self.show_idle()
             self.visual_state = 'idle'
