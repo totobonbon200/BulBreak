@@ -165,13 +165,14 @@ class ConstraintMenu(AnimatedSelectionMenu):
         return f'[{mode}] {title}'
 
     def draw(self):
-        super().draw()
+        info_text(self.font, 24, 550, self.title)
+        info_text(self.font, 320, 500, self.lines[0])
         for index, option in enumerate(self.OPTIONS):
             label = self.option_title(*option)
-            color = (255, 220, 0) if index == self.index else (255, 255, 255)
-            self.font.draw(100, 390 - index * 38, label, color)
+            draw_panel_choice(self.font, self.menu_image, 480 - index * 58, label,
+                              self.progress[index], len(self.OPTIONS) - 1 - index, left=True)
         target, self.preview.selected = self.OPTIONS[self.index]
-        info_text(self.font, 100, 125, self.preview.description(target))
+        info_text(self.font, 320, 430, self.preview.description(target))
 
 
 def create_menus(font, main_image=None, menu_image=None, *, start_font=None):
