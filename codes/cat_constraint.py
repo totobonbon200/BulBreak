@@ -19,7 +19,7 @@ class CatMotion:
         self.origin = (uniform(CAT_MARGIN, width - CAT_MARGIN),
                        uniform(CAT_MARGIN, height - CAT_MARGIN))
         self.heading = uniform(0, tau)
-        self.speed = uniform(360, 480)
+        self.speed = uniform(540, 720)  # 초당 이동할 픽셀 수를 개체마다 정한다.
 
     def pose(self, elapsed, width, height):
         distance = elapsed * self.speed
