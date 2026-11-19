@@ -8,11 +8,11 @@ from codes.hud import info_text, text
 
 
 def draw_start_panel(image, x, y, color, opacity=1.0):
-    # 오른쪽 경사는 캔버스에서 잘리고, 색상은 다른 HUD에 남기지 않는다.
+    # 패널을 오른쪽으로 48픽셀 늘리고, 그리기 뒤 공용 이미지의 색과 투명도를 복원한다.
     SDL_SetTextureColorMod(image.texture, *color)
     image.opacify(opacity)
     try:
-        image.draw(x, y, 412, 52)
+        image.draw(x + 24, y, 460, 52)
     finally:
         image.opacify(1.0)
         SDL_SetTextureColorMod(image.texture, 255, 255, 255)
