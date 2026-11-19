@@ -14,8 +14,10 @@ def choose_spawn(maze):
 
 
 class BomberRound:
+    FUSE_SECONDS = 1.5  # 폭발 판정과 안내에 같은 시간을 사용한다.
+
     def __init__(self, maze, position, now):
-        self.deadline = now + 2.0
+        self.deadline = now + self.FUSE_SECONDS
         safe_row, safe_col = self.nearby_shelter(maze, position)
         passages = [(row, col) for row in range(maze.size) if row != safe_row
                     for col in range(maze.size) if col != safe_col and (row, col) not in maze.walls]

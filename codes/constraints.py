@@ -1,6 +1,7 @@
 # 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md의 최신 기준을 확인한다.
 """무작위 단일 제약과 전환 안내를 관리한다."""
 from codes.hud import panel, info_text
+from codes.maze_bomber import BomberRound
 from ctypes import byref, c_int
 from sdl2.sdlttf import TTF_SizeUTF8
 import random
@@ -54,7 +55,7 @@ class ConstraintNotice:
         return {'maze_cross': '중앙 출구 6회',
                 'maze_placeholder': '추가 효과 없이 출구에 도착',
                 'maze_darkness': '주인공 주변만 보이는 미로',
-                'maze_bomber': '2초 뒤 십자 폭탄 3개의 범위를 피하세요',
+                'maze_bomber': f'{BomberRound.FUSE_SECONDS:g}초 뒤 십자 폭탄 3개의 범위를 피하세요',
                 'maze_osm': '화살표가 원에 닿을 때 방향키를 8번 맞히세요',
                 'battle_placeholder': '추가 효과 없음',
                 'battle_building': '접촉 중 좌우 타격 · 위로 점프 또는 띄우기',

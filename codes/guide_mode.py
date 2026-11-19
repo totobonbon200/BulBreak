@@ -5,6 +5,7 @@ from textwrap import wrap
 from pico2d import SDL_KEYDOWN, SDLK_DOWN, SDLK_RIGHT, SDLK_UP, draw_line
 from codes.hud import info_text
 from codes.constraints import CAT_CONSTRAINT, ConstraintNotice
+from codes.maze_bomber import BomberRound
 from codes.menu_modes import AnimatedSelectionMenu
 
 
@@ -44,7 +45,7 @@ class GuideMode(AnimatedSelectionMenu):
         ('battle_building', ('건물이 닿으면 좌우로 공격합니다. 층마다 열 번 타격하세요.',
                              '위 방향키로 점프하거나 가까운 건물을 띄웁니다.',
                              '바닥에서 깔리면 체력 1을 잃고 맨 아래층이 부서집니다.')),
-        ('maze_bomber', ('2초 뒤 십자 폭발을 피하면 출구를 통과합니다.',
+        ('maze_bomber', (f'{BomberRound.FUSE_SECONDS:g}초 뒤 십자 폭발을 피하면 출구를 통과합니다.',
                          '폭발 범위 안에 있으면 체력이 1 줄어듭니다.')),
     )
 
