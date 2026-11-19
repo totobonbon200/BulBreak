@@ -55,3 +55,13 @@ class RotatedDraw:
         points = [sdl2.SDL_Point(round(x), round(y)) for x, y in self.corners(rect)]
         closed = (sdl2.SDL_Point * 5)(*points, points[0])
         return sdl2.SDL_RenderDrawLines(renderer, closed, len(closed))
+
+    def fill(self, renderer, rect):
+        rgba = [ctypes.c_uint8() for _ in range(4)]  # 원래 색과 투명도를 읽는다.
+        sdl2.SDL_GetRenderDrawColor(renderer, *(ctypes.byref(channel) for channel in rgba))
+        color = sdl2.SDL_Color(*(channel.value for channel in rgba))
+        vertices = (sdl2.SDL_Vertex * 4)(
+            *(sdl2.SDL_Vertex(sdl2.SDL_FPoint(x, y), color, sdl2.SDL_FPoint())
+              for x, y in self.corners(rect)))
+        indices = (ctypes.c_int * 6)(0, 1, 2, 0, 2, 3)
+        return sdl2.SDL_RenderGeometry(renderer, None, vertices, len(vertices), indices, len(indices))
