@@ -17,7 +17,6 @@ class MazeMode:
         self.reset(get_time())
 
     def reset(self, now):
-        self.awaiting_next_maze = False  # 도착 화면에서 새 방향키 입력을 기다린다.
         self.stage_timed_out = False
         self.size = 6
         self.completed = 0
@@ -120,8 +119,7 @@ class MazeMode:
     def update(self, now):
         self.now = now
         self.transitioned = False
-        if not self.awaiting_next_maze:
-            self.player.update(now)
+        self.player.update(now)
 
     def draw(self):
         sheet, font = self.assets.maze_sheet, self.assets.font

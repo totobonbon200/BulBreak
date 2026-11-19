@@ -306,8 +306,6 @@ class BattleTests(unittest.TestCase):
                 maze.maze.walls.pop((0, 1), None)
                 maze.maze.exit = (0, 1)
                 press(maze, SDLK_RIGHT)
-                self.assertFalse(maze.awaiting_next_maze)  # 첫 전투 전에는 제약 없이 자동 전환한다.
-            self.assertFalse(maze.awaiting_next_maze)
             self.assertEqual(framework.current_mode, 'battle_mode')
             self.assertEqual(self.mode.rules.health, 2)
             self.mode.enemy.directions = deque(['left'] * 5)
