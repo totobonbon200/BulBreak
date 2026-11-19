@@ -1,8 +1,10 @@
 # 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
 """건물부수기의 낙하, 충돌과 층별 타격 상태를 관리한다."""
 from random import randint
+from pico2d import draw_line
 
 class BuildingBattle:
+    CENTER_X, WIDTH = 350, 190
     FLOOR, PLAYER_SIZE, FLOOR_HEIGHT = 130, 100, 42
     GRAVITY, HITS_PER_FLOOR = 1000, 10
 
@@ -55,3 +57,10 @@ class BuildingBattle:
             self.floors -= 1
             self.bottom += self.FLOOR_HEIGHT
         return True
+
+    def draw(self, assets):
+        # 메뉴 패널을 한 층씩 쌓고 주인공이 서는 바닥을 표시한다.
+        draw_line(120, self.FLOOR, 490, self.FLOOR, 255, 255, 255)
+        for floor in range(self.floors):
+            y = self.bottom + (floor + .5) * self.FLOOR_HEIGHT
+            assets.menu_image.draw(self.CENTER_X, y, self.WIDTH, self.FLOOR_HEIGHT)
