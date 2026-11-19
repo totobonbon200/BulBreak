@@ -45,3 +45,13 @@ class RotatedDraw:
         start = self.point(x1, y1, pivot)
         end = self.point(x2, y2, pivot)
         return sdl2.SDL_RenderDrawLine(renderer, *map(round, (*start, *end)))
+
+    def corners(self, rect):
+        x, y, w, h = rect.x, rect.y, rect.w, rect.h
+        pivot = x + w / 2, y + h / 2
+        return [self.point(px, py, pivot) for px, py in ((x, y), (x + w, y), (x + w, y + h), (x, y + h))]
+
+    def outline(self, renderer, rect):
+        points = [sdl2.SDL_Point(round(x), round(y)) for x, y in self.corners(rect)]
+        closed = (sdl2.SDL_Point * 5)(*points, points[0])
+        return sdl2.SDL_RenderDrawLines(renderer, closed, len(closed))
