@@ -65,3 +65,8 @@ class RotatedDraw:
               for x, y in self.corners(rect)))
         indices = (ctypes.c_int * 6)(0, 1, 2, 0, 2, 3)
         return sdl2.SDL_RenderGeometry(renderer, None, vertices, len(vertices), indices, len(indices))
+
+    def hooks(self):
+        names = ('RenderCopy', 'RenderCopyEx', 'RenderDrawLine', 'RenderDrawRect', 'RenderFillRect')
+        return dict(zip(('SDL_' + name for name in names),
+                        (self.copy, self.copy_ex, self.line, self.outline, self.fill)))
