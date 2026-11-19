@@ -88,7 +88,7 @@ class AnimatedSelectionMenu(SelectionMenu):
             self.progress[index] = min(1.0, progress + step) if index == self.index else max(0.0, progress - step)
 
 
-class StartMenu(SelectionMenu):
+class StartMenu(AnimatedSelectionMenu):
     # 표시 문구와 선택할 모드를 같은 순서로 둔다.
     OPTIONS = (('게임시작', 'maze_mode'), ('가이드', 'guide_mode'),
                ('디버그모드', 'instrument_mode'), ('게임종료', 'quit_mode'))
@@ -103,13 +103,6 @@ class StartMenu(SelectionMenu):
 
     def confirm_selection(self):
         self.framework.change_mode(self.OPTIONS[self.index][1])
-
-    def update(self, now):
-        # 항목마다 현재 위치에서 선택 또는 해제 방향으로 0.25초 동안 전환한다.
-        step = 0.0 if self.last_update is None else max(0.0, now - self.last_update) / 0.25
-        self.last_update = now
-        for index, progress in enumerate(self.progress):
-            self.progress[index] = min(1.0, progress + step) if index == self.index else max(0.0, progress - step)
 
     def draw(self):
         if self.image is not None:
