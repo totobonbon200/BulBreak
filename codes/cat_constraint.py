@@ -25,7 +25,8 @@ class CatMotion:
         distance = elapsed * self.speed
         x = bounce_position(self.origin[0], distance * cos(self.heading), width)
         y = bounce_position(self.origin[1], distance * sin(self.heading), height)
-        angle = (self.heading + distance / (CAT_SIZE / 2) * 0.85) % tau
+        spin = distance / (CAT_SIZE / 2) * 0.85 * 1.5  # 회전량만 1.5배로 높인다.
+        angle = (self.heading + spin) % tau
         return x, y, angle
 
 
