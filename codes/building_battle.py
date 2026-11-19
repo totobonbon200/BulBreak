@@ -7,6 +7,7 @@ from codes.hud import info_text
 class BuildingBattle:
     CENTER_X, WIDTH = 350, 190
     FLOOR, PLAYER_SIZE, FLOOR_HEIGHT = 130, 100, 42
+    CRUSH_BOTTOM = FLOOR + PLAYER_SIZE - 10
     GRAVITY, HITS_PER_FLOOR = 1000, 10
     BUILDING_RATE = .5
     CONTACT_SECONDS = .45  # 공중에서 밑면을 따라가는 시간이다.
@@ -23,8 +24,8 @@ class BuildingBattle:
         self.updated_at = now
 
     def fall(self, dt, gravity):
-        # 건물은 지면 위 주인공 머리 높이에서 멈춘다.
-        rest = self.FLOOR + self.PLAYER_SIZE
+        # 건물은 지상 피격 높이까지만 내려간다.
+        rest = self.CRUSH_BOTTOM
         self.bottom = max(rest, self.bottom + self.fall_speed * dt - .5 * gravity * dt ** 2)
         self.fall_speed = self.fall_speed - gravity * dt if self.bottom > rest else 0
 
@@ -39,8 +40,10 @@ class BuildingBattle:
             self.fall(slow_dt * self.BUILDING_RATE, self.GRAVITY * .35)
         if slow_dt < dt:
             self.fall((dt - slow_dt) * self.BUILDING_RATE, self.GRAVITY)
+        if self.floors and self.feet == self.FLOOR and self.bottom <= self.CRUSH_BOTTOM:
+            return self.crush_grounded(now)
         # 공중에서도 건물이 내려오면 주인공의 머리가 밑면을 통과하지 않는다.
-        limit = self.bottom - self.PLAYER_SIZE
+        limit = max(self.FLOOR, self.bottom - self.PLAYER_SIZE)
         if self.follow_until is not None:
             self.follow_bottom(limit, now)
             return
