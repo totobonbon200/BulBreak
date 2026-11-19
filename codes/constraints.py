@@ -18,7 +18,6 @@ class ConstraintNotice:
     DURATION = 1.0
     OPTIONS = {'maze_mode': ('maze_cross', CAT_CONSTRAINT),
                'battle_mode': ('battle_placeholder', 'battle_rhythm', CAT_CONSTRAINT)}
-    TITLES = {"maze_mode": "[미로] 도착 화면 확인", "battle_mode": "[전투] 기본"}
 
     def __init__(self):
         # 첫 전투를 마친 뒤부터 안내하며 새 게임에서는 초기화한다.
@@ -52,7 +51,7 @@ class ConstraintNotice:
 
     def description(self, mode):
         # 안내 시작 때 선택한 제약과 실제 적용 설명을 일치시킨다.
-        return {'maze_arrival': '도착 후 방향키로 다음 미로', 'maze_cross': '중앙 출구 6회',
+        return {'maze_cross': '중앙 출구 6회',
                 'battle_placeholder': '추가 효과 없음',
                 CAT_CONSTRAINT: f'{"미로" if mode == "maze_mode" else "전투"} 시야를 가리는 고양이',
                 'battle_rhythm': '두 패턴 따라 입력·±100ms'}.get(self.selected, '')
@@ -63,7 +62,7 @@ class ConstraintNotice:
             draw_notice_title(font, self.title())
 
     def title(self):
-        # 기본 전투 제약 이름은 전환 안내와 디버그 메뉴에서 공유한다.
-        return {'maze_arrival': '[미로] 도착 화면 확인', 'maze_cross': '[미로] 중앙 출구',
+        # 전환 안내와 디버그 메뉴가 같은 제약 이름을 표시한다.
+        return {'maze_cross': '[미로] 중앙 출구',
                 CAT_CONSTRAINT: '고양이다아아아아',
-                'battle_placeholder': self.TITLES['battle_mode'], 'battle_rhythm': '[전투] 리듬'}.get(self.selected, '')
+                'battle_placeholder': '[전투] 기본', 'battle_rhythm': '[전투] 리듬'}.get(self.selected, '')
