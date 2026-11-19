@@ -128,12 +128,7 @@ class GameFramework:
         if self.game_over_active:
             self.game_over_menu.update(now)
             return  # 게임오버 중에는 메뉴의 선택 전환만 진행한다.
-        mode = self.modes[self.state]
-        # 리듬 제약은 체력 판정만 진행하며 독립 제한 시계도 멈춘다.
-        if 'battle_rhythm' in self.notice.active and self.state == 'battle_mode':
-            mode.update(now)
-            return
-        mode.update(now)
+        self.modes[self.state].update(now)
 
     def _active_cat_effect(self, now):
         # 전환 안내와 메뉴에서는 효과를 지우고 새 적용을 기다린다.

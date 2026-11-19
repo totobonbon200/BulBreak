@@ -35,7 +35,7 @@ class GameFlowTests(unittest.TestCase):
             framework.change_mode('maze_mode')
             mode.player.rules.health = 100
             mode.player.rules.remaining = 100
-            framework.update(14.9)
+            framework.update(16)
             framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_UP))
             self.assertTrue(mode.player.is_playing)
 
