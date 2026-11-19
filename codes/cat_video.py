@@ -18,9 +18,15 @@ class LoopingVideo:
         if not texture:
             raise RuntimeError(SDL_GetError().decode())
         self.image = Image(texture)
+        self.index, self.frames = -1, self.container.decode(self.stream)
 
     def frame_at(self, elapsed):
         # 일정한 프레임 간격의 원본 영상은 마지막 프레임 뒤에 처음으로 돌아간다.
         index = int(elapsed * self.stream.average_rate) % self.stream.frames
-        self.container.seek(0, stream=self.stream)
-        return next(islice(self.container.decode(self.stream), index, None))
+        if index < self.index:
+            self.container.seek(0, stream=self.stream)
+            self.index, self.frames = -1, self.container.decode(self.stream)
+        if index != self.index:
+            frame = next(islice(self.frames, index - self.index - 1, None))
+            self.index = index
+            return frame
