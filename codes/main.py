@@ -10,6 +10,7 @@ from sdl2 import (SDL_SetHint, SDL_HINT_RENDER_SCALE_QUALITY,
 from codes.maze_gamemode import MazeMode
 from codes.battle import BattleMode
 from codes.cat_constraint import CatEffect
+from codes.cat_video import LoopingVideo
 from codes.clap_sound import load_clap, load_glass_break
 from codes.game_framework import GameFramework
 from codes.menu_modes import create_menus
@@ -44,8 +45,11 @@ class Assets:
         self.notice_font = load_font(str(font_path), 24)
         self.timeout_font = load_font(str(font_path), 38)
         # 미로와 전투가 같은 고양이 자원과 캔버스 경계를 사용한다.
+        video_path = root / 'resources/shadow_boxing_cat'
+        backdrop = (LoopingVideo(video_path) if video_path.is_file()
+                    else load_image(str(root / 'resources/manja-vitolic-gKXKBY-C-Dk-unsplash.jpg')))
         self.cat_effect = CatEffect(
-            load_image(str(root / 'resources/manja-vitolic-gKXKBY-C-Dk-unsplash.jpg')),
+            backdrop,
             load_image(str(root / 'resources/cat_yawn.png')),
             get_canvas_width(), get_canvas_height())
 

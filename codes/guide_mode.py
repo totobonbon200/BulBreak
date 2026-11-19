@@ -40,7 +40,7 @@ class GuideMode(AnimatedSelectionMenu):
         ('battle_placeholder', ('기본 전투와 동일하게 진행합니다.',)),
         ('battle_rhythm', ('두 패턴의 시범을 듣고 아무 방향키로 박자를 따라 칩니다.',
                            '판정 범위는 ±100ms이며, 틀리거나 놓치면 체력이 줄어듭니다.')),
-        (CAT_CONSTRAINT, ('미로와 전투에서 고양이 사진과 움직이는 고양이가 시야를 가립니다.',
+        (CAT_CONSTRAINT, ('미로와 전투에서 고양이 영상과 움직이는 고양이가 시야를 가립니다.',
                           '움직이는 고양이는 화면 가장자리에서 튕깁니다.')),
     )
 
