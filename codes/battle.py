@@ -267,6 +267,13 @@ class BattleMode:
             self.visual_state = 'idle'
             self.player_animation = self.make_player_animation('idle', self.player_direction)
 
+    def draw_player(self, x, y, size):
+        # 일반 전투와 건물부수기가 같은 주인공 애니메이션을 그린다.
+        attacking = self.visual_state in ('attack', 'parry')
+        sheet = self.assets.character_attack_sheet if attacking else self.assets.character_sheet
+        draw_frame(sheet, 2 if attacking else 4, 4, self.player_animation.frame(self.now),
+                   x, y, size, size, rotation=self.failure_rotation())
+
     def draw(self):
         draw_frame(self.assets.enemy_sheet, 4, 4, self.enemy.animation.frame(self.now),
                    350, 360, 150, 150)
