@@ -135,7 +135,7 @@ class GameFlowTests(unittest.TestCase):
             mode.draw()
         assets.maze_sheet.clip_draw.assert_called_once_with(600, 200, 200, 200, 300, 300, 400, 400)
 
-    def test_arrival_constraint_starts_after_first_battle(self):
+    def test_maze_constraint_starts_after_first_battle(self):
         # 최초 전투 진입은 생략하고 복귀 안내가 끝날 때 획득한다.
         notice = ConstraintNotice()
         self.assertFalse(notice.begin('maze_mode', 'battle_mode', 0))
@@ -144,7 +144,7 @@ class GameFlowTests(unittest.TestCase):
         self.assertEqual(notice.active, set())
         self.assertEqual(notice.finish(1), 'maze_mode')
         self.assertEqual(len(notice.active), 1)  # 진입 모드의 제약 하나만 적용한다.
-        self.assertTrue(notice.active <= {'maze_arrival', 'maze_cross', CAT_CONSTRAINT})
+        self.assertTrue(notice.active <= {'maze_cross', CAT_CONSTRAINT})
 
     def test_constraints_accumulate_without_duplicates(self):
         notice = ConstraintNotice()
@@ -205,7 +205,7 @@ class GameFlowTests(unittest.TestCase):
         menu.framework = Mock()
         for key in (SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT):
             menu.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=key))
-        menu.framework.play_constraint.assert_called_once_with('maze_mode', 'maze_cross')
+        menu.framework.play_constraint.assert_called_once_with('battle_mode', 'battle_placeholder')
         menu.framework.change_mode.assert_called_once_with('start_mode')
 
     def test_game_over_restart_resets_session_and_blocks_held_key(self):

@@ -138,7 +138,7 @@ class GameOverMenu(AnimatedSelectionMenu):
 
 class ConstraintMenu(AnimatedSelectionMenu):
     # 제약 선택 순서와 각 제약이 실행될 플레이 모드를 정의한다.
-    OPTIONS = (('maze_mode', 'maze_arrival'), ('maze_mode', 'maze_cross'),
+    OPTIONS = (('maze_mode', 'maze_cross'),
                ('battle_mode', 'battle_placeholder'), ('battle_mode', 'battle_rhythm'),
                ('maze_mode', CAT_CONSTRAINT), ('battle_mode', CAT_CONSTRAINT))
 
