@@ -5,6 +5,14 @@ from pico2d import draw_rectangle
 from codes.animation import draw_frame
 from codes.hud import info_text
 
+def choose_spawn(maze):
+    # 입구와 도착점을 제외한 통로에서 주인공의 시작 위치를 고른다.
+    excluded = {maze.entrance, maze.exit} | maze.walls.keys()
+    passages = [(row, col) for row in range(maze.size) for col in range(maze.size)
+                if (row, col) not in excluded]
+    return choice(passages)
+
+
 class BomberRound:
     def __init__(self, maze, position, now):
         self.deadline = now + 2.0
