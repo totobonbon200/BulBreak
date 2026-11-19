@@ -3,6 +3,11 @@
 from math import sqrt
 from pico2d import draw_line
 
+def exit_hint_opacity(exit_cell, position):
+    # 두 축 중 먼 쪽을 기준으로 3×3과 5×5를 나눈다.
+    distance = max(abs(cell - origin) for cell, origin in zip(exit_cell, position))
+    return (.35, .35, .12)[distance] if distance <= 2 else 0.0
+
 def draw_darkness(x, y, radius):
     for row in range(100, 501):
         half = sqrt(max(0, radius ** 2 - (row - y) ** 2))
