@@ -51,15 +51,17 @@ class Rhythm:
         while (now >= self.next_start
                and (self.index >= len(self.hits)
                     or now > self.beat_times()[-1] + self.WINDOW)):
-            misses += len(self.hits) - self.index
+            self.imperfect |= self.index < len(self.hits)
+            self.index = len(self.hits)
+            misses += self.take_damage()
             self.started = self.next_start
             self.segment += 1
             self.index = 0
         while (self.index < len(self.hits)
                and now > self.beat_times()[self.index] + self.WINDOW):
-            misses += 1
+            self.imperfect = True
             self.index += 1
-        return misses
+        return misses + self.take_damage()
 
     def take_damage(self):
         # 실패한 패턴의 피해는 마지막 박자까지 판정한 뒤 한 번만 꺼낸다.
