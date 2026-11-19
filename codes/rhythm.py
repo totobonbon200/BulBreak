@@ -20,6 +20,7 @@ class Rhythm:
         self.started = now
         self.segment = 0
         self.index = 0
+        self.imperfect = False
         self.last_clap = now - .001  # 첫 박자도 한 번 재생한다.
         self.next_cue_at = None
 
@@ -59,6 +60,13 @@ class Rhythm:
             misses += 1
             self.index += 1
         return misses
+
+    def take_damage(self):
+        # 실패한 패턴의 피해는 마지막 박자까지 판정한 뒤 한 번만 꺼낸다.
+        if self.index == len(self.hits) and self.imperfect:
+            self.imperfect = False
+            return 1
+        return 0
 
     @classmethod
     def is_on_time(cls, now, expected):
