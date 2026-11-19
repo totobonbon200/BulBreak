@@ -78,3 +78,12 @@ class OsmMode(MenuMode):
         else:
             info_text(self.font, 530, 320, self.feedback)
             self.draw_note()
+
+    def draw_note(self):
+        remaining = self.arrival - self.now
+        if remaining > self.TRAVEL:
+            return
+        dx, dy = self.DIRECTIONS[self.PATTERN[self.hits]]
+        distance = self.RADIUS * remaining / self.TRAVEL
+        x, y = self.CENTER
+        x, y = round(x - dx * distance), round(y - dy * distance)
