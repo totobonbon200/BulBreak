@@ -185,7 +185,9 @@ class BattleMode:
                 self.start_effect('player')
                 self.successes += 1
                 if self.rhythm is not None:
-                    self.rhythm.take_next_pattern_cue(self.now)  # 전환 시각은 기록하고 타격음은 생략한다.
+                    self.rhythm.take_next_pattern_cue(self.now)
+                    if self.rhythm.segment == 0:  # 첫 패턴의 성공 공격에 전구 파열음을 낸다.
+                        play_go_sound(self.assets)
                 else:
                     play_go_sound(self.assets)
                 self.next_attack_direction = 'right' if direction == 'left' else 'left'
