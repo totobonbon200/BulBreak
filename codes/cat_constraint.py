@@ -3,6 +3,7 @@
 from math import ceil, cos, sin, sqrt, tau
 from random import randint, uniform
 from sdl2 import SDL_BLENDMODE_BLEND, SDL_SetTextureBlendMode
+from codes.cat_video import LoopingVideo
 
 CAT_SIZE = 100
 CAT_MARGIN = ceil(CAT_SIZE / sqrt(2))  # 회전한 사각형도 캔버스 안에 둔다.
@@ -31,7 +32,8 @@ class CatMotion:
 class CatEffect:
     # 공유 이미지와 활성 구간마다 새로 배치할 개체를 관리한다.
     def __init__(self, backdrop, sprite, width, height):
-        self.backdrop, self.sprite = backdrop, sprite
+        self.video = backdrop if isinstance(backdrop, LoopingVideo) else None
+        self.backdrop, self.sprite = (self.video.image if self.video else backdrop), sprite
         SDL_SetTextureBlendMode(self.backdrop.texture, SDL_BLENDMODE_BLEND)
         self.backdrop.opacify(0.55)
         self.width, self.height = width, height
