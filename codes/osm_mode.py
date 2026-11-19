@@ -8,3 +8,11 @@ from codes.menu_modes import MenuMode
 
 class OsmMode(MenuMode):
     CENTER = (300, 300)
+    TRAVEL = 1.0
+    WINDOW = 0.15
+    RADIUS = 180
+    # 입력 방향은 노트가 주인공을 향해 이동하는 방향이다.
+    DIRECTIONS = {SDLK_UP: (0, 1), SDLK_DOWN: (0, -1),
+                  SDLK_LEFT: (-1, 0), SDLK_RIGHT: (1, 0)}
+    PATTERN = (SDLK_RIGHT, SDLK_DOWN, SDLK_LEFT, SDLK_UP,
+               SDLK_LEFT, SDLK_DOWN, SDLK_RIGHT, SDLK_UP)
