@@ -57,7 +57,7 @@ class GameFlowTests(unittest.TestCase):
         for name in ('maze_mode', 'battle_mode'):
             framework.change_mode(name)
             framework.update(35)
-            self.assertTrue(framework.stage_timed_out)
+            modes[name].update.assert_called_once_with(35)
             framework.change_mode('start_mode')
 
     def test_new_maze_keeps_regular_game_over_rules(self):

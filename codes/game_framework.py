@@ -133,14 +133,6 @@ class GameFramework:
         if 'battle_rhythm' in self.notice.active and self.state == 'battle_mode':
             mode.update(now)
             return
-        if self.stage_started is not None and getattr(mode, 'is_game_over', False) is not True:
-            self.stage_elapsed = min(self.STAGE_LIMIT, max(0.0, now - self.stage_started))
-            if self.stage_elapsed >= self.STAGE_LIMIT:
-                self.stage_timed_out = True
-                callback = getattr(mode, 'on_stage_timeout', None)
-                if callback is not None:
-                    callback()
-                return
         mode.update(now)
 
     def _active_cat_effect(self, now):
