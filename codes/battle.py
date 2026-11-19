@@ -250,14 +250,17 @@ class BattleMode:
                        350, 465, 65, 65)
         attack_sheet = self.visual_state in ('attack', 'parry')
         sheet = self.assets.character_attack_sheet if attack_sheet else self.assets.character_sheet
+        player_x, player_y = 240, 200
         draw_frame(sheet, 2 if attack_sheet else 4, 4,
-                   self.player_animation.frame(self.now), 240, 200, 130, 130,
+                   self.player_animation.frame(self.now), player_x, player_y, 130, 130,
                    rotation=self.failure_rotation())
         arrow_sheet = self.assets.yellow_arrow_sheet
         # 원본 생성 시트의 셀 종횡비를 보존해 화살표가 찌그러지지 않게 한다.
         arrow_height = 65 * arrow_sheet.h / (arrow_sheet.w / 4)
         column = 0 if self.next_attack_direction == 'left' else 1
-        draw_frame(arrow_sheet, 1, 4, (0, column), 240, 295, 65, arrow_height)
+        # 다음 공격 방향과 같은 쪽에 주인공과 간격을 두고 표시한다.
+        arrow_x = player_x + (-104 if column == 0 else 104)
+        draw_frame(arrow_sheet, 1, 4, (0, column), arrow_x, player_y, 65, arrow_height)
         if (self.failure_started is not None
                 and 0 <= self.now - self.failure_started < self.FAILURE_EFFECT_SECONDS):
             draw_frame(self.assets.effect_sheet, 2, 4, (0, 1), 240, 230, 65, 65)
