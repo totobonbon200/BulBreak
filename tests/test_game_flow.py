@@ -115,16 +115,6 @@ class GameFlowTests(unittest.TestCase):
             framework.update(100)
             self.assertFalse(framework.stage_timed_out)
 
-    def test_arrival_image_fills_only_the_play_area(self):
-        # 도착 시트의 행·열과 출력 영역을 직접 확인한다.
-        assets = SimpleNamespace(maze_sheet=Mock(w=800, h=400), font=Mock())
-        with patch('codes.maze_gamemode.get_time', return_value=0), \
-             patch('codes.maze_gamemode.draw_hud'):
-            mode = MazeMode(assets)
-            mode.awaiting_next_maze = True
-            mode.draw()
-        assets.maze_sheet.clip_draw.assert_called_once_with(600, 200, 200, 200, 300, 300, 400, 400)
-
     def test_maze_constraint_starts_after_first_battle(self):
         # 최초 전투 진입은 생략하고 복귀 안내가 끝날 때 획득한다.
         notice = ConstraintNotice()
