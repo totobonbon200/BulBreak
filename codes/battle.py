@@ -310,7 +310,9 @@ class BattleMode:
         column = 0 if self.next_attack_direction == 'left' else 1
         # 다음 공격 방향과 같은 쪽에 주인공과 간격을 두고 표시한다.
         arrow_x = player_x + (-101 if column == 0 else 101)
-        if self.rhythm is None:  # 리듬 지옥에서는 공격 방향 표시를 숨긴다.
+        if self.hidden_enemy:
+            draw_frame(self.assets.effect_sheet, 2, 4, (0, 1), arrow_x, player_y, 65, 65)
+        elif self.rhythm is None:  # 리듬 지옥에서는 공격 방향 표시를 숨긴다.
             draw_frame(arrow_sheet, 1, 4, (0, column), arrow_x, player_y, 65, arrow_height)
         if (self.failure_started is not None
                 and 0 <= self.now - self.failure_started < self.FAILURE_EFFECT_SECONDS):
