@@ -1,4 +1,5 @@
 # 이곳에는 게임오버기준 3가지를 만들어서 여기서 조건을 충족하는지 검사할 것
+# 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
 """게임오버 판정을 표시 및 입력 처리와 분리한다."""
 import random
 
@@ -44,14 +45,15 @@ class GameOverRules:
             self.remaining = min(self.max_idle_time,
                                  self.remaining + self.ACTION_BONUS)
 
-    def enter_maze(self, now):
+    def enter_maze(self, now, *, idle_limit=None):
         self.mode = "maze"
         self.last_update = now
-        self.max_idle_time = self.MAZE_LIMIT
-        self.remaining = self.MAZE_LIMIT
+        self.max_idle_time = self.MAZE_LIMIT if idle_limit is None else idle_limit
+        self.remaining = self.max_idle_time
 
     def enter_battle(self, now):
         self.mode = "battle"
+        self.max_idle_time = self.MAX_IDLE_TIME  # 미로의 제약별 최대치를 전투로 넘기지 않는다.
         self.last_update = now
 
     def record_wrong_defense(self, health_damage=0):
