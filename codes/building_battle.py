@@ -35,3 +35,13 @@ class BuildingBattle:
     def gap(self):
         # 주인공 머리에서 건물 밑면까지의 수직 간격이다.
         return self.bottom - (self.feet + self.PLAYER_SIZE)
+
+    def jump(self):
+        # 건물이 가까우면 건물을 띄우고, 떨어져 있으면 바닥에서만 점프한다.
+        if self.gap <= 10:
+            self.fall_speed = 475
+            return True
+        if self.feet == self.FLOOR:
+            self.jump_speed = 340
+            return True
+        return False
