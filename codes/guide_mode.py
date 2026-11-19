@@ -97,8 +97,11 @@ class GuideMode(AnimatedSelectionMenu):
             info_text(self.font, 320, detail_y - index * 26, line)
 
     def draw(self):
-        info_text(self.font, 80, 507, '가이드')
+        info_text(self.font, 24, 550, '가이드')
+        for index in range(len(self.PAGES)):
+            draw_panel_choice(self.font, self.menu_image, 480 - index * 58, self.page_title(index),
+                              self.progress[index], len(self.PAGES) - 1 - index, left=True)
         info_text(self.font, 655, 507, f'{self.page + 1} / {len(self.PAGES)}')
         self.draw_page()
-        info_text(self.font, 80, 72, '↑ 이전  ↓ 다음')
+        info_text(self.font, 24, 72, '↑ 이전  ↓ 다음')
         info_text(self.font, 605, 72, '→ 시작 화면')
