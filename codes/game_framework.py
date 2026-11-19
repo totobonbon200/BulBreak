@@ -91,14 +91,7 @@ class GameFramework:
         mode = self.modes[self.state]
         first_visit = self.state not in self.visited
         mode.enter(first_visit)
-        self.restart_stage_timer()
         self.visited.add(self.state)
-
-    def restart_stage_timer(self):
-        """Start a fresh deadline on maze/battle entry, never on ordinary input."""
-        self.stage_started = self.clock() if self.state in self.TIMED_MODES else None
-        self.stage_elapsed = 0.0
-        self.stage_timed_out = False
 
     def resolve_game_over(self, restart):
         if not restart:
@@ -107,7 +100,6 @@ class GameFramework:
         if not self.practicing_constraint:
             self.notice.reset()
         self.modes[self.state].enter(False)
-        self.restart_stage_timer()
         self.game_over_menu.enter(False)
 
     def handle_event(self, event):
