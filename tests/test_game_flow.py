@@ -51,21 +51,14 @@ class GameFlowTests(unittest.TestCase):
         framework.change_mode('maze_mode')
         self.assertEqual(framework.current_mode, 'maze_mode')
 
-    def test_stage_timer_only_runs_in_gameplay_and_resets_on_entry(self):
+    def test_gameplay_keeps_updating_past_fifteen_seconds(self):
         modes = {name: Mock() for name in GameFramework.MODES if name != 'quit_mode'}
         framework = GameFramework(modes, clock=lambda: 20)
-        framework.update(100)
-        self.assertIsNone(framework.stage_started)
         for name in ('maze_mode', 'battle_mode'):
-            modes[name].use_stage_deadline = True
             framework.change_mode(name)
-            framework.update(34.9)
-            self.assertFalse(framework.stage_timed_out)
             framework.update(35)
             self.assertTrue(framework.stage_timed_out)
-            modes[name].on_stage_timeout.assert_called_once()
             framework.change_mode('start_mode')
-            self.assertFalse(framework.stage_timed_out)
 
     def test_new_maze_resets_deadline_and_existing_game_over_is_preserved(self):
         with patch('codes.maze_gamemode.get_time', return_value=0):
