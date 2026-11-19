@@ -125,11 +125,12 @@ class GameFramework:
             if target is not None:
                 self._change_mode(target)
             return  # 안내 중에는 일반 타이머와 적 큐를 진행하지 않는다.
+        if self.game_over_active:
+            self.game_over_menu.update(now)
+            return  # 게임오버 중에는 메뉴의 선택 전환만 진행한다.
         mode = self.modes[self.state]
         if getattr(mode, 'awaiting_next_maze', False) is True:
             return  # 도착 확인 대기에는 일반 게임오버 타이머를 진행하지 않는다.
-        if self.stage_timed_out:
-            return
         # 리듬 제약은 체력 판정만 진행하며 독립 제한 시계도 멈춘다.
         if 'battle_rhythm' in self.notice.active and self.state == 'battle_mode':
             mode.update(now)
