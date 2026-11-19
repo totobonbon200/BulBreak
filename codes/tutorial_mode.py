@@ -112,7 +112,7 @@ class TutorialMode:
         cats = self.assets.cat_effect if self.showing_cats else None
         if cats is not None:
             cats.sync(True, self.now)
-            cats.draw_background()
+            cats.draw_background(self.now)
         self.mode.draw()
         if cats is not None:
             cats.draw_cats(self.now)

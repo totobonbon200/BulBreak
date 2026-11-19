@@ -159,7 +159,7 @@ class GameFramework:
         now = self.clock()
         cats = self._active_cat_effect(now)
         if cats is not None:
-            cats.draw_background()
+            cats.draw_background(now)
         self.modes[self.state].draw()
         if cats is not None:
             cats.draw_cats(now)

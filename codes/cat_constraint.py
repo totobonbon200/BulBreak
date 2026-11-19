@@ -47,7 +47,9 @@ class CatEffect:
             self.cats = [CatMotion(self.width, self.height) for _ in range(randint(3, 4))]
         return active
 
-    def draw_background(self):
+    def draw_background(self, now):
+        if self.video is not None:
+            self.video.advance(max(0.0, now - self.started))
         # 원본의 비율을 맞추고 캔버스를 채우도록 가운데를 확대한다.
         scale = max(self.width / self.backdrop.w, self.height / self.backdrop.h)
         self.backdrop.draw(self.width / 2, self.height / 2,
