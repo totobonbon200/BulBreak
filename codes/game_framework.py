@@ -149,7 +149,11 @@ class GameFramework:
         cats = self._active_cat_effect(now)
         if cats is not None:
             cats.draw_background(now)
-        self.modes[self.state].draw()
+        draw_mode = self.modes[self.state].draw
+        if self.rotation is not None and self.notice.pending is None and not self.game_over_active:
+            self.rotation.draw(now, draw_mode)
+        else:
+            draw_mode()
         if cats is not None:
             cats.draw_cats(now)
         if self.notice.pending is not None:
