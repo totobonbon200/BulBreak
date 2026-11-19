@@ -11,6 +11,7 @@ class BuildingBattle:
     GRAVITY, HITS_PER_FLOOR = 1000, 10
     BUILDING_RATE = .5
     CONTACT_SECONDS = .45  # 공중에서 밑면을 따라가는 시간이다.
+    DETACH_RATE = 2.2
 
     def __init__(self, now):
         self.floors = randint(3, 5)
@@ -62,13 +63,13 @@ class BuildingBattle:
         return self.bottom - (self.feet + self.PLAYER_SIZE)
 
     def follow_bottom(self, limit, now):
-        # 접촉 중에는 건물의 실제 속도를 따르고, 놓이면 조금 더 빠르게 떨어진다.
+        # 이탈 후 속도와 가속도는 실제 시간 기준 건물 낙하의 2.2배로 맞춘다.
         self.feet = limit
         self.jump_speed = self.fall_speed * self.BUILDING_RATE
         if now >= self.follow_until:
             self.follow_until = None
-            self.jump_speed = min(0, self.jump_speed) - 30
-            self.player_gravity = 300
+            self.jump_speed = min(-30, self.jump_speed * self.DETACH_RATE)
+            self.player_gravity = self.GRAVITY * self.BUILDING_RATE ** 2 * self.DETACH_RATE
 
     def jump(self):
         # 건물이 가까우면 건물을 띄우고, 떨어져 있으면 바닥에서만 점프한다.
