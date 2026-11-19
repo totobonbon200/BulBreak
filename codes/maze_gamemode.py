@@ -103,7 +103,7 @@ class MazeMode:
                 self.complete_maze()
 
     def complete_maze(self):
-        # 실제 출구와 폭탄 회피가 같은 미로 완료 흐름을 사용한다.
+        # 실제 출구와 폭탄 판정이 같은 미로 완료 흐름을 사용한다.
         self.completed += 1
         if self.completed == 2:
             battle = self.framework.modes['battle_mode']
@@ -140,11 +140,11 @@ class MazeMode:
         if self.bomber.in_blast(self.player.position):
             self.player.rules.health -= 1
             self.player.update(now)
-            if self.player.is_playing:
-                self.start_bomber_round()
+            if not self.player.is_playing:
+                return
         else:
             play_go_sound(self.assets)
-            self.complete_maze()
+        self.complete_maze()
 
     def draw(self):
         sheet, font = self.assets.maze_sheet, self.assets.font
