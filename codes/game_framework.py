@@ -77,6 +77,7 @@ class GameFramework:
 
     def _enter(self):
         self.game_over_menu.enter(False)
+        self.game_over_since = None
         if self.state == 'quit_mode':
             self.running = False
             return
@@ -93,6 +94,12 @@ class GameFramework:
             self.notice.reset()
         self.modes[self.state].enter(False)
         self.game_over_menu.enter(False)
+        self.game_over_since = None
+
+    def note_game_over(self, now=None):
+        # 발생한 첫 순간만 기록해 입력 대기 시간이 연장되지 않게 한다.
+        if self.running and self.game_over_since is None and self.game_over_active:
+            self.game_over_since = self.clock() if now is None else now
 
     def handle_event(self, event):
         if self.notice.pending is not None:
