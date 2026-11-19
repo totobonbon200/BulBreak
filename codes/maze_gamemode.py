@@ -30,9 +30,6 @@ class MazeMode:
         self.now = now
         self.message = '방향키: 이동 / 벽은 두 번 공격'
         self.transitioned = False
-        framework = getattr(self, 'framework', None)
-        if framework is not None:
-            framework.restart_stage_timer()
 
     @property
     def is_game_over(self):
@@ -104,7 +101,6 @@ class MazeMode:
         self.cross_count = 0
         self.maze = CrossMaze() if self.cross_enabled else Maze(self.size, self.maze.exit)
         self.player.enter_maze(self.maze.entrance, self.now)
-        self.framework.restart_stage_timer()
         self.message = '방향키: 이동 / 벽은 두 번 공격'
         self.transitioned = True
 

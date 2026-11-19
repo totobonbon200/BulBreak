@@ -56,7 +56,7 @@ class ConstraintTests(unittest.TestCase):
         mode = MazeMode(assets())
         notice = ConstraintNotice()
         notice.active.add('maze_cross')
-        mode.framework = SimpleNamespace(notice=notice, restart_stage_timer=lambda: None)
+        mode.framework = SimpleNamespace(notice=notice)
         with patch('codes.maze_gamemode.get_time', return_value=0):
             mode.enter(False)
         keys = {(-1, 0): SDLK_UP, (1, 0): SDLK_DOWN, (0, -1): SDLK_LEFT, (0, 1): SDLK_RIGHT}
