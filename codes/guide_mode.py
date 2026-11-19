@@ -44,6 +44,8 @@ class GuideMode(AnimatedSelectionMenu):
         ('battle_building', ('건물이 닿으면 좌우로 공격합니다. 층마다 열 번 타격하세요.',
                              '위 방향키로 점프하거나 가까운 건물을 띄웁니다.',
                              '바닥에서 깔리면 체력 1을 잃고 맨 아래층이 부서집니다.')),
+        ('maze_bomber', ('2초 뒤 십자 폭발을 피하면 출구를 통과합니다.',
+                         '폭발 범위 안에 있으면 체력이 1 줄어듭니다.')),
     )
 
     def __init__(self, font, title_font=None, menu_image=None):
@@ -95,9 +97,9 @@ class GuideMode(AnimatedSelectionMenu):
             info_text(self.font, 320, detail_y - index * 26, line)
 
     def draw(self):
-        info_text(self.font, 24, 550, '가이드')
+        info_text(self.font, 24, 575, '가이드')
         for index in range(len(self.PAGES)):
-            draw_panel_choice(self.font, self.menu_image, 480 - index * 58, self.page_title(index),
+            draw_panel_choice(self.font, self.menu_image, 530 - index * 53, self.page_title(index),
                               self.progress[index], len(self.PAGES) - 1 - index, left=True)
         info_text(self.font, 655, 507, f'{self.page + 1} / {len(self.PAGES)}')
         self.draw_page()

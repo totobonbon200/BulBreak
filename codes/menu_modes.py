@@ -141,7 +141,8 @@ class ConstraintMenu(AnimatedSelectionMenu):
     OPTIONS = (('maze_mode', 'maze_cross'),
                ('battle_mode', 'battle_placeholder'), ('battle_mode', 'battle_rhythm'),
                ('maze_mode', CAT_CONSTRAINT), ('battle_mode', CAT_CONSTRAINT),
-               ('maze_mode', 'maze_darkness'), ('battle_mode', 'battle_building'))
+               ('maze_mode', 'maze_darkness'), ('battle_mode', 'battle_building'),
+               ('maze_mode', 'maze_bomber'))
 
     def __init__(self, font, menu_image=None):
         super().__init__(font, '디버그모드', ['위·아래: 제약 선택 / 왼쪽: 플레이 / 오른쪽: 시작 화면'],
