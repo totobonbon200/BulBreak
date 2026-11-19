@@ -47,6 +47,7 @@ class BattleMode:
         self.rules.remaining = self.rules.max_idle_time
         # 무효과 제약은 유지하고 새 리듬 제약이 있을 때만 판정한다.
         active = getattr(getattr(self.framework, 'notice', None), 'active', set())
+        self.hidden_enemy = isinstance(active, set) and 'battle_hidden_enemy' in active
         self.countdown = RhythmCountdown(self.now) if isinstance(active, set) and 'battle_rhythm' in active else None
         self.rhythm = Rhythm(self.countdown.end) if self.countdown is not None else None
         self.building = (BuildingBattle(self.now)
@@ -297,7 +298,7 @@ class BattleMode:
     def draw_standard_scene(self):
         draw_frame(self.assets.enemy_sheet, 4, 4, self.enemy.animation.frame(self.now),
                    350, 360, 150, 150)
-        if self.rhythm is None and self.enemy.state == 'prepare':
+        if self.rhythm is None and not self.hidden_enemy and self.enemy.state == 'prepare':
             column = ('left', 'right', 'up', 'down').index(self.enemy.direction)
             draw_frame(self.assets.effect_sheet, 2, 4, (1, column),
                        350, 465, 65, 65)
@@ -323,7 +324,8 @@ class BattleMode:
     def draw_status(self):
         paused = self.rhythm is not None or self.cleared or self.framework.timer_paused is True
         draw_hud(self.assets, self.rules, self.now, 2, timer_paused=paused)
-        draw_enemy_health(self.CLEAR_ATTACKS - self.successes, self.CLEAR_ATTACKS)
+        if not self.hidden_enemy:  # 내맘인데?는 적의 남은 체력을 가린다.
+            draw_enemy_health(self.CLEAR_ATTACKS - self.successes, self.CLEAR_ATTACKS)
         if self.countdown is not None:
             frame = self.countdown.frame(self.now)
             if frame is not None:
