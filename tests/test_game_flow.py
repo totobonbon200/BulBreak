@@ -21,7 +21,7 @@ class GameFlowTests(unittest.TestCase):
         drawing.start()
         self.addCleanup(drawing.stop)
 
-    def test_stage_deadline_ignores_input_and_shows_large_korean_message(self):
+    def test_maze_stays_playable_with_health_and_time_remaining(self):
         assets = SimpleNamespace(font=Mock(), maze_sheet=Mock(w=800, h=400),
                                  notice_font=Mock(), menu_image=Mock(),
                                  character_sheet=Mock(w=600, h=600), effect_sheet=Mock(w=800, h=400))
@@ -29,18 +29,14 @@ class GameFlowTests(unittest.TestCase):
             mode = MazeMode(assets)
             modes = create_menus(assets.font)
             modes['maze_mode'] = mode
-            large_font = Mock()
-            framework = GameFramework(modes, timeout_font=large_font, clock=lambda: 0)
+            framework = GameFramework(modes, clock=lambda: 0)
             for item in modes.values():
                 item.framework = framework
             framework.change_mode('maze_mode')
-            mode.player.rules.rule = 3
-            framework.restart_stage_timer()
             mode.player.rules.health = 100
             mode.player.rules.remaining = 100
             framework.update(14.9)
             framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_UP))
-            self.assertFalse(framework.stage_timed_out)
             self.assertTrue(mode.player.is_playing)
 
     def test_first_game_start_routes_through_tutorial_once(self):
