@@ -225,6 +225,14 @@ class BattleMode:
 
         self.finish_if_cleared()
 
+    def handle_building(self, key):
+        # 좌우 입력은 교대 순서 없이 닿아 있는 건물을 공격한다.
+        self.rules.record_action(self.now)
+        if not self.is_game_over and key in (SDLK_LEFT, SDLK_RIGHT) and self.building.attack():
+            self.successes += 1
+            self.display_action('attack', self.DIRECTIONS[key])
+            self.finish_if_cleared()
+
     def finish_if_cleared(self):
         # 일반 공격과 건물 타격이 같은 완료 흐름을 사용한다.
         if self.successes >= self.CLEAR_ATTACKS and not self.is_game_over:
