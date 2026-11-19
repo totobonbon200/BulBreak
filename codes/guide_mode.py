@@ -79,16 +79,14 @@ class GuideMode(AnimatedSelectionMenu):
         return heading if index < 2 else self.notice.title()
 
     def draw_page(self):
-        heading, lines = self.PAGES[self.page]
+        lines = self.PAGES[self.page][1]
         if self.page < 2:
             self.draw_keys()
             info_text(self.font, 320, 250, '세부 조작')
             heading_y, detail_y = 467, 222
         else:
-            self.notice.selected = heading
-            heading = self.notice.title()
             heading_y, detail_y = 420, 355
-        info_text(self.title_font, 320, heading_y, heading)
+        info_text(self.title_font, 320, heading_y, self.page_title(self.page))
         # 긴 안내는 오른쪽 본문 영역 안에서 줄을 나눈다.
         wrapped_lines = [part for line in lines for part in wrap(line, width=34)]
         for index, line in enumerate(wrapped_lines):
