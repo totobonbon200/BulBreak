@@ -59,3 +59,13 @@ class OsmMode(MenuMode):
             self.next_note(now)
         elif now >= self.arrival - self.TRAVEL:
             self.feedback = '중앙에서 화살표 방향으로 입력'
+
+    def draw(self):
+        x, y = self.CENTER
+        draw_rectangle(100, 100, 500, 500, 255, 255, 255)
+        # 가로·세로 이동선과 중앙 판정 영역을 표시한다.
+        draw_line(120, y, 480, y, 80, 80, 80)
+        draw_line(x, 120, x, 480, 80, 80, 80)
+        draw_rectangle(x - 27, y - 27, x + 27, y + 27, 255, 255, 255)
+        sheet = self.assets.character_sheet
+        width, height = sheet.w // 4, sheet.h // 4
