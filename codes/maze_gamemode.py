@@ -129,13 +129,8 @@ class MazeMode:
 
     def draw(self):
         sheet, font = self.assets.maze_sheet, self.assets.font
-        if self.awaiting_next_maze:
-            # 미로 시트 1행 4열을 플레이 영역(100, 100)~(500, 500)에 표시한다.
-            width, height = sheet.w // 4, sheet.h // 2
-            sheet.clip_draw(3 * width, height, width, height, 300, 300, 400, 400)
-        else:
-            self.maze.draw(sheet, font, self.now)
-            self.player.draw(self.assets.character_sheet, self.maze, self.now)
+        self.maze.draw(sheet, font, self.now)
+        self.player.draw(self.assets.character_sheet, self.maze, self.now)
         framework = getattr(self, 'framework', None)
         paused = self.awaiting_next_maze or self.is_game_over or getattr(framework, 'timer_paused', False) is True
         draw_hud(self.assets, self.player.rules, self.now, self.completed, timer_paused=paused)
