@@ -64,7 +64,7 @@ class OsmMode(MenuMode):
             self.feedback = '성공'
             self.next_note(now)
         elif now >= self.arrival - self.TRAVEL:
-            self.feedback = '중앙에서 화살표 방향으로 입력'
+            self.feedback = '화살표 방향과 타이밍을 맞추세요'
 
     def draw(self):
         x, y = self.CENTER
@@ -83,7 +83,7 @@ class OsmMode(MenuMode):
         draw_frame(sheet, 4, 4, (0, int(pulse > 0)), x, y, 44, 44)
         info_text(self.assets.notice_font, 100, 550, self.title)
         info_text(self.font, 530, 400, f'성공 {self.hits}/{len(self.PATTERN)}')
-        info_text(self.font, 530, 360, '중앙에서 화살표 방향키')
+        info_text(self.font, 530, 360, '화살표가 원에 닿을 때 방향키')
         if self.hits == len(self.PATTERN):
             info_text(self.font, 530, 320, '클리어 · 오른쪽으로 복귀')
         else:

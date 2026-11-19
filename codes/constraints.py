@@ -55,7 +55,7 @@ class ConstraintNotice:
                 'maze_placeholder': '추가 효과 없이 출구에 도착',
                 'maze_darkness': '주인공 주변만 보이는 미로',
                 'maze_bomber': '2초 뒤 십자 폭탄 3개의 범위를 피하세요',
-                'maze_osm': '중앙에 도착하는 화살표를 방향키로 8번 맞히세요',
+                'maze_osm': '화살표가 원에 닿을 때 방향키를 8번 맞히세요',
                 'battle_placeholder': '추가 효과 없음',
                 'battle_building': '접촉 중 좌우 타격 · 위로 점프 또는 띄우기',
                 CAT_CONSTRAINT: f'{"미로" if mode == "maze_mode" else "전투"} 시야를 가리는 고양이',
