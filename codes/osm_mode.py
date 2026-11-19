@@ -38,3 +38,12 @@ class OsmMode(MenuMode):
         if self.hits < len(self.PATTERN) and now > self.arrival + self.WINDOW:
             self.feedback = '놓침 · 다시 시도'
             self.next_note(now)
+
+    def handle_event(self, event):
+        if event.type == SDL_KEYUP:
+            self.held.discard(event.key)
+        if event.type != SDL_KEYDOWN or event.key not in self.DIRECTIONS:
+            return
+        if event.key in self.held or getattr(event, 'repeat', False):
+            return
+        self.held.add(event.key)
