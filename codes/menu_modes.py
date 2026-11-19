@@ -152,7 +152,8 @@ class ConstraintMenu(AnimatedSelectionMenu):
                ('maze_mode', CAT_CONSTRAINT), ('battle_mode', CAT_CONSTRAINT),
                ('maze_mode', 'maze_darkness'), ('battle_mode', 'battle_building'),
                ('maze_mode', 'maze_bomber'), ('maze_mode', 'maze_placeholder'),
-               ('osm_mode', 'maze_osm'))
+               ('osm_mode', 'maze_osm'), ('battle_mode', 'battle_hidden_enemy'),
+               ('maze_mode', 'scene_rotation'), ('battle_mode', 'scene_rotation'))
 
     def __init__(self, font, menu_image=None):
         super().__init__(font, '디버그모드', ['위·아래: 제약 선택 / 왼쪽: 플레이 / 오른쪽: 시작 화면'],
@@ -167,13 +168,13 @@ class ConstraintMenu(AnimatedSelectionMenu):
         self.framework.play_constraint(*self.OPTIONS[self.index])
 
     def option_title(self, target, key):
-        # 같은 고양이 제약도 실행할 모드에 따라 구분한다.
+        # 미로·전투 공통 제약은 실행할 모드를 제목에 표시한다.
         self.preview.selected = key
         title = self.preview.title()
-        if key != CAT_CONSTRAINT:
+        if key not in (CAT_CONSTRAINT, 'scene_rotation'):
             return title
         mode = '미로' if target == 'maze_mode' else '전투'
-        return f'[{mode}] {title}'
+        return f'[{mode}] {title.removeprefix("[미로/전투] ")}'
 
     def draw(self):
         info_text(self.font, 24, 575, self.title)
