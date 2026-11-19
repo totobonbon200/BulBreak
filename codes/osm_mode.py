@@ -87,3 +87,11 @@ class OsmMode(MenuMode):
         distance = self.RADIUS * remaining / self.TRAVEL
         x, y = self.CENTER
         x, y = round(x - dx * distance), round(y - dy * distance)
+        # 판정 범위에 들어온 노트는 노란색으로 바꾼다.
+        color = (255, 220, 0) if remaining <= self.WINDOW else (102, 210, 255)
+        tip_x, tip_y = x + dx * 12, y + dy * 12
+        tail_x, tail_y = x - dx * 12, y - dy * 12
+        draw_line(tail_x, tail_y, tip_x, tip_y, *color)
+        wing_x, wing_y = x + dx * 2, y + dy * 2
+        draw_line(tip_x, tip_y, wing_x - dy * 8, wing_y + dx * 8, *color)
+        draw_line(tip_x, tip_y, wing_x + dy * 8, wing_y - dx * 8, *color)
