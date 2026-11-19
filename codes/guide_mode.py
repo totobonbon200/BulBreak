@@ -49,15 +49,13 @@ class GuideMode(AnimatedSelectionMenu):
         self.title_font = title_font or font
         self.menu_image = menu_image
         self.notice = ConstraintNotice()
+        self.enter(True)
+
+    def enter(self, first_visit):
+        super().enter(first_visit)
         self.page = 0
         self.progress = [0.0] * len(self.PAGES)  # 가이드 페이지마다 선택 전환을 기록한다.
         self.last_update = None
-
-    def enter(self, first_visit):
-        self.page = 0
-
-    def exit(self):
-        pass
 
     def handle_event(self, event):
         if event.type != SDL_KEYDOWN or getattr(event, 'repeat', False):
