@@ -175,12 +175,9 @@ class ConstraintMenu(AnimatedSelectionMenu):
         return f'[{mode}] {title}'
 
     def draw(self):
-        info_text(self.font, 24, 550, self.title)
+        info_text(self.font, 24, 575, self.title)
         info_text(self.font, 320, 500, self.lines[0])
-        for index, option in enumerate(self.OPTIONS):
-            label = self.option_title(*option)
-            draw_panel_choice(self.font, self.menu_image, 480 - index * 58, label,
-                              self.progress[index], len(self.OPTIONS) - 1 - index, left=True)
+        self.draw_paged_options(len(self.OPTIONS), lambda index: self.option_title(*self.OPTIONS[index]))
         target, self.preview.selected = self.OPTIONS[self.index]
         info_text(self.font, 320, 430, self.preview.description(target))
 
