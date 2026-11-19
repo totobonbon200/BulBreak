@@ -14,6 +14,7 @@ class OsmMode(MenuMode):
     TRAVEL = 1.0
     RADIUS = 180
     HIT_RADIUS = 100
+    SUCCESS_SECONDS = 0.2
     # 입력과 화살표는 노트가 출발한 쪽을 가리킨다.
     DIRECTIONS = {SDLK_UP: (0, 1), SDLK_DOWN: (0, -1),
                   SDLK_LEFT: (-1, 0), SDLK_RIGHT: (1, 0)}
@@ -30,6 +31,7 @@ class OsmMode(MenuMode):
         self.hits = 0
         self.feedback = ''
         self.now = self.framework.clock()
+        self.success_until = self.now
         self.arrival = self.now + self.TRAVEL
 
     def next_note(self, now):
@@ -58,6 +60,7 @@ class OsmMode(MenuMode):
         on_time = Rhythm.is_on_time(now, self.arrival)
         if event.key == self.PATTERN[self.hits] and on_time:
             self.hits += 1
+            self.success_until = now + self.SUCCESS_SECONDS
             self.feedback = '성공'
             self.next_note(now)
         elif now >= self.arrival - self.TRAVEL:
@@ -72,11 +75,12 @@ class OsmMode(MenuMode):
         # 원 둘레에 화살표의 중심이 닿는 순간을 판정한다.
         points = [(round(x + self.HIT_RADIUS * cos(i * tau / 64)),
                    round(y + self.HIT_RADIUS * sin(i * tau / 64))) for i in range(64)]
+        pulse = max(0.0, min(1.0, (self.success_until - self.now) / self.SUCCESS_SECONDS))
+        shade = round(150 + 85 * pulse)
         for start, end in zip(points, points[1:] + points[:1]):
-            draw_line(*start, *end, 150, 150, 150)
+            draw_line(*start, *end, shade, shade, shade)
         sheet = self.assets.character_sheet
-        width, height = sheet.w // 4, sheet.h // 4
-        sheet.clip_draw(0, 3 * height, width, height, x, y, 44, 44)
+        draw_frame(sheet, 4, 4, (0, int(pulse > 0)), x, y, 44, 44)
         info_text(self.assets.notice_font, 100, 550, self.title)
         info_text(self.font, 530, 400, f'성공 {self.hits}/{len(self.PATTERN)}')
         info_text(self.font, 530, 360, '중앙에서 화살표 방향키')
