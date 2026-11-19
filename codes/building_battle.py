@@ -78,10 +78,14 @@ class BuildingBattle:
             return False
         self.hits = (self.hits + 1) % self.HITS_PER_FLOOR
         if self.hits == 0:
-            self.follow_until = None
-            self.floors -= 1
-            self.bottom += self.FLOOR_HEIGHT
+            self.break_floor()
         return True
+
+    def break_floor(self):
+        # 타격과 지상 충돌 모두 현재 밑층만 제거한다.
+        self.follow_until = None
+        self.floors -= 1
+        self.bottom += self.FLOOR_HEIGHT
 
     def draw(self, assets):
         # 메뉴 패널을 한 층씩 쌓고 주인공이 서는 바닥을 표시한다.
