@@ -76,6 +76,8 @@ class MazeMode:
                 return
             self.player.position, result = self.maze.step(
                 self.player.position, directions[event.key])
+            if self.bomber is not None and result == 'exit':
+                result = 'moved'  # 봄버맨의 출구 성공은 폭탄 판정으로만 결정한다.
             self.player.react(self.now, result, directions[event.key])
             self.message = {'hit': '벽: 한 번 더 공격',
                             'broken': '벽 파괴 완료! 다시 누르면 이동',
@@ -113,6 +115,8 @@ class MazeMode:
         self.cross_count = 0
         self.maze = CrossMaze() if self.cross_enabled else Maze(self.size, self.maze.exit)
         self.player.enter_maze(self.maze.entrance, self.now)
+        if self.bomber is not None:
+            self.start_bomber_round()
         self.message = '방향키: 이동 / 벽은 두 번 공격'
         self.transitioned = True
 
