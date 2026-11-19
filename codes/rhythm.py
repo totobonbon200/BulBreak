@@ -49,7 +49,7 @@ class Rhythm:
             self.started = max(self.started, now + self.CUE_GAP)
         return True
 
-    def advance(self, now, *, stop_after_pattern=False):
+    def advance(self, now):
         # 시범 2초 뒤 같은 박자를 입력하고 다음 시범으로 진행한다.
         misses = 0
         # 구간 마지막 박자의 늦은 허용 범위까지 보존한다.
@@ -59,7 +59,7 @@ class Rhythm:
             self.imperfect |= self.index < len(self.hits)
             self.index = len(self.hits)
             misses += self.take_damage()
-            if self.finished or stop_after_pattern:
+            if self.finished:
                 return misses
             self.started = self.next_start
             self.segment += 1
@@ -99,7 +99,7 @@ class Rhythm:
         return 0, int(pulse)
 
     def description(self, now):
-        return '시범 박자 확인' if now < self.started + 2 else '박수에 맞춰 입력 (±100ms)'
+        return '시범 박자 확인' if now < self.started + 2 else '시범 박자에 맞춰 입력 (±100ms)'
 
     def play_claps(self, now, sound):
         # 첫 패턴의 응답 구간에는 성공 공격음이 박수를 대신한다.
