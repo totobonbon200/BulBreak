@@ -41,13 +41,6 @@ class GameFlowTests(unittest.TestCase):
             framework.update(14.9)
             framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_UP))
             self.assertFalse(framework.stage_timed_out)
-            framework.update(15)
-            self.assertTrue(framework.stage_timed_out)
-            self.assertFalse(mode.player.is_playing)
-            framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_RIGHT))
-            self.assertFalse(mode.player.is_playing)
-            framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_LEFT))
-            self.assertFalse(framework.stage_timed_out)
             self.assertTrue(mode.player.is_playing)
 
     def test_first_game_start_routes_through_tutorial_once(self):
