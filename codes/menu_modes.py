@@ -79,6 +79,15 @@ class SelectionMenu(MenuMode):
             self.index = (self.index + step) % len(self.OPTIONS)
 
 
+class AnimatedSelectionMenu(SelectionMenu):
+    def update(self, now):
+        # 이미지 메뉴에서 항목별 선택·해제 전환을 0.25초 동안 진행한다.
+        step = 0.0 if self.last_update is None else max(0.0, now - self.last_update) / 0.25
+        self.last_update = now
+        for index, progress in enumerate(self.progress):
+            self.progress[index] = min(1.0, progress + step) if index == self.index else max(0.0, progress - step)
+
+
 class StartMenu(SelectionMenu):
     # 표시 문구와 선택할 모드를 같은 순서로 둔다.
     OPTIONS = (('게임시작', 'maze_mode'), ('가이드', 'guide_mode'),
