@@ -35,6 +35,11 @@ class Rhythm:
     def hits(self):
         return self.patterns[self.segment % len(self.patterns)]
 
+    @property
+    def finished(self):
+        # 마지막 패턴의 모든 박자가 판정됐는지 확인한다.
+        return self.segment == len(self.patterns) - 1 and self.index == len(self.hits)
+
     def take_next_pattern_cue(self, now):
         first_finished = self.segment == 1 or (self.segment == 0 and self.index == len(self.hits))
         if not first_finished or self.next_cue_at is not None:
@@ -54,7 +59,7 @@ class Rhythm:
             self.imperfect |= self.index < len(self.hits)
             self.index = len(self.hits)
             misses += self.take_damage()
-            if stop_after_pattern:  # 클리어를 기다리면 현재 패턴까지만 판정한다.
+            if self.finished or stop_after_pattern:
                 return misses
             self.started = self.next_start
             self.segment += 1
