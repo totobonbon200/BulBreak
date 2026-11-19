@@ -39,3 +39,9 @@ class RotatedDraw:
         x, y = self.point(*pivot, pivot)
         rect = sdl2.SDL_Rect(round(x - dest.w / 2), round(y - dest.h / 2), dest.w, dest.h)
         return sdl2.SDL_RenderCopyEx(renderer, texture, source, rect, angle + self.angle, center, flip)
+
+    def line(self, renderer, x1, y1, x2, y2):
+        pivot = (x1 + x2) / 2, (y1 + y2) / 2
+        start = self.point(x1, y1, pivot)
+        end = self.point(x2, y2, pivot)
+        return sdl2.SDL_RenderDrawLine(renderer, *map(round, (*start, *end)))
