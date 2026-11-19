@@ -18,9 +18,9 @@ def draw_start_panel(image, x, y, color, opacity=1.0):
         SDL_SetTextureColorMod(image.texture, 255, 255, 255)
 
 
-def draw_panel_choice(font, image, y, label, progress, distance=24):
-    # 선택 진행률에 맞춰 패널과 글자를 함께 이동시키고 글자색을 바꾼다.
-    x = 663 - round(distance * progress)
+def draw_panel_choice(font, image, y, label, progress, rows_below):
+    # 아래 행이 한 개 늘 때마다 기본 위치가 8픽셀 왼쪽으로 이동한다.
+    x = 663 - 8 * rows_below - round(36 * progress)
     color = (255, round(255 - 35 * progress), round(255 * (1 - progress)))
     if image is not None:
         if progress < 1:
@@ -108,7 +108,7 @@ class StartMenu(SelectionMenu):
             self.image.draw(256, 465, self.image.w * scale, self.image.h * scale)
         # 네 항목을 오른쪽 아래에 쌓는다.
         for index, (label, _) in enumerate(self.OPTIONS):
-            draw_panel_choice(self.font, self.menu_image, 256 - index * 63, label, self.progress[index], 36)
+            draw_panel_choice(self.font, self.menu_image, 256 - index * 63, label, self.progress[index], 3 - index)
 
 
 class GameOverMenu(SelectionMenu):
@@ -129,7 +129,7 @@ class GameOverMenu(SelectionMenu):
 
     def draw(self):
         for index, label in enumerate(self.OPTIONS):
-            draw_panel_choice(self.font, self.menu_image, 130 - index * 63, label, index == self.index)
+            draw_panel_choice(self.font, self.menu_image, 130 - index * 63, label, index == self.index, 1 - index)
 
 
 class ConstraintMenu(SelectionMenu):
