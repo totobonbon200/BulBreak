@@ -125,6 +125,16 @@ class MazeMode:
         self.transitioned = False
         self.player.update(now)
 
+    def resolve_bomber(self, now):
+        if self.bomber.in_blast(self.player.position):
+            self.player.rules.health -= 1
+            self.player.update(now)
+            if self.player.is_playing:
+                self.start_bomber_round()
+        else:
+            play_go_sound(self.assets)
+            self.complete_maze()
+
     def draw(self):
         sheet, font = self.assets.maze_sheet, self.assets.font
         self.maze.draw(sheet, font, self.now)
