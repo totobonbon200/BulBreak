@@ -7,12 +7,14 @@ from codes.guide_mode import GuideMode
 from codes.hud import info_text, text
 
 
-def draw_start_panel(image, x, y, color):
+def draw_start_panel(image, x, y, color, opacity=1.0):
     # 오른쪽 경사는 캔버스에서 잘리고, 색상은 다른 HUD에 남기지 않는다.
     SDL_SetTextureColorMod(image.texture, *color)
+    image.opacify(opacity)
     try:
         image.draw(x, y, 412, 52)
     finally:
+        image.opacify(1.0)
         SDL_SetTextureColorMod(image.texture, 255, 255, 255)
 
 
@@ -21,7 +23,10 @@ def draw_panel_choice(font, image, y, label, progress, distance=24):
     x = 663 - round(distance * progress)
     color = (255, round(255 - 35 * progress), round(255 * (1 - progress)))
     if image is not None:
-        draw_start_panel(image, x, y, color)
+        if progress < 1:
+            draw_start_panel(image, x, y, (255, 255, 255))
+        if progress > 0:
+            draw_start_panel(image, x, y, (255, 220, 0), progress)
     font.draw(x - 153, y, label, color)
 
 
@@ -96,6 +101,7 @@ class StartMenu(SelectionMenu):
         self.last_update = now
         for index, progress in enumerate(self.progress):
             self.progress[index] = min(1.0, progress + step) if index == self.index else max(0.0, progress - step)
+
     def draw(self):
         if self.image is not None:
             scale = min(440 / self.image.w, 250 / self.image.h)
