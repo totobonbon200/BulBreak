@@ -74,6 +74,12 @@ class GuideMode(AnimatedSelectionMenu):
             info_text(self.title_font, x - 12, y + 14, arrow)
             self.title_font.draw(x - 46, y - 14, role, (255, 220, 0))
 
+    def page_title(self, index):
+        # 페이지 제목과 왼쪽 선택지에 같은 제약 이름을 표시한다.
+        heading = self.PAGES[index][0]
+        self.notice.selected = heading
+        return heading if index < 2 else self.notice.title()
+
     def draw_page(self):
         heading, lines = self.PAGES[self.page]
         if self.page < 2:
