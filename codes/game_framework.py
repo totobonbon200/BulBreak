@@ -7,6 +7,7 @@
 from transitions import Machine
 from codes.constraints import CAT_CONSTRAINT, ConstraintNotice
 from codes.menu_modes import GameOverMenu
+from codes.scene_rotation import SceneRotation
 from pico2d import get_time
 
 
@@ -78,6 +79,7 @@ class GameFramework:
     def _enter(self):
         self.game_over_menu.enter(False)
         self.game_over_since = None
+        self._start_rotation()
         if self.state == 'quit_mode':
             self.running = False
             return
@@ -86,12 +88,18 @@ class GameFramework:
         mode.enter(first_visit)
         self.visited.add(self.state)
 
+    def _start_rotation(self):
+        # 일반 진입과 재시작마다 회전 기준을 새로 고른다.
+        active = self.state in self.TIMED_MODES and 'scene_rotation' in self.notice.active
+        self.rotation = SceneRotation(self.clock()) if active else None
+
     def resolve_game_over(self, restart):
         if not restart:
             self.change_mode('instrument_mode' if self.practicing_constraint else 'start_mode')
             return
         if not self.practicing_constraint:
             self.notice.reset()
+        self._start_rotation()
         self.modes[self.state].enter(False)
         self.game_over_menu.enter(False)
         self.game_over_since = None
