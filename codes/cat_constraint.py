@@ -49,7 +49,7 @@ class CatEffect:
 
     def draw_background(self, now):
         if self.video is not None:
-            self.video.advance(max(0.0, now - self.started))
+            self.video.advance(max(0.0, now - self.started) * 2)  # 배경 영상만 2배속으로 반복한다.
         # 원본의 비율을 맞추고 캔버스를 채우도록 가운데를 확대한다.
         scale = max(self.width / self.backdrop.w, self.height / self.backdrop.h)
         self.backdrop.draw(self.width / 2, self.height / 2,
