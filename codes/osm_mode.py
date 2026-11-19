@@ -47,3 +47,13 @@ class OsmMode(MenuMode):
         if event.key in self.held or getattr(event, 'repeat', False):
             return
         self.held.add(event.key)
+        if self.hits == len(self.PATTERN):
+            if event.key == SDLK_RIGHT:
+                self.framework.change_mode('instrument_mode')
+            return
+        now = self.framework.clock()
+        on_time = self.arrival - self.WINDOW <= now <= self.arrival + self.WINDOW
+        if event.key == self.PATTERN[self.hits] and on_time:
+            self.hits += 1
+            self.feedback = '성공'
+            self.next_note(now)
