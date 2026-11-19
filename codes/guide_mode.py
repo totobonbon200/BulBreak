@@ -20,7 +20,7 @@ def draw_key_outline(x, y):
 class GuideMode(AnimatedSelectionMenu):
     index = property(lambda self: self.page)  # 현재 페이지가 목록의 선택 항목이다.
     # 키 좌표와 역할은 위·왼쪽·아래·오른쪽 순서로 대응한다.
-    KEYS = (('↑', 400, 400), ('←', 242, 311), ('↓', 400, 311), ('→', 558, 311))
+    KEYS = (('↑', 550, 400), ('←', 392, 311), ('↓', 550, 311), ('→', 708, 311))
     KEY_ROLES = (('위로 이동', '좌측 이동', '아래 이동', '우측 이동'),
                  ('위로 회피', '좌측 공격', '아래 회피', '우측 공격'))
 
@@ -77,15 +77,15 @@ class GuideMode(AnimatedSelectionMenu):
         heading, lines = self.PAGES[self.page]
         if self.page < 2:
             self.draw_keys()
-            info_text(self.font, 80, 250, '세부 조작')
+            info_text(self.font, 320, 250, '세부 조작')
             heading_y, detail_y = 467, 222
         else:
             self.notice.selected = heading
             heading = self.notice.title()
             heading_y, detail_y = 420, 355
-        info_text(self.title_font, 80, heading_y, heading)
+        info_text(self.title_font, 320, heading_y, heading)
         for index, line in enumerate(lines):
-            info_text(self.font, 80, detail_y - index * 34, line)
+            info_text(self.font, 320, detail_y - index * 34, line)
 
     def draw(self):
         info_text(self.font, 80, 507, '가이드')
