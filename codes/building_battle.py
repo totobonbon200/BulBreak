@@ -19,6 +19,7 @@ class BuildingBattle:
         self.player_gravity = self.GRAVITY
         self.follow_until = None
         self.impact_at = None
+        self.slow_until = now
         self.updated_at = now
 
     def fall(self, dt, gravity):
@@ -32,7 +33,12 @@ class BuildingBattle:
             return
         dt = now - self.updated_at
         self.updated_at = now
-        self.fall(dt * self.BUILDING_RATE, self.GRAVITY)
+        # 피격 후 감속 구간이 끝나는 프레임은 두 가속도로 나눠 계산한다.
+        slow_dt = min(dt, max(0, self.slow_until - (now - dt)))
+        if slow_dt:
+            self.fall(slow_dt * self.BUILDING_RATE, self.GRAVITY * .35)
+        if slow_dt < dt:
+            self.fall((dt - slow_dt) * self.BUILDING_RATE, self.GRAVITY)
         # 공중에서도 건물이 내려오면 주인공의 머리가 밑면을 통과하지 않는다.
         limit = self.bottom - self.PLAYER_SIZE
         if self.follow_until is not None:
