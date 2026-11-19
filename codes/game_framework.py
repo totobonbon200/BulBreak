@@ -105,9 +105,13 @@ class GameFramework:
         if self.notice.pending is not None:
             return  # 안내 중 방향키는 다음 플레이에 전달하지 않는다.
         if self.game_over_active:
-            self.game_over_menu.handle_event(event)
+            now = self.clock()
+            self.note_game_over(now)
+            if now >= self.game_over_since + .5:
+                self.game_over_menu.handle_event(event)
             return
         self.modes[self.state].handle_event(event)
+        self.note_game_over()
 
     def update(self, now):
         if self.notice.pending is not None:
@@ -116,9 +120,11 @@ class GameFramework:
                 self._change_mode(target)
             return  # 안내 중에는 일반 타이머와 적 큐를 진행하지 않는다.
         if self.game_over_active:
+            self.note_game_over(now)
             self.game_over_menu.update(now)
             return  # 게임오버 중에는 메뉴의 선택 전환만 진행한다.
         self.modes[self.state].update(now)
+        self.note_game_over(now)
 
     def _active_cat_effect(self, now):
         # 전환 안내와 메뉴에서는 효과를 지우고 새 적용을 기다린다.
