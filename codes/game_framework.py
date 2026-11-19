@@ -6,7 +6,6 @@
 """모드 초기화와 전환을 관리한다."""
 from transitions import Machine
 from codes.constraints import CAT_CONSTRAINT, ConstraintNotice
-from codes.hud import info_text as text
 from codes.menu_modes import GameOverMenu
 from pico2d import get_time
 
@@ -43,11 +42,11 @@ class GameFramework:
 
     @property
     def timer_paused(self):
-        return self.state == 'tutorial_mode' or self.stage_timed_out or self.notice.pending is not None
+        return self.state == 'tutorial_mode' or self.notice.pending is not None
 
     @property
     def game_over_active(self):
-        return self.stage_timed_out or getattr(self.modes[self.state], 'is_game_over', False) is True
+        return getattr(self.modes[self.state], 'is_game_over', False) is True
 
     def change_mode(self, name):
         if name not in self.MODES:
@@ -150,7 +149,5 @@ class GameFramework:
             cats.draw_cats(now)
         if self.notice.pending is not None:
             self.notice.draw(self.modes[self.state].assets.notice_font)
-        if self.stage_timed_out and self.timeout_font is not None:
-            text(self.timeout_font, 100, 380, '관심받고싶음? 옛다 관심', size=38)
         if self.game_over_active:
             self.game_over_menu.draw()
