@@ -231,6 +231,8 @@ class BattleMode:
         else:
             self.rules.update(self.now)  # 빗나간 좌우 입력에는 회복을 적용하지 않는다.
         if key == SDLK_UP and not self.is_game_over and self.building.jump():
+            if self.building.gap <= self.building.LAUNCH_GAP:
+                play_go_sound(self.assets)
             self.display_action('dodge_up', self.player_direction)
         if not self.is_game_over and key in (SDLK_LEFT, SDLK_RIGHT) and self.building.attack():
             self.rules.record_action(self.now)
@@ -262,6 +264,8 @@ class BattleMode:
             previous_impact = self.building.impact_at
             crushed_hits = self.building.update(now)
             if self.building.impact_at != previous_impact:
+                if not crushed_hits:  # 공중에서 밑면에 부딪힌 순간에만 재생한다.
+                    play_go_sound(self.assets)
                 self.display_action('hit', self.player_direction)
             if crushed_hits:
                 self.successes += crushed_hits

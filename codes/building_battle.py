@@ -10,6 +10,7 @@ class BuildingBattle:
     CRUSH_BOTTOM = FLOOR + PLAYER_SIZE - 20  # 지상 피격 범위 안으로 20픽셀 들어오면 피해를 준다.
     GRAVITY, HITS_PER_FLOOR = 1000, 10
     BUILDING_RATE = .5
+    LAUNCH_GAP = 10  # 건물을 띄울 수 있는 최대 간격이다.
     CONTACT_SECONDS = .45  # 공중에서 밑면을 따라가는 시간이다.
     DETACH_RATE = 2.2
 
@@ -73,7 +74,7 @@ class BuildingBattle:
 
     def jump(self):
         # 건물이 가까우면 건물을 띄우고, 떨어져 있으면 바닥에서만 점프한다.
-        if self.gap <= 10:
+        if self.gap <= self.LAUNCH_GAP:
             self.fall_speed = 475
             return True
         if self.feet == self.FLOOR:
