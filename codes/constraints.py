@@ -17,7 +17,7 @@ def draw_notice_title(font, title):
 class ConstraintNotice:
     DURATION = 1.0
     KEYS = {'maze_mode': 'maze_arrival', 'battle_mode': 'battle_placeholder'}
-    TITLES = {"maze_mode": "[미로] 도착 화면 확인", "battle_mode": "[전투] 임시 제약"}
+    TITLES = {"maze_mode": "[미로] 도착 화면 확인", "battle_mode": "[전투] 기본"}
 
     def __init__(self):
         # 첫 전투를 마친 뒤부터 안내하며 새 게임에서는 초기화한다.
@@ -64,7 +64,7 @@ class ConstraintNotice:
             draw_notice_title(font, self.title())
 
     def title(self):
-        # 전환 안내와 제약 한 판 선택 화면에서 같은 제목을 쓴다.
+        # 기본 전투 제약 이름은 전환 안내와 디버그 메뉴에서 공유한다.
         return {'maze_arrival': '[미로] 도착 화면 확인', 'maze_cross': '[미로] 중앙 출구',
                 CAT_CONSTRAINT: '고양이다아아아아',
-                'battle_placeholder': '[전투] 임시 제약', 'battle_rhythm': '[전투] 리듬'}.get(self.selected, '')
+                'battle_placeholder': self.TITLES['battle_mode'], 'battle_rhythm': '[전투] 리듬'}.get(self.selected, '')
