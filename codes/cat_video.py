@@ -30,3 +30,12 @@ class LoopingVideo:
             frame = next(islice(self.frames, index - self.index - 1, None))
             self.index = index
             return frame
+
+    def advance(self, elapsed):
+        # 프레임이 바뀌면 배경 텍스처에 영상 픽셀을 올린다.
+        frame = self.frame_at(elapsed)
+        if frame is not None:
+            rgb = frame.reformat(width=self.image.w, height=self.image.h, format='rgb24')
+            plane = rgb.planes[0]
+            if SDL_UpdateTexture(self.image.texture, None, plane.buffer_ptr, plane.line_size) != 0:
+                raise RuntimeError(SDL_GetError().decode())
