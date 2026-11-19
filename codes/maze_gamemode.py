@@ -3,6 +3,7 @@
 from pico2d import *
 
 from codes.maze import Maze
+from codes.maze_bomber import BomberRound
 from codes.maze_darkness import draw_darkness
 from codes.clap_sound import play_go_sound
 from codes.cross_maze import CrossMaze
@@ -30,6 +31,13 @@ class MazeMode:
         self.now = now
         self.message = '방향키: 이동 / 벽은 두 번 공격'
         self.transitioned = False
+        self.bomber = None
+        if notice is not None and isinstance(notice.active, set) and 'maze_bomber' in notice.active:
+            self.start_bomber_round()
+
+    def start_bomber_round(self):
+        # 현재 주인공 위치를 기준으로 새 폭탄과 판정 시간을 정한다.
+        self.bomber = BomberRound(self.maze, self.player.position, self.now)
 
     @property
     def is_game_over(self):
