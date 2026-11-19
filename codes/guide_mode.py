@@ -40,6 +40,9 @@ class GuideMode(AnimatedSelectionMenu):
                            '판정 범위는 ±100ms이며, 틀리거나 놓치면 체력이 줄어듭니다.')),
         (CAT_CONSTRAINT, ('미로와 전투에서 고양이 영상과 움직이는 고양이가 시야를 가립니다.',
                           '움직이는 고양이는 화면 가장자리에서 튕깁니다.')),
+        ('maze_darkness', ('주인공 주변 반지름 1.5칸만 보입니다.',)),
+        ('battle_building', ('건물이 닿으면 좌우로 공격합니다. 층마다 열 번 타격하세요.',
+                             '위 방향키로 점프하거나 가까운 건물을 띄웁니다.')),
     )
 
     def __init__(self, font, title_font=None, menu_image=None):
