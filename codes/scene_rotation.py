@@ -23,3 +23,9 @@ class RotatedDraw:
         self.angle = angle % 360
         self.canvas_center = canvas_center
         self.cosine, self.sine = cos(radians(self.angle)), sin(radians(self.angle))
+
+    def point(self, x, y, pivot):
+        cx, cy = self.canvas_center if self.canvas_center is not None else pivot
+        dx, dy = x - cx, y - cy
+        return (cx + dx * self.cosine - dy * self.sine,
+                cy + dx * self.sine + dy * self.cosine)
