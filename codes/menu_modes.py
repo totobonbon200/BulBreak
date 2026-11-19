@@ -113,25 +113,27 @@ class StartMenu(AnimatedSelectionMenu):
             draw_panel_choice(self.font, self.menu_image, 256 - index * 63, label, self.progress[index], 3 - index)
 
 
-class GameOverMenu(SelectionMenu):
+class GameOverMenu(AnimatedSelectionMenu):
     OPTIONS = ('다시시작', '돌아가기')
 
     def __init__(self, start_menu, framework):
         super().__init__(start_menu.font, '', (), {})
         self.menu_image = start_menu.menu_image
         self.framework = framework
-        self.index = 0
+        self.enter(False)
 
     def enter(self, first_visit):
         super().enter(first_visit)
         self.index = 0
+        self.progress = [0.0] * len(self.OPTIONS)  # 새 게임오버마다 흰색 위치에서 시작한다.
+        self.last_update = None
 
     def confirm_selection(self):
         self.framework.resolve_game_over(restart=self.index == 0)
 
     def draw(self):
         for index, label in enumerate(self.OPTIONS):
-            draw_panel_choice(self.font, self.menu_image, 130 - index * 63, label, index == self.index, 1 - index)
+            draw_panel_choice(self.font, self.menu_image, 130 - index * 63, label, self.progress[index], 1 - index)
 
 
 class ConstraintMenu(SelectionMenu):
