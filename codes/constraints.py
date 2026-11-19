@@ -17,8 +17,10 @@ def draw_notice_title(font, title):
 
 class ConstraintNotice:
     DURATION = 1.0
-    OPTIONS = {'maze_mode': ('maze_cross', CAT_CONSTRAINT, 'maze_darkness', 'maze_bomber'),
-               'battle_mode': ('battle_placeholder', 'battle_rhythm', CAT_CONSTRAINT, 'battle_building')}
+    OPTIONS = {'maze_mode': ('maze_cross', CAT_CONSTRAINT, 'maze_darkness', 'maze_bomber',
+                             'scene_rotation'),
+               'battle_mode': ('battle_placeholder', 'battle_rhythm', CAT_CONSTRAINT,
+                               'battle_building', 'battle_hidden_enemy', 'scene_rotation')}
 
     def __init__(self):
         # 첫 전투를 마친 뒤부터 안내하며 새 게임에서는 초기화한다.
