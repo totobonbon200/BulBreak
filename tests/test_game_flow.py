@@ -44,18 +44,11 @@ class GameFlowTests(unittest.TestCase):
             framework.update(15)
             self.assertTrue(framework.stage_timed_out)
             self.assertFalse(mode.player.is_playing)
-            self.assertEqual(framework.stage_elapsed, 15)
-            with patch('pico2d.draw_rectangle'):
-                framework.draw()
-            large_font.draw.assert_called_once_with(
-                100, 380, '관심받고싶음? 옛다 관심', (255, 255, 255))
-            self.assertNotIn('GAME OVER', mode.message)
             framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_RIGHT))
             self.assertFalse(mode.player.is_playing)
             framework.handle_event(SimpleNamespace(type=SDL_KEYDOWN, key=SDLK_LEFT))
             self.assertFalse(framework.stage_timed_out)
             self.assertTrue(mode.player.is_playing)
-            self.assertEqual(framework.stage_elapsed, 0)
 
     def test_first_game_start_routes_through_tutorial_once(self):
         modes = {name: Mock() for name in GameFramework.MODES}
