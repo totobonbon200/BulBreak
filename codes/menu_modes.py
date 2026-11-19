@@ -18,16 +18,17 @@ def draw_start_panel(image, x, y, color, opacity=1.0):
         SDL_SetTextureColorMod(image.texture, 255, 255, 255)
 
 
-def draw_panel_choice(font, image, y, label, progress, rows_below):
-    # 아래 행이 한 개 늘 때마다 기본 위치가 8픽셀 왼쪽으로 이동한다.
-    x = 663 - 8 * rows_below - round(36 * progress)
+def draw_panel_choice(font, image, y, label, progress, rows_below, *, left=False):
+    # 각 행의 간격과 선택 돌출을 화면 안쪽 방향으로 적용한다.
+    offset = 8 * rows_below + round(36 * progress)
+    x = -40 + offset if left else 663 - offset
     color = (255, round(255 - 35 * progress), round(255 * (1 - progress)))
     if image is not None:
         if progress < 1:
             draw_start_panel(image, x, y, (255, 255, 255))
         if progress > 0:
             draw_start_panel(image, x, y, (255, 220, 0), progress)
-    font.draw(x - 153, y, label, color)
+    font.draw(x + 64 if left else x - 153, y, label, color)
 
 
 class MenuMode:
