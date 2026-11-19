@@ -41,12 +41,15 @@ class GuideMode:
                           '움직이는 고양이는 화면 가장자리에서 튕깁니다.')),
     )
 
-    def __init__(self, font, title_font=None):
+    def __init__(self, font, title_font=None, menu_image=None):
         self.font = font
         self.title_font = title_font or font
+        self.menu_image = menu_image
         self.notice = ConstraintNotice()
         self.page = 0
         self.framework = None
+        self.progress = [0.0] * len(self.PAGES)  # 가이드 페이지마다 선택 전환을 기록한다.
+        self.last_update = None
 
     def enter(self, first_visit):
         self.page = 0

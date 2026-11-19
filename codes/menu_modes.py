@@ -3,7 +3,6 @@
 from pico2d import *
 from sdl2 import SDL_SetTextureColorMod
 from codes.constraints import CAT_CONSTRAINT, ConstraintNotice
-from codes.guide_mode import GuideMode
 from codes.hud import info_text, text
 
 
@@ -176,9 +175,10 @@ class ConstraintMenu(AnimatedSelectionMenu):
 
 
 def create_menus(font, main_image=None, menu_image=None, *, start_font=None):
+    from codes.guide_mode import GuideMode  # 가이드는 이 모듈의 공통 메뉴를 사용한다.
     return {
         'start_mode': StartMenu(start_font or font, main_image, menu_image),
-        'guide_mode': GuideMode(font, title_font=start_font),
+        'guide_mode': GuideMode(font, title_font=start_font, menu_image=menu_image),
         'instrument_mode': ConstraintMenu(font, menu_image),
         'battle_mode': MenuMode(font, 'Battle: planned',
                                ['Combat is not implemented yet.', 'LEFT: back'],
