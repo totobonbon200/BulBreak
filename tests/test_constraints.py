@@ -65,7 +65,7 @@ class ConstraintTests(unittest.TestCase):
             press(mode, keys[delta])
             self.assertEqual(mode.completed, int(index == 5))
         self.assertEqual(mode.cross_count, 0)  # 여섯 번째 출구에서 다음 미로를 바로 시작한다.
-        mode.update(9)
+        mode.update(mode.now + 9.1)
         self.assertTrue(mode.is_game_over)
 
     def test_demo_input_preserves_health_and_freezes_timer(self):
