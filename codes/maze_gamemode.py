@@ -34,16 +34,15 @@ class MazeMode:
         self.transitioned = False
         self.bomber = None
         if notice is not None and isinstance(notice.active, set) and 'maze_bomber' in notice.active:
-            self.start_bomber_round(respawn=True)
+            self.start_bomber_round()
 
     @property
     def maze_idle_limit(self):
         return 4.0 if self.darkness else None  # 기본값은 기존 미로 규칙을 사용한다.
 
-    def start_bomber_round(self, *, respawn=False):
+    def start_bomber_round(self):
         # 현재 주인공 위치를 기준으로 새 폭탄과 판정 시간을 정한다.
-        if respawn:
-            self.player.position = choose_spawn(self.maze)
+        self.player.position = choose_spawn(self.maze)
         self.bomber = BomberRound(self.maze, self.player.position, self.now)
 
     @property
@@ -123,7 +122,7 @@ class MazeMode:
         self.maze = CrossMaze() if self.cross_enabled else Maze(self.size, self.maze.exit)
         self.player.enter_maze(self.maze.entrance, self.now, idle_limit=self.maze_idle_limit)
         if self.bomber is not None:
-            self.start_bomber_round(respawn=True)
+            self.start_bomber_round()
         self.message = '방향키: 이동 / 벽은 두 번 공격'
         self.transitioned = True
 
