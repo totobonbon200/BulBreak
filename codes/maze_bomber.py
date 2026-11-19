@@ -1,6 +1,7 @@
 # 작업 전 ppt/AI_Planner.md와 ppt/Code_Plans.md를 확인한다.
 """봄버맨 미로에서 폭탄 세 개의 위치와 판정 시각을 관리한다."""
 from random import choice, sample
+from pico2d import draw_rectangle
 
 class BomberRound:
     def __init__(self, maze, position, now):
@@ -17,3 +18,8 @@ class BomberRound:
         passages = [cell for cell in neighbors if all(0 <= axis < maze.size for axis in cell)
                     and cell not in maze.walls]
         return choice(passages or [position])
+
+    def in_blast(self, position):
+        # 십자는 벽에 막히지 않고 미로 끝까지 이어진다.
+        row, col = position
+        return any(row == bomb_row or col == bomb_col for bomb_row, bomb_col in self.bombs)
