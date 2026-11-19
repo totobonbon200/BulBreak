@@ -347,7 +347,7 @@ class BattleTests(unittest.TestCase):
                 self.mode.draw()
             call = self.assets.yellow_arrow_sheet.clip_draw.call_args.args
             self.assertEqual(call[:4], (column * 543, 0, 543, 724))
-            self.assertEqual(call[4:6], ((136, 344)[column], 200))
+            self.assertEqual(call[4:6], ((139, 341)[column], 200))
 
     def test_wrong_order_shows_cross_and_smooth_right_rotation_without_blocking(self):
         press(self.mode, SDLK_RIGHT)

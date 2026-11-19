@@ -259,7 +259,7 @@ class BattleMode:
         arrow_height = 65 * arrow_sheet.h / (arrow_sheet.w / 4)
         column = 0 if self.next_attack_direction == 'left' else 1
         # 다음 공격 방향과 같은 쪽에 주인공과 간격을 두고 표시한다.
-        arrow_x = player_x + (-104 if column == 0 else 104)
+        arrow_x = player_x + (-101 if column == 0 else 101)
         draw_frame(arrow_sheet, 1, 4, (0, column), arrow_x, player_y, 65, arrow_height)
         if (self.failure_started is not None
                 and 0 <= self.now - self.failure_started < self.FAILURE_EFFECT_SECONDS):

@@ -35,6 +35,7 @@ class Assets:
         self.character_attack_sheet = load_image(str(root / 'resources/character_attacks_800x400.png'))
         self.effect_sheet = load_image(str(root / 'resources/effect_800x400.png'))
         self.yellow_arrow_sheet = load_image(str(root / 'resources/effect_arrows_yellow.png'))
+        self.yellow_arrow_sheet.opacify(0.85)  # 전투의 플레이어 안내 화살표만 반투명하게 그린다.
         self.effect_attack_sheet = load_image(str(root / 'resources/effect_attack_800x200.png'))
         self.enemy_sheet = load_image(str(root / 'resources/enemy_animation_600x600.png'))
         self.result_sheet = load_image(str(root / 'resources/result_800x400.png'))
