@@ -275,6 +275,15 @@ class BattleMode:
                    x, y, size, size, rotation=self.failure_rotation())
 
     def draw(self):
+        if self.building is None:
+            self.draw_standard_scene()
+        else:
+            self.building.draw(self.assets)
+            size = self.building.PLAYER_SIZE
+            self.draw_player(self.building.CENTER_X, self.building.feet + size / 2, size)
+        self.draw_status()
+
+    def draw_standard_scene(self):
         draw_frame(self.assets.enemy_sheet, 4, 4, self.enemy.animation.frame(self.now),
                    350, 360, 150, 150)
         if self.enemy.state == 'prepare':
@@ -298,6 +307,7 @@ class BattleMode:
             if effect is not None and not effect.finished(self.now):
                 draw_frame(self.assets.effect_attack_sheet, 1, 4, effect.frame(self.now),
                            *position, 110, 110)
+    def draw_status(self):
         paused = self.rhythm is not None or self.cleared or self.framework.timer_paused is True
         draw_hud(self.assets, self.rules, self.now, 2, timer_paused=paused)
         draw_enemy_health(self.CLEAR_ATTACKS - self.successes, self.CLEAR_ATTACKS)
