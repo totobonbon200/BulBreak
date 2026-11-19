@@ -60,7 +60,7 @@ class GameFlowTests(unittest.TestCase):
             self.assertTrue(framework.stage_timed_out)
             framework.change_mode('start_mode')
 
-    def test_new_maze_resets_deadline_and_existing_game_over_is_preserved(self):
+    def test_new_maze_keeps_regular_game_over_rules(self):
         with patch('codes.maze_gamemode.get_time', return_value=0):
             mode = MazeMode(Mock())
             modes = create_menus(Mock())
@@ -70,7 +70,6 @@ class GameFlowTests(unittest.TestCase):
                 item.framework = framework
             framework.change_mode('maze_mode')
             mode.maze.walls.pop((0, 1), None)
-            mode.player.rules.rule = 3
             mode.maze.exit = (0, 1)
             mode.now = 14
             mode.player.rules.remaining = 100
@@ -80,15 +79,13 @@ class GameFlowTests(unittest.TestCase):
             self.assertEqual(mode.completed, 1)
             self.assertEqual(mode.player.position, (0, 1))
             self.assertEqual(mode.player.action_state, 'idle')
-            self.assertEqual(framework.stage_started, 14)
             framework.update(15)
-            self.assertFalse(framework.stage_timed_out)
-            self.assertEqual(framework.stage_elapsed, 1)
+            self.assertTrue(mode.player.is_playing)
             mode.player.rules.health = 0
             mode.player.rules.rule = 2
             mode.player.update(15)
             framework.update(100)
-            self.assertFalse(framework.stage_timed_out)
+            self.assertTrue(framework.game_over_active)
 
     def test_maze_constraint_starts_after_first_battle(self):
         # 최초 전투 진입은 생략하고 복귀 안내가 끝날 때 획득한다.
